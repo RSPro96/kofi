@@ -182,6 +182,42 @@
     .botnav{display:flex}
     body{padding-bottom:86px}
   }
+
+  .ovl{position:fixed;inset:0;z-index:80;background:rgba(8,10,14,.6);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:18px}
+  .ovl[hidden]{display:none}
+  .sheet{width:100%;max-width:420px;background:var(--card2);border:1px solid var(--line);border-radius:18px;box-shadow:0 24px 60px rgba(0,0,0,.5);overflow:hidden;display:flex;flex-direction:column;max-height:88vh}
+  .sheet-center{width:100%;max-width:400px;background:var(--card2);border:1px solid var(--line);border-radius:18px;box-shadow:0 24px 60px rgba(0,0,0,.5);padding:26px 24px;text-align:center}
+  .g-icon{width:56px;height:56px;border-radius:16px;background:linear-gradient(180deg,var(--crema),#3f78c0);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:var(--shadow)}
+  .g-icon .ic{width:28px;height:28px;color:var(--onaccent)}
+  .sheet-center h2{margin:0 0 8px;font-size:20px;color:var(--cream)}
+  .sheet-center p{color:var(--muted);font-size:14px;margin:0 0 20px;line-height:1.6}
+  .g-big{width:100%;padding:15px;font-size:15px;justify-content:center;margin-bottom:10px}
+  .g-remember{display:flex;align-items:center;justify-content:center;gap:8px;color:var(--muted);font-size:13px;margin-top:14px;cursor:pointer}
+  .g-remember input{accent-color:var(--crema);width:16px;height:16px}
+
+  .g-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 12px}
+  .g-tool{font-weight:800;font-size:15px;color:var(--cream);display:flex;align-items:center;gap:8px}
+  .g-tool .ic{width:18px;height:18px;color:var(--crema)}
+  .g-close{background:transparent;border:0;color:var(--muted);cursor:pointer;padding:6px;border-radius:9px;display:inline-flex;transition:.15s}
+  .g-close:hover{color:var(--cream);background:var(--field)}
+  .g-close .ic{width:18px;height:18px}
+  .g-progress{height:6px;background:var(--field);border-radius:99px;margin:0 18px 16px;overflow:hidden}
+  .g-bar{height:100%;background:linear-gradient(90deg,var(--crema),var(--crema-soft));border-radius:99px;transition:width .3s}
+  .g-body{display:flex;gap:14px;padding:0 18px 18px}
+  .g-stepicon{flex-shrink:0;width:42px;height:42px;border-radius:12px;background:var(--field);border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center}
+  .g-stepicon .ic{width:22px;height:22px;color:var(--crema)}
+  .g-idx{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px}
+  .g-body h3{margin:0 0 6px;font-size:17px;color:var(--cream)}
+  .g-body p{margin:0;color:var(--muted);font-size:13.5px;line-height:1.6}
+  .g-actions{display:flex;gap:10px;padding:14px 18px 18px;border-top:1px solid var(--line)}
+  .g-actions .btn{flex:1;justify-content:center;padding:13px}
+  .guide-ring{box-shadow:0 0 0 3px var(--crema),0 8px 30px rgba(0,0,0,.35) !important;border-radius:14px}
+  .g-reopen{position:fixed;left:14px;bottom:18px;z-index:65;display:inline-flex;align-items:center;gap:8px;background:rgba(21,26,33,.94);backdrop-filter:blur(8px);border:1.5px solid var(--line);border-radius:999px;padding:11px 16px;color:var(--cream);font-size:13.5px;font-weight:700;cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,.4);transition:.15s}
+  .g-reopen .ic{width:18px;height:18px;color:var(--crema)}
+  .g-reopen:hover{border-color:var(--crema)}
+  .g-reopen:active{transform:scale(.95)}
+  @media(max-width:760px){.g-reopen{bottom:96px}}
+  @media(prefers-reduced-motion:reduce){.g-bar,.g-progress,.sheet,.ovl{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
@@ -522,6 +558,43 @@
   <button class="navitem" data-panel="v60"><svg class="ic"><use href="#i-droplet"/></svg> V60 Cone</button>
 </nav>
 
+<!-- ===== MODAL PILIH CARA PAKAI ===== -->
+<div class="ovl" id="guide-w" hidden>
+  <div class="sheet-center">
+    <div class="g-icon"><svg class="ic"><use href="#i-cup"/></svg></div>
+    <h2>Mau dipandu langkah demi langkah?</h2>
+    <p>Biar gak bingung, pilih salah satu:<br/>dipandu satu-satu sampai jadi, atau langsung atur sendiri.</p>
+    <button class="btn btn-primary g-big" id="g-start"><svg class="ic"><use href="#i-play"/></svg> Pandu Saya Satu per Satu</button>
+    <button class="btn btn-ghost g-big" id="g-direct">Langsung Saja</button>
+    <label class="g-remember"><input type="checkbox" id="g-remember"/> Selalu langsung saja (jangan tanya lagi)</label>
+  </div>
+</div>
+
+<!-- ===== WIZARD PANDUAN ===== -->
+<div class="ovl" id="guide-wiz" hidden>
+  <div class="sheet">
+    <div class="g-head">
+      <span class="g-tool"><svg class="ic" id="g-tool-ic"><use href="#i-cup"/></svg> <span id="g-tool">Tygopresso</span></span>
+      <button class="g-close" id="g-close" title="Tutup panduan"><svg class="ic"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="g-progress"><div class="g-bar" id="g-bar"></div></div>
+    <div class="g-body">
+      <div class="g-stepicon"><svg class="ic" id="g-icon"><use href="#i-info"/></svg></div>
+      <div>
+        <div class="g-idx" id="g-idx">Langkah 1 dari 5</div>
+        <h3 id="g-title">—</h3>
+        <p id="g-desc">—</p>
+      </div>
+    </div>
+    <div class="g-actions">
+      <button class="btn btn-ghost" id="g-back">Kembali</button>
+      <button class="btn btn-primary" id="g-next">Lanjut</button>
+    </div>
+  </div>
+</div>
+
+<button class="g-reopen" id="g-reopen"><svg class="ic"><use href="#i-info"/></svg> Pandu Langkah</button>
+
 <div class="toast" id="toast">Tersimpan!</div>
 
 <script>
@@ -820,6 +893,14 @@
   }
 
   // ---------- log catatan ----------
+  function loadNotes(){ try{ var a=JSON.parse(localStorage.getItem(LS_KEY)); return Array.isArray(a)?a:[]; }catch(e){ return []; } }
+  function saveNotes(arr){ try{ localStorage.setItem(LS_KEY, JSON.stringify(arr)); }catch(e){} }
+  var toastTimer=null;
+  function toast(msg){
+    var t=$("toast"); t.textContent=msg; t.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer=setTimeout(function(){ t.classList.remove("show"); }, 2200);
+  }
   var VIC = {good:"smile", meh:"meh", bad:"frown"};
   var VLABEL = {good:"Enak", meh:"Biasa", bad:"Kurang"};
   var DLABEL = {tygo:"Tygopresso", espresso:"Espresso", sanger:"Sanger Espresso", brew:"Seduh Manual"};
@@ -914,13 +995,16 @@
   function dupKey(n){ return [n.drink,n.verdict,n.dose,n.yield,n.ice,n.serve,(n.pemanis&&n.pemanis.label)||"",n.note||"",n.date||""].join("|"); }
 
   // ---------- tabs / nav bawah ----------
+  var ACTIVE = "tygo";
   function switchPanel(p){
+    ACTIVE = p;
     document.querySelectorAll(".panel").forEach(function(x){
       x.style.display = x.id==="panel-"+p ? "block" : "none";
     });
     document.querySelectorAll(".tab,.navitem").forEach(function(t){
       t.classList.toggle("active", t.getAttribute("data-panel")===p);
     });
+    closeGuide();
     window.scrollTo(0,0);
   }
   document.querySelectorAll(".tab,.navitem").forEach(function(t){
@@ -928,6 +1012,122 @@
       switchPanel(t.getAttribute("data-panel"));
     });
   });
+
+  // ---------- panduan langkah ----------
+  var GK = "kofi.guide.v1";
+  var GUIDE = {
+    tygo: [
+      {t:"Kalibrasi Alat", ic:"i-info",
+       d:"Isi 3 berat kosong dulu: wadah bubuk, sendok kopi, dan gelas tampung. Biar kopi bersih & hasilnya ketimbang otomatis.",
+       el:"t-wadah0",
+       ok:function(){ return g("t-wadah0")>0 && g("t-sendok0")>0 && g("t-gelas0")>0; },
+       msg:"Isi dulu 3 berat kosong di kartu Kalibrasi Alat."},
+      {t:"Ambil Kopi", ic:"i-droplet",
+       d:"Isi berat wadah bubuk yang sudah diisi bubuk kopi (Persiapan Kopi). Rasio bisa lo geser sesuai selera.",
+       el:"t-sendok1",
+       ok:function(){ return g("t-sendok1")>0; },
+       msg:"Isi dulu berat wadah + bubuk di Persiapan Kopi."},
+      {t:"Press & Timbang", ic:"i-play",
+       d:"Tekan alat 8 bar sampai air habis. Setelah jadi, isi berat gelas + espresso (di kartu Result). Hasilnya jadi dasar takaran pemanis.",
+       el:"t-gelas1",
+       ok:function(){ return g("t-gelas1")>0; },
+       msg:"Tekan dulu kopinya, lalu isi berat gelas + espresso."},
+      {t:"Takaran Pemanis", ic:"i-cup", opt:true,
+       d:"Pilih level gula atau susu (SKM) sesuai selera. Boleh dibiarkan — nanti diisi saat mau simpan. Tekan Lanjut untuk lanjut.",
+       el:"t-sweets", ok:null},
+      {t:"Penilaian & Simpan", ic:"i-bookmark", opt:true,
+       d:"Pilih penilaian (Enak/Biasa/Kurang) lalu klik Simpan agar tercatat di Catatan Rasa. Sudah selesai, selamat meracik!",
+       el:"t-savecard", ok:null}
+    ],
+    v60: [
+      {t:"Target Porsi", ic:"i-cup",
+       d:"Atur 1 gelas atau lebih & ukuran per gelas. Semakin banyak kopi, semakin besar total airnya.",
+       el:"v-porsi",
+       ok:function(){ return num(g("v-porsi"))>0 && num(g("v-perporsi"))>0; },
+       msg:"Isi dulu jumlah porsi & ukuran per gelas."},
+      {t:"Kapasitas & Rasio", ic:"i-droplet",
+       d:"Cek maks bubuk yang muat di cone kamu, lalu pilih rasio (1:12–18). Rekomendasi bubuk dihitung otomatis.",
+       el:"v-kap", ok:null},
+      {t:"Fase Tuangan", ic:"i-info",
+       d:"Total air dibagi tahap: rendam awal (2× bubuk, diam 30–45 detik) → tuang ke 60% → tuang ke 100%. Semua masuk satu wadah, baru dibagi ke gelas.",
+       el:"v-t2info", ok:null},
+      {t:"Gula / Susu (opsional)", ic:"i-cup", opt:true,
+       d:"Buat yang pengen manis, pilih level gula atau susu. Kalau tidak pakai, langsung Lanjut saja.",
+       el:"v-sweets", ok:null},
+      {t:"Timer & Seduh", ic:"i-play",
+       d:"Timer kecil di bawah layar: ▶ mulai → otomatis berhenti & bunyi di 45 detik → ▶ tuang ke 60% → ⏸ → ▶ tuang ke 100% → ⏸. Selesai!",
+       el:"v-timerfab", ok:null}
+    ]
+  };
+  var gState = {tool:"tygo", i:0, timer:null};
+  function gRing(){
+    clearTimeout(gState.timer);
+    document.querySelectorAll(".guide-ring").forEach(function(x){ x.classList.remove("guide-ring"); });
+    var s=GUIDE[gState.tool][gState.i];
+    var t=document.getElementById(s.el);
+    if(t){
+      var card=t.closest(".card")||t;
+      card.classList.add("guide-ring");
+      card.scrollIntoView({behavior:"smooth", block:"center"});
+    }
+  }
+  function gRender(){
+    var steps=GUIDE[gState.tool];
+    var s=steps[gState.i];
+    $("g-tool").textContent = gState.tool==="tygo" ? "Tygopresso" : "V60 Cone F-402";
+    $("g-tool-ic").setAttribute("href", "#"+(gState.tool==="tygo"?"i-cup":"i-droplet"));
+    $("g-icon").setAttribute("href", "#"+s.ic);
+    $("g-idx").textContent = "Langkah "+(gState.i+1)+" dari "+steps.length;
+    $("g-title").textContent = s.t;
+    $("g-desc").textContent = s.d;
+    $("g-bar").style.width = Math.round((gState.i+1)/steps.length*100)+"%";
+    $("g-back").disabled = gState.i===0;
+    $("g-next").textContent = gState.i===steps.length-1 ? "Selesai" : "Lanjut";
+    gRing();
+  }
+  function startGuide(tool){
+    gState.tool = tool || ACTIVE;
+    gState.i = 0;
+    document.body.style.overflow="hidden";
+    $("guide-wiz").hidden=false;
+    $("g-reopen").style.display="none";
+    gRender();
+  }
+  function closeGuide(){
+    document.body.style.overflow="";
+    document.querySelectorAll(".guide-ring").forEach(function(x){ x.classList.remove("guide-ring"); });
+    clearTimeout(gState.timer);
+    $("guide-w").hidden=true;
+    $("guide-wiz").hidden=true;
+    $("g-reopen").style.display="inline-flex";
+  }
+  $("g-next").addEventListener("click", function(){
+    var steps=GUIDE[gState.tool];
+    var s=steps[gState.i];
+    if(!s.opt && s.ok && !s.ok()){ toast(s.msg); gRing(); return; }
+    gState.i++;
+    if(gState.i>=steps.length){
+      closeGuide();
+      toast("Panduan selesai. Selamat meracik!");
+      return;
+    }
+    gRender();
+  });
+  $("g-back").addEventListener("click", function(){
+    if(gState.i>0){ gState.i--; gRender(); }
+  });
+  $("g-close").addEventListener("click", closeGuide);
+  $("g-reopen").addEventListener("click", function(){ startGuide(); });
+  $("g-start").addEventListener("click", function(){
+    $("guide-w").hidden=true; startGuide();
+  });
+  $("g-direct").addEventListener("click", function(){
+    if($("g-remember").checked){ try{ localStorage.setItem(GK,"direct"); }catch(e){} }
+    $("guide-w").hidden=true;
+  });
+  try{
+    if(localStorage.getItem(GK)!=="direct"){ $("guide-w").hidden=false; }
+  }catch(e){ $("guide-w").hidden=false; }
 
   // ---------- V60 ----------
   function vDash(n){ return n>0 ? n : "–"; }
