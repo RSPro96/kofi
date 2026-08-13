@@ -1,0 +1,803 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%232f6fd0'%20stroke-width='1.9'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M17%208h1a3%203%200%200%201%200%206h-1'/%3E%3Cpath%20d='M3%208h14v7a4%204%200%200%201-4%204H7a4%204%200%200%201-4-4V8z'/%3E%3Cpath%20d='M7%202v2M10.5%202v2M14%202v2'/%3E%3C/svg%3E" />
+<title>RSpro — Tygopresso (Espresso &amp; Sanger)</title>
+<style>
+  :root{
+    --bg:#eef2f8;
+    --bg2:#e6ecf4;
+    --card:#ffffff;
+    --card2:#f3f6fb;
+    --line:#d5dfec;
+    --crema:#2f6fd0;
+    --crema-soft:#2560c4;
+    --cream:#132234;
+    --text:#1f2a37;
+    --muted:#5c6b7d;
+    --good:#0e8f63;
+    --bad:#d14343;
+    --meh:#a9741a;
+    --field:#f5f8fc;
+    --onaccent:#ffffff;
+    --shadow:0 10px 28px rgba(31,50,80,.12);
+    --radius:16px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+    background:
+      radial-gradient(1100px 620px at 82% -12%, #d6e6fb 0%, transparent 60%),
+      radial-gradient(900px 520px at -12% 112%, #e2ebf6 0%, transparent 55%),
+      var(--bg);
+    color:var(--text);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  .wrap{max-width:860px;margin:0 auto;padding:24px 16px 80px}
+
+  .ic{display:inline-block;width:1.15em;height:1.15em;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;vertical-align:-0.22em;flex:none}
+  .ic-lg{width:46px;height:46px;stroke-width:1.5;color:var(--crema)}
+  .ic-md{width:26px;height:26px}
+  .v-good{color:var(--good)} .v-meh{color:var(--meh)} .v-bad{color:var(--bad)}
+
+  header.top{text-align:center;margin:12px 0 22px}
+  .brandrow{display:flex;align-items:center;justify-content:center;gap:13px}
+  .brandmark{display:inline-flex;width:56px;height:56px;align-items:center;justify-content:center;background:linear-gradient(180deg,var(--crema),#2b62b8);border-radius:16px;box-shadow:var(--shadow)}
+  .brandmark .ic-lg{width:34px;height:34px;color:#fff;stroke-width:1.7}
+  .brandname{font-size:34px;font-weight:800;letter-spacing:.5px;color:var(--cream);line-height:1}
+  .brandname span{color:var(--crema)}
+  .tagline{margin:12px 0 0;font-style:italic;color:var(--muted);font-size:15px}
+  h1{font-size:26px;margin:6px 0 4px;letter-spacing:.3px}
+  h1 span{color:var(--crema-soft)}
+  .sub{color:var(--muted);font-size:13.5px;margin:0}
+
+  .card{background:linear-gradient(180deg,var(--card),var(--bg2));border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin-bottom:18px}
+  .card h2{margin:0 0 4px;font-size:19px;display:flex;align-items:center;gap:9px}
+  .card .hint{color:var(--muted);font-size:13.5px;margin:0 0 16px}
+
+  details.edu{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:0;margin-bottom:16px;overflow:hidden}
+  details.edu summary{cursor:pointer;padding:13px 16px;font-weight:600;font-size:14.5px;list-style:none;display:flex;align-items:center;gap:10px}
+  details.edu summary::-webkit-details-marker{display:none}
+  details.edu summary .caret{margin-left:auto;transition:.2s;color:var(--crema-soft)}
+  details.edu[open] summary .caret{transform:rotate(180deg)}
+  details.edu .body{padding:0 16px 15px;color:var(--muted);font-size:13.5px}
+  details.edu .body b{color:var(--cream)}
+  details.edu ul,details.edu ol{margin:8px 0;padding-left:20px}
+  details.edu li{margin:4px 0}
+
+  .field{margin-bottom:16px}
+  label{display:block;font-size:13.5px;color:var(--muted);margin-bottom:7px;font-weight:600}
+  .inrow{display:flex;align-items:center;gap:10px}
+  input[type=number],input[type=text],select,textarea{
+    width:100%;background:var(--field);border:1.5px solid var(--line);color:var(--text);
+    border-radius:11px;padding:12px 14px;font-size:16px;outline:none;transition:.15s;font-family:inherit;
+  }
+  input[type=number]:focus,input[type=text]:focus,select:focus,textarea:focus{border-color:var(--crema);box-shadow:0 0 0 3px rgba(47,111,208,.18)}
+  input[type=range]{width:100%;height:34px;accent-color:var(--crema)}
+  .unit{color:var(--muted);font-size:14px;white-space:nowrap}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:560px){.grid2{grid-template-columns:1fr}}
+
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .warn{display:none;background:rgba(209,67,67,.1);border:1px solid var(--bad);color:var(--bad);border-radius:11px;padding:10px 12px;font-size:13px;font-weight:700;margin-bottom:14px;align-items:center;gap:8px}
+  .chip{border:1.5px solid var(--line);background:var(--field);color:var(--muted);padding:9px 14px;border-radius:999px;font-size:13.5px;cursor:pointer;transition:.15s;font-weight:600;display:inline-flex;align-items:center;gap:7px}
+  .chip.active{background:var(--crema);border-color:var(--crema);color:var(--onaccent)}
+
+  .result{background:var(--field);border:1px solid var(--line);border-radius:12px;padding:16px;margin-top:6px}
+  .kpis{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:6px}
+  .kpi{flex:1;min-width:120px;background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:12px 14px;text-align:center}
+  .kpi .n{font-size:22px;font-weight:800;color:var(--crema-soft)}
+  .kpi .l{font-size:12px;color:var(--muted);margin-top:2px}
+  .note-line{font-size:13px;color:var(--muted);margin-top:12px;padding-top:12px;border-top:1px dashed var(--line)}
+
+  .sweet-title{font-size:14px;font-weight:700;margin:18px 0 10px;color:var(--cream);display:flex;align-items:center;gap:8px}
+  .sweets{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  @media(max-width:560px){.sweets{grid-template-columns:1fr}}
+  .sweet{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:14px;position:relative;overflow:hidden}
+  .sweet::before{content:"";position:absolute;top:0;left:0;right:0;height:4px}
+  .sweet.s0::before{background:#9aa8bb}
+  .sweet.s1::before{background:var(--crema)}
+  .sweet.s2::before{background:var(--crema-soft)}
+  .sweet .cat{font-weight:800;font-size:14.5px;margin-bottom:2px}
+  .sweet .cat small{display:block;font-weight:500;color:var(--muted);font-size:11.5px;margin-top:2px}
+  .sweet .val{margin-top:10px}
+  .sweet .val .big{font-size:20px;font-weight:800;color:var(--crema-soft)}
+  .sweet .val .u{font-size:12px;color:var(--muted)}
+  .sweet .val .approx{font-size:12px;color:var(--muted);margin-top:3px}
+
+  .btn{border:0;border-radius:11px;padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;transition:.15s;font-family:inherit;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+  .btn-primary{background:linear-gradient(180deg,var(--crema),#3f78c0);color:var(--onaccent);box-shadow:var(--shadow);width:100%}
+  .btn-primary:hover{filter:brightness(1.07)}
+  .btn-ghost{background:transparent;color:var(--muted);border:1.5px solid var(--line)}
+  .btn-ghost:hover{color:var(--cream);border-color:var(--crema)}
+
+  .verdicts{display:flex;gap:8px}
+  .verdict{flex:1;border:1.5px solid var(--line);background:var(--field);color:var(--muted);padding:11px;border-radius:11px;cursor:pointer;font-weight:700;font-size:14px;transition:.15s;display:inline-flex;align-items:center;justify-content:center;gap:7px}
+  .verdict[data-v=good].active{background:rgba(14,143,99,.12);border-color:var(--good);color:var(--good)}
+  .verdict[data-v=meh].active{background:rgba(169,116,26,.12);border-color:var(--meh);color:var(--meh)}
+  .verdict[data-v=bad].active{background:rgba(209,67,67,.12);border-color:var(--bad);color:var(--bad)}
+
+  .savedhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+  .filterbar{display:flex;gap:6px;flex-wrap:wrap}
+  .fbtn{border:1px solid var(--line);background:var(--field);color:var(--muted);padding:6px 11px;border-radius:999px;font-size:12.5px;cursor:pointer;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+  .fbtn.active{background:var(--crema);border-color:var(--crema);color:var(--onaccent)}
+  .iorow{display:flex;gap:8px;flex-wrap:wrap;margin-top:2px}
+  .btn.io{padding:9px 14px;font-size:13px;flex:1;min-width:150px}
+  .empty{text-align:center;color:var(--muted);padding:26px 10px;font-size:14px}
+  .logitem{background:var(--card2);border:1px solid var(--line);border-left-width:4px;border-radius:12px;padding:13px 15px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap}
+  .logitem.good{border-left-color:var(--good)}
+  .logitem.meh{border-left-color:var(--meh)}
+  .logitem.bad{border-left-color:var(--bad)}
+  .logitem .ic-md{margin-top:1px}
+  .logitem .main{flex:1;min-width:0}
+  .logitem .t1{font-weight:700;font-size:14.5px}
+  .logitem .badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:999px;background:var(--field);border:1px solid var(--line);color:var(--muted);margin-left:6px;vertical-align:middle}
+  .logitem .specs{font-size:12.5px;color:var(--muted);margin-top:4px}
+  .logitem .usernote{font-size:13px;color:var(--cream);margin-top:6px;font-style:italic}
+  .logitem .date{font-size:11px;color:var(--muted);margin-top:6px;opacity:.8}
+  .logitem .del{background:transparent;border:0;color:var(--muted);cursor:pointer;padding:2px 6px;border-radius:8px;flex-shrink:0;display:inline-flex}
+  .logitem .del:hover{color:var(--bad);background:rgba(209,67,67,.1)}
+
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--good);color:#ffffff;padding:12px 20px;border-radius:12px;font-weight:700;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.25s;z-index:50}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  footer{text-align:center;color:var(--muted);font-size:12px;margin-top:26px;opacity:.85;line-height:1.7}
+  footer .ic{color:var(--crema-soft)}
+</style>
+</head>
+<body>
+
+<!-- ===== SPRITE IKON SVG ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-coffee" viewBox="0 0 24 24"><path d="M17 8h1a3 3 0 0 1 0 6h-1"/><path d="M3 8h14v7a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/><path d="M7 2v2M10.5 2v2M14 2v2"/></symbol>
+  <symbol id="i-cup" viewBox="0 0 24 24"><path d="M6 3h12l-1.4 16.2A2 2 0 0 1 14.6 21H9.4a2 2 0 0 1-2-1.8L6 3z"/><path d="M6.6 9h10.8"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></symbol>
+  <symbol id="i-droplet" viewBox="0 0 24 24"><path d="M12 3s6 6.1 6 10.2A6 6 0 0 1 6 13.2C6 9.1 12 3 12 3z"/></symbol>
+  <symbol id="i-bookmark" viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4.5L5 21V4a1 1 0 0 1 1-1z"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s6-5.4 6-10a6 6 0 1 0-12 0c0 4.6 6 10 6 10z"/><circle cx="12" cy="11" r="2.4"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/><path d="M8 10l4 4 4-4"/><path d="M12 14V3"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/><path d="M8 7l4-4 4 4"/><path d="M12 3v11"/></symbol>
+  <symbol id="i-smile" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 14s1.4 2 4 2 4-2 4-2"/><path d="M9 9.5h.01M15 9.5h.01"/></symbol>
+  <symbol id="i-meh" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8.5 15h7"/><path d="M9 9.5h.01M15 9.5h.01"/></symbol>
+  <symbol id="i-frown" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 15.5s1.4-2 4-2 4 2 4 2"/><path d="M9 9.5h.01M15 9.5h.01"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+</svg>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brandrow">
+      <span class="brandmark"><svg class="ic ic-lg"><use href="#i-cup"/></svg></span>
+      <span class="brandname">RS<span>pro</span></span>
+    </div>
+    <p class="tagline">“Karena Kopi Nikmat Adalah Hak Setiap Umat”</p>
+    <h1>Tygopresso — <span>Espresso &amp; Sanger</span></h1>
+    <p class="sub">Kalibrasi tare, rasio, pemanis gula / susu SKM + catatan rasa &amp; preset</p>
+  </header>
+
+  <details class="edu">
+    <summary><svg class="ic"><use href="#i-info"/></svg> Cara pakai (3 langkah) <svg class="ic caret"><use href="#i-chevron"/></svg></summary>
+    <div class="body">
+      <ol>
+        <li><b>Ambil kopi</b> dengan sendok kopi → tuang ke <b>wadah bubuk</b> → timbang, catat berat wadah+bubuk. Kopi bersih dihitung otomatis (potong berat wadah kosong).</li>
+        <li><b>Masukkan wadah bubuk</b> ke alat + air panas → <b>press maksimal 8 bar</b> sampai air habis jadi kopi.</li>
+        <li><b>Kopi tertampung di gelas</b> → timbang gelas+espresso. Berat kopi jadi dasar takaran <b>gula</b> (espresso polos) atau <b>SKM</b> (Sanger Espresso).</li>
+      </ol>
+      <p><b>Gram atau ml?</b> 1 g air ≈ 1 ml, jadi cukup pakai timbangan — lebih akurat daripada gelas ukur ml. Basket 9g = <b>1 shot espresso</b>; yield 1:2 (±18g) itu normal dan memang kecil. Mau lebih banyak? Press 2x berturut-turut (≈ double) atau geser rasio ke 1:2,5–1:3.</p>
+      <p><b>Takaran pemanis (referensi):</b> Sanger khas Aceh memakai <b>kopi : susu kental manis = 3:1</b> (susu hemat, kopi dominan). Buih dihasilkan dari kocokan kopi + SKM. Level manis tetap terserah lidahmu.</p>
+    </div>
+  </details>
+
+  <div class="card">
+    <h2>Kalibrasi Alat</h2>
+    <p class="hint">Isi sekali, tersimpan otomatis di browser ini. Edit kapan pun.</p>
+    <div class="grid2">
+      <div class="field">
+        <label>Wadah Bubuk Kosong</label>
+        <div class="inrow">
+          <input type="number" id="t-wadah0" min="0" step="0.1" value="" placeholder="0.0" />
+          <span class="unit">gram</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>Sendok Kopi Kosong</label>
+        <div class="inrow">
+          <input type="number" id="t-sendok0" min="0" step="0.1" value="" placeholder="0.0" />
+          <span class="unit">gram</span>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <label>Gelas Tampung Kosong</label>
+      <div class="inrow">
+        <input type="number" id="t-gelas0" min="0" step="0.1" value="" placeholder="0.0" />
+        <span class="unit">gram</span>
+      </div>
+    </div>
+    <p class="hint" id="t-calib-status" style="margin:2px 0 0;font-size:12.5px"></p>
+  </div>
+
+  <div class="card">
+    <h2>Persiapan Kopi</h2>
+    <p class="hint">Timbang wadah bubuk yang sudah terisi bubuk kopi.</p>
+    <div class="field">
+      <label>Berat Wadah Bubuk + Bubuk Kopi</label>
+      <div class="inrow">
+        <input type="number" id="t-sendok1" min="0" step="0.1" value="" placeholder="0.0" />
+        <span class="unit">gram</span>
+      </div>
+    </div>
+    <div class="field">
+      <label>Target rasio (1:X)</label>
+      <div class="inrow">
+        <input type="range" id="t-ratio" min="1" max="3" step="0.1" value="2" />
+        <span class="unit" id="t-ratio-out" style="min-width:52px;text-align:right">1:2.0</span>
+      </div>
+    </div>
+    <div class="result">
+      <div class="warn" id="t-warn"></div>
+      <div class="kpis">
+        <div class="kpi"><div class="n" id="t-bersih">–</div><div class="l">Kopi Bersih</div></div>
+        <div class="kpi"><div class="n" id="t-target">–</div><div class="l">Target Yield</div></div>
+      </div>
+      <div class="note-line">Kopi bersih = (wadah+bubuk) − wadah kosong · Target = kopi bersih × rasio · <b>1 g ≈ 1 ml</b></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Hasil Seduhan</h2>
+    <p class="hint">Setelah press 8 bar, timbang gelas berisi espresso.</p>
+    <div class="field">
+      <label>Berat Gelas + Hasil Press</label>
+      <div class="inrow">
+        <input type="number" id="t-gelas1" min="0" step="0.1" value="" placeholder="0.0" />
+        <span class="unit">gram</span>
+      </div>
+    </div>
+    <div class="result">
+      <div class="kpis">
+        <div class="kpi"><div class="n" id="t-aktual">–</div><div class="l">Yield Aktual</div></div>
+        <div class="kpi"><div class="n" id="t-rasio-now">–</div><div class="l">Rasio Aktual</div></div>
+      </div>
+      <div class="note-line" id="t-ringkas"></div>
+      <p class="hint" style="margin:12px 0 0;font-size:12.5px">1 g espresso ≈ 1 ml — timbangan lebih presisi daripada gelas ukur ml.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Preset Racikan</h2>
+    <p class="hint">Simpan setelan pemanis + rasio untuk dipakai ulang, mis. "Sanger 3:1" atau "Espresso kuat".</p>
+    <div class="field">
+      <label>Nama preset</label>
+      <div class="inrow">
+        <input type="text" id="p-name" placeholder="mis. Sanger klasik Aceh" />
+      </div>
+    </div>
+    <button class="btn btn-primary" id="p-save"><svg class="ic"><use href="#i-bookmark"/></svg> Simpan preset saat ini</button>
+    <div id="p-list" style="margin-top:14px"></div>
+  </div>
+
+  <div class="card">
+    <h2>Takaran Pemanis</h2>
+    <p class="hint">Pilih bahan pemanis: <b>Gula</b> untuk espresso polos, atau <b>Susu (SKM)</b> untuk Sanger Espresso. Lalu pilih level.</p>
+    <div class="chips" id="t-pemanis">
+      <div class="chip active" data-type="gula"><svg class="ic"><use href="#i-droplet"/></svg> Gula</div>
+      <div class="chip" data-type="susu"><svg class="ic"><use href="#i-cup"/></svg> Susu (SKM) — Sanger</div>
+    </div>
+    <div class="sweet-title" id="t-sweet-title"></div>
+    <div class="sweets" id="t-sweets"></div>
+  </div>
+
+  <div class="card" id="t-savecard"></div>
+
+  <div class="card">
+    <h2>Kalkulator Bebas</h2>
+    <p class="hint">Hitung manual tanpa keluar aplikasi — misal gula, air, atau perbandingan lain.</p>
+    <div class="grid2">
+      <div class="field"><label>Nilai A</label><input type="number" id="t-a" value="" placeholder="0" /></div>
+      <div class="field"><label>Nilai B</label><input type="number" id="t-b" value="" placeholder="0" /></div>
+    </div>
+    <div class="chips" id="t-ops" style="margin-bottom:14px">
+      <button class="chip active" data-op="+">+</button>
+      <button class="chip" data-op="-">−</button>
+      <button class="chip" data-op="*">×</button>
+      <button class="chip" data-op="/">÷</button>
+    </div>
+    <div class="result">
+      <div class="kpis">
+        <div class="kpi"><div class="n" id="t-calc-out">–</div><div class="l">Hasil</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="savedhead">
+      <h2 style="margin:0"><svg class="ic"><use href="#i-pin"/></svg> Catatan Rasa Tersimpan</h2>
+      <div class="filterbar" id="filterbar">
+        <button class="fbtn active" data-f="all">Semua</button>
+        <button class="fbtn" data-f="good"><svg class="ic v-good"><use href="#i-smile"/></svg> Enak</button>
+        <button class="fbtn" data-f="meh"><svg class="ic v-meh"><use href="#i-meh"/></svg> Biasa</button>
+        <button class="fbtn" data-f="bad"><svg class="ic v-bad"><use href="#i-frown"/></svg> Kurang</button>
+      </div>
+    </div>
+    <p class="hint" style="margin-top:-4px">Tersimpan permanen di browser ini (localStorage) — tetap ada walau web ditutup.</p>
+    <div class="iorow">
+      <button class="btn btn-ghost io" id="btn-export"><svg class="ic"><use href="#i-download"/></svg> Export (unduh cadangan)</button>
+      <button class="btn btn-ghost io" id="btn-import"><svg class="ic"><use href="#i-upload"/></svg> Import (muat cadangan)</button>
+      <input type="file" id="file-import" accept="application/json,.json" style="display:none" />
+    </div>
+    <p class="hint" id="io-count" style="margin:2px 0 14px;font-size:12.5px"></p>
+    <div id="loglist"></div>
+  </div>
+
+  <footer>
+    <svg class="ic"><use href="#i-coffee"/></svg> <b style="color:var(--cream)">RSpro</b> — “Karena Kopi Nikmat Adalah Hak Setiap Umat”<br/>
+    Racik Kopi — takaran adalah titik awal, lidahmu penentu akhir.<br/>
+    Data catatan &amp; preset disimpan lokal di browser. Menghapus data browser akan menghapus semuanya.
+  </footer>
+</div>
+
+<div class="toast" id="toast">Tersimpan!</div>
+
+<script>
+(function(){
+  "use strict";
+  var LS_KEY = "racikKopi.notes.v1";
+  var CAL_KEY = "tygo.calib.v1";
+  var PRE_KEY = "tygo.presets.v1";
+  var round = function(n){ return Math.round(n*10)/10; };
+  var sdm = function(g){ return round(g/12); }; // 1 sdm SKM ~12 g; gula ~12 g juga
+
+  function ic(name, extra){ return '<svg class="ic'+(extra?' '+extra:'')+'"><use href="#i-'+name+'"/></svg>'; }
+  function $(id){ return document.getElementById(id); }
+  function el(tag, cls, html){ var e=document.createElement(tag); if(cls)e.className=cls; if(html!=null)e.innerHTML=html; return e; }
+  function g(id){ return parseFloat($(id).value)||0; }
+
+  // ---------- definisi pemanis (referensi) ----------
+  // gula — berdasarkan yield espresso: pahit ~5%, standar 12%, manis 22%
+  var ESP_SUGAR = [
+    {cat:"Pahit", sub:"sedikit / tanpa gula", ratio:0.05, cls:"s0"},
+    {cat:"Sedikit manis", sub:"seimbang", ratio:0.12, cls:"s1"},
+    {cat:"Manis", sub:"manis mantap", ratio:0.22, cls:"s2"}
+  ];
+  // SKM sanger — khas Aceh kopi:susu = 3:1 (susu hemat, kopi dominan). 0.35 ≈ 1/3
+  var SANGER_SKM = [
+    {cat:"Pahit / kuat", sub:"klasik Aceh, 3:1 kopi:susu", ratio:0.35, cls:"s0"},
+    {cat:"Sedikit manis", sub:"sanger standar", ratio:0.60, cls:"s1"},
+    {cat:"Manis", sub:"sanger manis", ratio:0.90, cls:"s2"}
+  ];
+  function PEM(t){ return t==="susu" ? SANGER_SKM : ESP_SUGAR; }
+  function PEM_LABEL(t){ return t==="susu" ? "Susu (SKM)" : "Gula"; }
+  function PEM_UNIT(t){ return t==="susu" ? "g SKM" : "g gula"; }
+
+  // ---------- state ----------
+  var state = {
+    tygo: { pemanis:null, customG:null, pemanisType:"gula" },
+    verdict: { tygo:null },
+    filter: "all"
+  };
+
+  // ---------- kalibrasi ----------
+  function loadCalib(){
+    var c={};
+    try{ c=JSON.parse(localStorage.getItem(CAL_KEY))||{}; }catch(e){}
+    if(c.wadah!=null)  $("t-wadah0").value  = c.wadah;
+    if(c.sendok!=null) $("t-sendok0").value = c.sendok;
+    if(c.gelas!=null)  $("t-gelas0").value  = c.gelas;
+    calibStatus();
+  }
+  function saveCalib(){
+    try{ localStorage.setItem(CAL_KEY, JSON.stringify({
+      wadah:g("t-wadah0"), sendok:g("t-sendok0"), gelas:g("t-gelas0")
+    })); }catch(e){}
+  }
+  function calibStatus(){
+    var filled = ["t-wadah0","t-sendok0","t-gelas0"].filter(function(id){ return g(id)>0; }).length;
+    $("t-calib-status").textContent = filled>=3
+      ? "Kalibrasi lengkap — berat tare tersimpan otomatis."
+      : "Kalibrasi belum lengkap ("+filled+"/3) — isi semua berat kosong agar hitungan akurat.";
+  }
+
+  // ---------- preset ----------
+  function loadPresets(){ try{ return JSON.parse(localStorage.getItem(PRE_KEY))||[]; }catch(e){ return []; } }
+  function savePresets(arr){ try{ localStorage.setItem(PRE_KEY, JSON.stringify(arr)); }catch(e){} }
+  function renderPresets(){
+    var box=$("p-list"); box.innerHTML="";
+    var arr=loadPresets();
+    if(arr.length===0){ box.appendChild(el("div","empty","Belum ada preset. Atur pemanis + rasio, lalu simpan.")); return; }
+    arr.forEach(function(p){
+      var pm = p.mode==="manual" ? "Manual ("+p.gram+"g)"
+             : p.mode==="choice" ? (PEM(p.type)[p.idx]?PEM(p.type)[p.idx].cat:"Level manis")
+             : "Tanpa pemanis";
+      var row=el("div","logitem");
+      row.style.borderLeftColor="var(--crema)";
+      row.innerHTML =
+        '<div class="main">'+
+          '<div class="t1">'+escapeHtml(p.name)+'</div>'+
+          '<div class="specs">'+PEM_LABEL(p.type)+' · '+escapeHtml(pm)+' · Rasio 1:'+p.ratio+'</div>'+
+        '</div>'+
+        '<button class="chip" data-pk="'+p.id+'" style="padding:7px 12px">Pakai</button>'+
+        '<button class="del" data-pd="'+p.id+'" title="Hapus">'+ic('x')+'</button>';
+      box.appendChild(row);
+    });
+  }
+  function savePreset(){
+    var name=$("p-name").value.trim();
+    if(!name){ toast("Isi nama preset dulu"); return; }
+    var st=state.tygo;
+    var p={
+      id: Date.now(), name:name,
+      ratio: parseFloat($("t-ratio").value)||2,
+      type: st.pemanisType,
+      mode: st.customG!=null ? "manual" : (st.pemanis!=null ? "choice" : null),
+      idx: st.customG!=null ? null : st.pemanis,
+      gram: st.customG
+    };
+    var arr=loadPresets(); arr.unshift(p); savePresets(arr);
+    $("p-name").value=""; renderPresets();
+    toast("Preset disimpan");
+  }
+  function applyPreset(p){
+    state.tygo.pemanis = p.mode==="choice" ? p.idx : null;
+    state.tygo.customG = p.mode==="manual" ? p.gram : null;
+    state.tygo.pemanisType = p.type;
+    $("t-ratio").value = p.ratio;
+    setPemanisType(p.type);
+    calcTygo();
+    toast('Preset "'+p.name+'" diterapkan');
+  }
+
+  // ---------- pemanis type ----------
+  function setPemanisType(t){
+    state.tygo.pemanisType=t;
+    document.querySelectorAll("#t-pemanis .chip").forEach(function(x){
+      x.classList.toggle("active", x.getAttribute("data-type")===t);
+    });
+    renderTygoSweets(); renderSaveCard();
+  }
+
+  // ---------- sweets + kustom ----------
+  function renderTygoSweets(){
+    var box=$("t-sweets"); box.innerHTML="";
+    var yieldG = g("t-gelas1")-g("t-gelas0");
+    var t = state.tygo.pemanisType;
+    var S = PEM(t);
+    var st = state.tygo;
+    $("t-sweet-title").innerHTML = (t==="susu" ? ic('cup') : ic('droplet'))+' Rekomendasi '+PEM_LABEL(t)+' — pilih level manis';
+    S.forEach(function(s, i){
+      var gram = round(yieldG*s.ratio);
+      var sel = st.pemanis===i;
+      var c=el("div","sweet "+s.cls);
+      c.innerHTML =
+        '<div class="cat">'+s.cat+'<small>'+s.sub+'</small></div>'+
+        '<div class="val"><span class="big">'+ (yieldG>0?gram:"–") +'</span> <span class="u">'+PEM_UNIT(t)+'</span>'+
+        '<div class="approx">± '+ (yieldG>0?sdm(gram):"–") +' sdm</div></div>'+
+        '<div style="margin-top:10px"><button class="chip'+(sel?' active':'')+'" data-pick="'+i+'">'+(sel? ic('check')+' dipilih':'pilih ini')+'</button></div>';
+      box.appendChild(c);
+    });
+    box.querySelectorAll("[data-pick]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        st.pemanis = parseInt(this.getAttribute("data-pick"),10);
+        st.customG=null;
+        renderTygoSweets(); renderSaveCard();
+      });
+    });
+    box.appendChild(customCard());
+  }
+  function customCard(){
+    var st=state.tygo;
+    var unit=PEM_UNIT(st.pemanisType);
+    var cur=st.customG;
+    var c=el("div","sweet s2");
+    c.innerHTML =
+      '<div class="cat">Kustom<small>input sendiri (manual)</small></div>'+
+      '<div class="val"><input type="number" min="0" step="1" value="'+(cur!=null?cur:"")+'" placeholder="'+unit+'"/></div>'+
+      '<div style="margin-top:10px"><button type="button" class="chip'+(cur!=null?' active':'')+'">'+ (cur!=null?ic('check')+' dipakai':'pakai ini') +'</button></div>';
+    var inp=c.querySelector("input"), btn=c.querySelector("button");
+    function set(v){ st.customG=v; if(v!=null) st.pemanis=null; }
+    inp.addEventListener("input", function(){
+      var v=parseFloat(inp.value)||null;
+      set(v>0?v:null);
+      renderSaveCard();
+    });
+    btn.addEventListener("click", function(){
+      var v=parseFloat(inp.value)||null;
+      if(v==null||v<=0){ toast("Isi gram dulu"); return; }
+      set(v);
+      renderTygoSweets(); renderSaveCard();
+    });
+    return c;
+  }
+
+  // ---------- perhitungan inti ----------
+  function calcTygo(){
+    var w0=g("t-wadah0"), s1=g("t-sendok1");
+    var g0=g("t-gelas0"), g1=g("t-gelas1");
+    var ratio = parseFloat($("t-ratio").value)||2;
+    var bersih = s1-w0;
+    var target = bersih*ratio;
+    var aktual = g1-g0;
+    var ratioNow = bersih>0 ? aktual/bersih : 0;
+
+    $("t-ratio-out").textContent = "1:"+ratio.toFixed(1);
+    $("t-bersih").textContent = s1>0 ? round(bersih)+" g" : "–";
+    $("t-target").textContent = bersih>0 ? round(target)+" g" : "–";
+    $("t-aktual").textContent = g1>0 ? round(aktual)+" g" : "–";
+    $("t-rasio-now").textContent = bersih>0&&aktual>0 ? "1:"+round(ratioNow) : "–";
+
+    var warn=$("t-warn");
+    if(s1>0 && bersih>9){
+      warn.style.display="flex";
+      warn.innerHTML = '<svg class="ic"><use href="#i-frown"/></svg> Kapasitas melebihi batas: kopi bersih '+round(bersih)+'g (&gt; 9g keranjang).';
+    } else {
+      warn.style.display="none";
+    }
+
+    var ring=$("t-ringkas");
+    if(bersih>0 && aktual>0){
+      var diff = ratioNow-ratio;
+      var ev = Math.abs(diff)<0.15
+        ? "Tekanan pas — pertahankan resep ini."
+        : (diff<0 ? "Press kurang — lebih lama / tekan lebih stabil." : "Press berlebih — hentikan lebih awal / kurangi tekanan.");
+      ring.innerHTML = "<b>Rasio aktual Anda: 1 : "+round(ratioNow)+"</b> (target 1:"+ratio.toFixed(1)+"). "+ev;
+    } else if(s1>0){
+      ring.textContent = "Isi bagian hasil seduhan untuk membandingkan rasio aktual.";
+    } else {
+      ring.textContent = "Isi berat wadah + bubuk untuk mulai.";
+    }
+    renderTygoSweets();
+  }
+
+  // ---------- kartu simpan ----------
+  function renderSaveCard(){
+    var card=$("t-savecard");
+    var st=state.tygo;
+    var S = PEM(st.pemanisType);
+    var picked = st.pemanis;
+    var customG = st.customG;
+    var pickedName = picked!=null ? S[picked].cat : (customG!=null ? "Kustom" : null);
+
+    card.innerHTML =
+      '<h2>'+ic('bookmark')+' Simpan Catatan Rasa</h2>'+
+      '<p class="hint">Tandai apakah minuman ini <b>enak</b> atau tidak, biar lain kali tinggal ikuti.</p>'+
+      (pickedName? '' : '<p class="hint" style="color:var(--meh)">Pilih dulu satu level pemanis di atas untuk mencatatnya (opsional).</p>')+
+      '<div class="field"><label>Penilaian rasa</label>'+
+        '<div class="verdicts">'+
+          '<button class="verdict" data-v="good">'+ic('smile')+' Enak</button>'+
+          '<button class="verdict" data-v="meh">'+ic('meh')+' Biasa</button>'+
+          '<button class="verdict" data-v="bad">'+ic('frown')+' Kurang</button>'+
+        '</div></div>'+
+      '<div class="field"><label>Catatan (opsional)</label>'+
+        '<textarea id="t-note" rows="2" placeholder="mis. pas banget, jangan tambah air lagi..."></textarea></div>'+
+      '<button class="btn btn-primary" id="t-save">'+ic('bookmark')+' Simpan catatan ini</button>';
+
+    card.querySelectorAll(".verdict").forEach(function(b){
+      if(state.verdict.tygo===b.getAttribute("data-v")) b.classList.add("active");
+      b.addEventListener("click", function(){
+        state.verdict.tygo = this.getAttribute("data-v");
+        card.querySelectorAll(".verdict").forEach(function(x){ x.classList.remove("active"); });
+        this.classList.add("active");
+      });
+    });
+    $("t-save").addEventListener("click", doSave);
+  }
+
+  function doSave(){
+    if(!state.verdict.tygo){ toast("Pilih penilaian dulu"); return; }
+    var dose = round(g("t-sendok1")-g("t-wadah0"));
+    if(dose<=0){ toast("Isi berat wadah + bubuk dulu"); return; }
+    var yieldG = round(g("t-gelas1")-g("t-gelas0"));
+    if(yieldG<=0){ toast("Isi berat gelas + hasil press dulu"); return; }
+    var ratio = round(yieldG/dose);
+    var noteTxt = ($("t-note").value||"").trim();
+
+    var t = state.tygo.pemanisType;
+    var S = PEM(t);
+    var unit = PEM_UNIT(t);
+    var st = state.tygo;
+    var ti = st.pemanis;
+    var pemanis = ti!=null
+      ? {label:S[ti].cat, val:round(yieldG*S[ti].ratio), unit:unit, mode:"by choice", type:PEM_LABEL(t)}
+      : (st.customG!=null
+        ? {label:"Kustom", val:round(st.customG), unit:unit, mode:"manual", type:PEM_LABEL(t)}
+        : null);
+
+    var specs = "Dose "+dose+"g · Yield "+yieldG+"g (1:"+ratio+") · press 8 bar"
+      + (pemanis? " · "+pemanis.type+" ("+pemanis.label+" · "+pemanis.val+pemanis.unit+" · "+pemanis.mode+")" : "");
+
+    var notes = loadNotes();
+    notes.unshift({
+      id: "n"+notes.length+"_"+ (notes[0]?(parseInt(notes[0].id.split("_")[1]||"0",10)+1):1),
+      drink: "tygo",
+      verdict: state.verdict.tygo,
+      dose: dose, ratio: ratio, yield: yieldG,
+      pemanis: pemanis,
+      specs: specs,
+      note: noteTxt,
+      date: nowStr()
+    });
+    saveNotes(notes);
+    renderLog();
+    state.verdict.tygo=null;
+    renderSaveCard();
+    toast("Catatan tersimpan");
+  }
+
+  function nowStr(){
+    var d = new Date();
+    var pad=function(n){return (n<10?"0":"")+n;};
+    return pad(d.getDate())+"/"+pad(d.getMonth()+1)+"/"+d.getFullYear()+" "+pad(d.getHours())+":"+pad(d.getMinutes());
+  }
+
+  // ---------- log catatan ----------
+  var VIC = {good:"smile", meh:"meh", bad:"frown"};
+  var VLABEL = {good:"Enak", meh:"Biasa", bad:"Kurang"};
+  var DLABEL = {tygo:"Tygopresso", espresso:"Espresso", sanger:"Sanger Espresso", brew:"Seduh Manual"};
+
+  function renderLog(){
+    var list=$("loglist"); list.innerHTML="";
+    var notes = loadNotes();
+    updateIoCount();
+    var f = state.filter;
+    var shown = notes.filter(function(n){ return f==="all" || n.verdict===f; });
+    if(shown.length===0){
+      list.appendChild(el("div","empty", notes.length===0
+        ? "Belum ada catatan. Hitung takaran di atas, lalu simpan penilaianmu."
+        : "Tidak ada catatan untuk filter ini."));
+      return;
+    }
+    shown.forEach(function(n){
+      var it=el("div","logitem "+n.verdict);
+      it.innerHTML =
+        ic(VIC[n.verdict]||"meh", "ic-md v-"+n.verdict)+
+        '<div class="main">'+
+          '<div class="t1">'+(DLABEL[n.drink]||"Tygopresso")+'<span class="badge">'+VLABEL[n.verdict]+'</span></div>'+
+          '<div class="specs">'+escapeHtml(n.specs||"")+'</div>'+
+          (n.note? '<div class="usernote">“'+escapeHtml(n.note)+'”</div>':'')+
+          '<div class="date">'+escapeHtml(n.date||"")+'</div>'+
+        '</div>'+
+        '<button class="del" title="Hapus" data-id="'+n.id+'">'+ic('x')+'</button>';
+      it.querySelector(".del").addEventListener("click", function(){
+        if(confirm("Hapus catatan ini?")){
+          var arr=loadNotes().filter(function(x){ return x.id!==n.id; });
+          saveNotes(arr); renderLog(); toast("Catatan dihapus");
+        }
+      });
+      list.appendChild(it);
+    });
+  }
+  function escapeHtml(s){ return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
+
+  function updateIoCount(){
+    var n = loadNotes().length;
+    $("io-count").textContent = n>0 ? ("Total "+n+" catatan tersimpan.") : "Belum ada catatan untuk di-export.";
+  }
+
+  // ---------- export / import ----------
+  function fileStamp(){
+    var d=new Date(), p=function(x){return (x<10?"0":"")+x;};
+    return d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+"-"+p(d.getHours())+p(d.getMinutes());
+  }
+  function exportNotes(){
+    var notes = loadNotes();
+    if(notes.length===0){ toast("Belum ada catatan untuk di-export"); return; }
+    var payload = { app:"RacikKopi", version:1, exportedAt:new Date().toISOString(), count:notes.length, notes:notes };
+    var blob = new Blob([JSON.stringify(payload,null,2)], {type:"application/json"});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url; a.download = "racik-kopi-catatan-"+fileStamp()+".json";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1500);
+    toast("File cadangan terunduh");
+  }
+  function importNotes(file){
+    var reader = new FileReader();
+    reader.onload = function(){
+      var incoming;
+      try{
+        var data = JSON.parse(reader.result);
+        incoming = Array.isArray(data) ? data : (data && Array.isArray(data.notes) ? data.notes : null);
+      }catch(e){ incoming = null; }
+      if(!incoming){ alert("File tidak valid. Pilih file cadangan Racik Kopi (.json)."); return; }
+      incoming = incoming.filter(function(n){ return n && n.drink && n.verdict; });
+      if(incoming.length===0){ alert("Tidak ada catatan yang bisa dimuat dari file ini."); return; }
+
+      var existing = loadNotes();
+      var mode = existing.length===0 ? "replace"
+        : (confirm("Ada "+existing.length+" catatan saat ini.\n\nOK = GABUNG (tambahkan "+incoming.length+" catatan dari file)\nCancel = GANTI (hapus yang ada, pakai isi file)") ? "merge" : "replace");
+
+      if(mode==="merge"){
+        var seen = {};
+        existing.forEach(function(n){ seen[dupKey(n)] = true; });
+        var added = 0;
+        incoming.forEach(function(n){ var k=dupKey(n); if(!seen[k]){ seen[k]=true; existing.unshift(n); added++; } });
+        saveNotes(existing); renderLog(); updateIoCount();
+        toast(added+" catatan baru ditambahkan");
+      }else{
+        saveNotes(incoming); renderLog(); updateIoCount();
+        toast(incoming.length+" catatan dimuat (mengganti data lama)");
+      }
+    };
+    reader.onerror = function(){ alert("Gagal membaca file."); };
+    reader.readAsText(file);
+  }
+  function dupKey(n){ return [n.drink,n.verdict,n.dose,n.yield,n.ice,n.serve,(n.pemanis&&n.pemanis.label)||"",n.note||"",n.date||""].join("|"); }
+
+  // ---------- kalkulator bebas ----------
+  var tOp="+";
+  function calcFree(){
+    var a=g("t-a"), b=g("t-b");
+    var r = tOp==="+" ? a+b : tOp==="-" ? a-b : tOp==="*" ? a*b : (b!==0 ? a/b : NaN);
+    $("t-calc-out").textContent = isFinite(r) ? round(r) : "—";
+  }
+
+  // ---------- events ----------
+  ["t-wadah0","t-sendok0","t-gelas0"].forEach(function(id){
+    $(id).addEventListener("input", function(){ saveCalib(); calibStatus(); calcTygo(); });
+  });
+  $("t-sendok1").addEventListener("input", calcTygo);
+  $("t-gelas1").addEventListener("input", function(){ calcTygo(); renderSaveCard(); });
+  $("t-ratio").addEventListener("input", calcTygo);
+
+  $("t-pemanis").addEventListener("click", function(e){
+    var c=e.target.closest(".chip"); if(!c) return;
+    setPemanisType(c.getAttribute("data-type"));
+  });
+
+  $("p-save").addEventListener("click", savePreset);
+  $("p-list").addEventListener("click", function(e){
+    var pk=e.target.closest("[data-pk]");
+    if(pk){
+      var p=loadPresets().filter(function(x){ return String(x.id)===pk.getAttribute("data-pk"); })[0];
+      if(p) applyPreset(p);
+      return;
+    }
+    var pd=e.target.closest("[data-pd]");
+    if(pd){
+      if(confirm("Hapus preset ini?")){
+        savePresets(loadPresets().filter(function(x){ return String(x.id)!==pd.getAttribute("data-pd"); }));
+        renderPresets(); toast("Preset dihapus");
+      }
+    }
+  });
+
+  $("t-ops").addEventListener("click", function(e){
+    var b=e.target.closest(".chip"); if(!b) return;
+    tOp=b.getAttribute("data-op");
+    this.querySelectorAll(".chip").forEach(function(x){ x.classList.remove("active"); });
+    b.classList.add("active");
+    calcFree();
+  });
+  ["t-a","t-b"].forEach(function(id){ $(id).addEventListener("input", calcFree); });
+
+  $("filterbar").addEventListener("click", function(e){
+    var b=e.target.closest(".fbtn"); if(!b) return;
+    state.filter=b.getAttribute("data-f");
+    this.querySelectorAll(".fbtn").forEach(function(x){ x.classList.remove("active"); });
+    b.classList.add("active");
+    renderLog();
+  });
+
+  $("btn-export").addEventListener("click", exportNotes);
+  $("btn-import").addEventListener("click", function(){ $("file-import").click(); });
+  $("file-import").addEventListener("change", function(){
+    if(this.files && this.files[0]){ importNotes(this.files[0]); }
+    this.value = "";
+  });
+
+  // ---------- init ----------
+  loadCalib();
+  calcTygo();
+  calcFree();
+  renderPresets();
+  renderSaveCard();
+  renderLog();
+})();
+</script>
+</body>
+</html>
