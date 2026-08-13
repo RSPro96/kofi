@@ -195,22 +195,37 @@
   .g-remember{display:flex;align-items:center;justify-content:center;gap:8px;color:var(--muted);font-size:13px;margin-top:14px;cursor:pointer}
   .g-remember input{accent-color:var(--crema);width:16px;height:16px}
 
-  .g-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 12px}
-  .g-tool{font-weight:800;font-size:15px;color:var(--cream);display:flex;align-items:center;gap:8px}
-  .g-tool .ic{width:18px;height:18px;color:var(--crema)}
+  .g-pick{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 14px}
+  .g-pickcard{background:var(--field);border:2px solid var(--line);border-radius:14px;padding:10px 10px 12px;cursor:pointer;transition:.15s;text-align:center}
+  .g-pickcard:hover{border-color:var(--crema-soft)}
+  .g-pickimg{width:100%;height:110px;object-fit:contain;background:var(--bg);border-radius:8px;margin-bottom:8px}
+  .g-pickname{font-size:12.5px;font-weight:800;color:var(--cream);display:flex;align-items:center;justify-content:center;gap:6px}
+  .g-pickname .ic{width:15px;height:15px;color:var(--crema)}
+  .g-pickcard.sel{border-color:var(--crema);box-shadow:0 0 0 3px rgba(255,211,150,.2)}
+  .g-pickcard.sel .g-pickname{color:var(--crema)}
+  .g-pickhint{font-size:12.5px;color:var(--muted);margin:-8px 0 12px;min-height:16px}
+  .g-pickhint.ok{color:var(--cream)}
+
+  .gbar{position:fixed;left:14px;right:14px;bottom:18px;z-index:75;max-width:460px;margin:0 auto;background:var(--card2);border:1px solid var(--line);border-radius:18px;box-shadow:0 18px 50px rgba(0,0,0,.5);overflow:hidden;display:flex;flex-direction:column}
+  .gbar[hidden]{display:none}
+  @media(max-width:760px){.gbar{bottom:96px}}
+
+  .g-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px 10px}
+  .g-tool{font-weight:800;font-size:14px;color:var(--cream);display:flex;align-items:center;gap:8px}
+  .g-toolimg{width:30px;height:30px;object-fit:contain;background:var(--bg);border-radius:7px}
   .g-close{background:transparent;border:0;color:var(--muted);cursor:pointer;padding:6px;border-radius:9px;display:inline-flex;transition:.15s}
   .g-close:hover{color:var(--cream);background:var(--field)}
   .g-close .ic{width:18px;height:18px}
-  .g-progress{height:6px;background:var(--field);border-radius:99px;margin:0 18px 16px;overflow:hidden}
+  .g-progress{height:6px;background:var(--field);border-radius:99px;margin:0 16px 12px;overflow:hidden}
   .g-bar{height:100%;background:linear-gradient(90deg,var(--crema),var(--crema-soft));border-radius:99px;transition:width .3s}
-  .g-body{display:flex;gap:14px;padding:0 18px 18px}
-  .g-stepicon{flex-shrink:0;width:42px;height:42px;border-radius:12px;background:var(--field);border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center}
-  .g-stepicon .ic{width:22px;height:22px;color:var(--crema)}
-  .g-idx{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px}
-  .g-body h3{margin:0 0 6px;font-size:17px;color:var(--cream)}
-  .g-body p{margin:0;color:var(--muted);font-size:13.5px;line-height:1.6}
-  .g-actions{display:flex;gap:10px;padding:14px 18px 18px;border-top:1px solid var(--line)}
-  .g-actions .btn{flex:1;justify-content:center;padding:13px}
+  .g-body{display:flex;gap:12px;padding:0 16px}
+  .g-stepicon{flex-shrink:0;width:38px;height:38px;border-radius:11px;background:var(--field);border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center}
+  .g-stepicon .ic{width:20px;height:20px;color:var(--crema)}
+  .g-idx{font-size:10.5px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:2px}
+  .g-body h3{margin:0 0 4px;font-size:15.5px;color:var(--cream)}
+  .g-body p{margin:0;color:var(--muted);font-size:12.5px;line-height:1.55}
+  .g-actions{display:flex;gap:10px;padding:12px 16px 14px;border-top:1px solid var(--line);margin-top:12px}
+  .g-actions .btn{flex:1;justify-content:center;padding:12px}
   .guide-ring{box-shadow:0 0 0 3px var(--crema),0 8px 30px rgba(0,0,0,.35) !important;border-radius:14px}
   .g-reopen{position:fixed;left:14px;bottom:18px;z-index:65;display:inline-flex;align-items:center;gap:8px;background:rgba(21,26,33,.94);backdrop-filter:blur(8px);border:1.5px solid var(--line);border-radius:999px;padding:11px 16px;color:var(--cream);font-size:13.5px;font-weight:700;cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,.4);transition:.15s}
   .g-reopen .ic{width:18px;height:18px;color:var(--crema)}
@@ -562,34 +577,43 @@
 <div class="ovl" id="guide-w" hidden>
   <div class="sheet-center">
     <div class="g-icon"><svg class="ic"><use href="#i-cup"/></svg></div>
-    <h2>Mau dipandu langkah demi langkah?</h2>
-    <p>Biar gak bingung, pilih salah satu:<br/>dipandu satu-satu sampai jadi, atau langsung atur sendiri.</p>
-    <button class="btn btn-primary g-big" id="g-start"><svg class="ic"><use href="#i-play"/></svg> Pandu Saya Satu per Satu</button>
+    <h2>Alat apa yang kamu pakai?</h2>
+    <p>Pilih alatnya dulu, lalu pilih cara pakainya:<br/>dipandu satu-satu, atau langsung atur sendiri.</p>
+    <div class="g-pick">
+      <button type="button" class="g-pickcard" data-tool="tygo">
+        <img src="img/Tygoespresso.png" alt="Tygopresso" class="g-pickimg"/>
+        <span class="g-pickname"><svg class="ic"><use href="#i-cup"/></svg> Tygopresso</span>
+      </button>
+      <button type="button" class="g-pickcard" data-tool="v60">
+        <img src="img/vcon.png" alt="V60 Cone" class="g-pickimg"/>
+        <span class="g-pickname"><svg class="ic"><use href="#i-droplet"/></svg> V60 Cone</span>
+      </button>
+    </div>
+    <div id="g-pickhint" class="g-pickhint">Cek foto alatmu di atas.</div>
+    <button class="btn btn-primary g-big" id="g-start" disabled><svg class="ic"><use href="#i-play"/></svg> Pandu Saya Satu per Satu</button>
     <button class="btn btn-ghost g-big" id="g-direct">Langsung Saja</button>
     <label class="g-remember"><input type="checkbox" id="g-remember"/> Selalu langsung saja (jangan tanya lagi)</label>
   </div>
 </div>
 
 <!-- ===== WIZARD PANDUAN ===== -->
-<div class="ovl" id="guide-wiz" hidden>
-  <div class="sheet">
-    <div class="g-head">
-      <span class="g-tool"><svg class="ic" id="g-tool-ic"><use href="#i-cup"/></svg> <span id="g-tool">Tygopresso</span></span>
-      <button class="g-close" id="g-close" title="Tutup panduan"><svg class="ic"><use href="#i-x"/></svg></button>
+<div class="gbar" id="guide-wiz" hidden>
+  <div class="g-head">
+    <span class="g-tool"><img class="g-toolimg" id="g-tool-img" src="img/Tygoespresso.png" alt=""/> <span id="g-tool">Tygopresso</span></span>
+    <button class="g-close" id="g-close" title="Tutup panduan"><svg class="ic"><use href="#i-x"/></svg></button>
+  </div>
+  <div class="g-progress"><div class="g-bar" id="g-bar"></div></div>
+  <div class="g-body">
+    <div class="g-stepicon"><svg class="ic" id="g-icon"><use href="#i-info"/></svg></div>
+    <div>
+      <div class="g-idx" id="g-idx">Langkah 1 dari 5</div>
+      <h3 id="g-title">—</h3>
+      <p id="g-desc">—</p>
     </div>
-    <div class="g-progress"><div class="g-bar" id="g-bar"></div></div>
-    <div class="g-body">
-      <div class="g-stepicon"><svg class="ic" id="g-icon"><use href="#i-info"/></svg></div>
-      <div>
-        <div class="g-idx" id="g-idx">Langkah 1 dari 5</div>
-        <h3 id="g-title">—</h3>
-        <p id="g-desc">—</p>
-      </div>
-    </div>
-    <div class="g-actions">
-      <button class="btn btn-ghost" id="g-back">Kembali</button>
-      <button class="btn btn-primary" id="g-next">Lanjut</button>
-    </div>
+  </div>
+  <div class="g-actions">
+    <button class="btn btn-ghost" id="g-back">Kembali</button>
+    <button class="btn btn-primary" id="g-next">Lanjut</button>
   </div>
 </div>
 
@@ -1075,7 +1099,7 @@
     var steps=GUIDE[gState.tool];
     var s=steps[gState.i];
     $("g-tool").textContent = gState.tool==="tygo" ? "Tygopresso" : "V60 Cone F-402";
-    $("g-tool-ic").setAttribute("href", "#"+(gState.tool==="tygo"?"i-cup":"i-droplet"));
+    $("g-tool-img").src = gState.tool==="tygo" ? "img/Tygoespresso.png" : "img/vcon.png";
     $("g-icon").setAttribute("href", "#"+s.ic);
     $("g-idx").textContent = "Langkah "+(gState.i+1)+" dari "+steps.length;
     $("g-title").textContent = s.t;
@@ -1085,10 +1109,20 @@
     $("g-next").textContent = gState.i===steps.length-1 ? "Selesai" : "Lanjut";
     gRing();
   }
+  var gPick = null;
+  function pickTool(tool){
+    gPick = tool;
+    document.querySelectorAll(".g-pickcard").forEach(function(x){ x.classList.toggle("sel", x.getAttribute("data-tool")===tool); });
+    $("g-start").disabled = false;
+    $("g-pickhint").textContent = tool==="tygo" ? "Tygopresso dipilih." : "V60 Cone dipilih.";
+    $("g-pickhint").classList.add("ok");
+  }
+  document.querySelectorAll(".g-pickcard").forEach(function(x){
+    x.addEventListener("click", function(){ pickTool(x.getAttribute("data-tool")); });
+  });
   function startGuide(tool){
-    gState.tool = tool || ACTIVE;
+    gState.tool = tool || gPick || ACTIVE;
     gState.i = 0;
-    document.body.style.overflow="hidden";
     $("guide-wiz").hidden=false;
     $("g-reopen").style.display="none";
     gRender();
@@ -1117,13 +1151,16 @@
     if(gState.i>0){ gState.i--; gRender(); }
   });
   $("g-close").addEventListener("click", closeGuide);
-  $("g-reopen").addEventListener("click", function(){ startGuide(); });
+  $("g-reopen").addEventListener("click", function(){ $("guide-w").hidden=false; });
   $("g-start").addEventListener("click", function(){
-    $("guide-w").hidden=true; startGuide();
+    $("guide-w").hidden=true;
+    switchPanel(gPick);
+    startGuide(gPick);
   });
   $("g-direct").addEventListener("click", function(){
     if($("g-remember").checked){ try{ localStorage.setItem(GK,"direct"); }catch(e){} }
     $("guide-w").hidden=true;
+    if(gPick) switchPanel(gPick);
   });
   try{
     if(localStorage.getItem(GK)!=="direct"){ $("guide-w").hidden=false; }
