@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%232f6fd0'%20stroke-width='1.9'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M17%208h1a3%203%200%200%201%200%206h-1'/%3E%3Cpath%20d='M3%208h14v7a4%204%200%200%201-4%204H7a4%204%200%200%201-4-4V8z'/%3E%3Cpath%20d='M7%202v2M10.5%202v2M14%202v2'/%3E%3C/svg%3E" />
-<title>RSPro — Racik Kopi (Tygopresso &amp; V60)</title>
+<title>RSPro — Racik Kopi (Tygopresso)</title>
 <style>
   :root{
     --bg:#eef2f8;
@@ -266,12 +266,12 @@
     </div>
     <p class="tagline">“Karena Kopi Nikmat Adalah Hak Setiap Umat”</p>
     <h1>RSPro <span>— Racik Kopi</span></h1>
-    <p class="sub">Dua panduan &amp; kalkulator seduh: Tygopresso (espresso/sanger) &amp; Cone V60 F-402</p>
+    <p class="sub">Panduan &amp; kalkulator seduh: Tygopresso (espresso/sanger)</p>
   </header>
 
   <div class="tabs" id="tabs">
     <button class="tab active" data-panel="tygo"><svg class="ic"><use href="#i-cup"/></svg> Tygopresso</button>
-    <button class="tab" data-panel="v60"><svg class="ic"><use href="#i-droplet"/></svg> V60 Cone F-402</button>
+    <button class="tab" data-panel="v60"><svg class="ic"><use href="#i-droplet"/></svg> V60 Cone</button>
   </div>
 
   <section id="panel-tygo" class="panel">
@@ -365,19 +365,6 @@
   </div>
 
   <div class="card">
-    <h2>Preset Racikan</h2>
-    <p class="hint">Simpan setelan pemanis + rasio untuk dipakai ulang, mis. "Sanger 3:1" atau "Espresso kuat".</p>
-    <div class="field">
-      <label>Nama preset</label>
-      <div class="inrow">
-        <input type="text" id="p-name" placeholder="mis. Sanger klasik Aceh" />
-      </div>
-    </div>
-    <button class="btn btn-primary" id="p-save"><svg class="ic"><use href="#i-bookmark"/></svg> Simpan preset saat ini</button>
-    <div id="p-list" style="margin-top:14px"></div>
-  </div>
-
-  <div class="card">
     <h2>Takaran Pemanis</h2>
     <p class="hint">Pilih bahan pemanis: <b>Gula</b> untuk espresso polos, atau <b>Susu (SKM)</b> untuk Sanger Espresso. Lalu pilih level.</p>
     <div class="chips" id="t-pemanis">
@@ -404,32 +391,32 @@
   <div class="card" id="t-savecard"></div>
   </section>
 
-  <!-- ================= V60 CONE F-402 ================= -->
+  <!-- ================= V60 CONE 01 ================= -->
   <section id="panel-v60" class="panel" style="display:none">
     <details class="edu">
-      <summary><svg class="ic"><use href="#i-info"/></svg> Cara pakai V60 Cone F-402 (pour over) <svg class="ic caret"><use href="#i-chevron"/></svg></summary>
+      <summary><svg class="ic"><use href="#i-info"/></svg> Cara pakai V60 Cone 01 (pour over) <svg class="ic caret"><use href="#i-chevron"/></svg></summary>
       <div class="body">
-        <p>V60 = <b>nyeduh manual</b>: air dituang pelan-pelan ke bubuk kopi, tembus kertas filter, jatuh ke gelas di bawah. Dibagi beberapa kali tuangan biar semua bubuk kebasah &amp; rasanya rata.</p>
+        <p>V60 = <b>nyeduh manual</b>: air dituang pelan-pelan ke bubuk kopi, tembus kertas filter, jatuh ke gelas di bawah. Conemu <b>ukuran 01</b> — pas untuk <b>1–2 cangkir</b>, muat ±15 g bubuk.</p>
         <ol>
           <li><b>Siapkan filter</b>: pasang kertas filter di cone, siram air panas dulu buat hilangin "rasa kertas", buang airnya.</li>
-          <li><b>Masukkan bubuk</b> giling sedang (segede gula pasir).</li>
-          <li><b>Rendam dulu (blooming)</b>: masih di dalam cone, tuang air panas sedikit aja ke atas bubuk sampai semuanya kebasah (2× berat bubuk), terus <b>diem 30–45 detik</b>. Air ini buat ngeluarin gas di bubuk — <b>jangan dibuang</b>, nanti ikut jadi kopinya. Gak usah diaduk &amp; gak usah pindah ke gelas lain.</li>
-          <li><b>Tuangan 1</b>: tuang pelan-pelan sampai 60% dari total air, lalu <b>berhenti sejenak</b>.</li>
-          <li><b>Tuangan 2</b>: lanjut menuang begitu air di dalam cone <b>hampir habis nembus ke gelas</b> (permukaan bubuk mulai kusam/matt, biasanya 1–5 detik). Jangan sampai bubuk kering total. Tuang sampai 100% total air.</li>
-          <li>Total seduh <b>2,5–3 menit</b>. Gilingan terlalu halus → airnya negendon lama &amp; rasanya pahit; terlalu kasar → cepat netes &amp; rasanya asam.</li>
+          <li><b>Masukkan bubuk</b> giling sedang (segede gula pasir). Pakai timbangan gram buat takar jumlahnya.</li>
+          <li><b>Rendam dulu (blooming)</b>: tuang air panas sedikit aja (2× berat bubuk), terus <b>diem 30–45 detik</b>. Air ini buat ngeluarin gas — <b>jangan dibuang</b>.</li>
+          <li><b>Tuangan berikutnya</b>: tuang pelan sampai total air tercapai, istirahat sebentar di tengah biar air sempat turun.</li>
+          <li>Total seduh <b>2,5–3 menit</b>. Gilingan terlalu halus → air negendon lama &amp; rasanya pahit; terlalu kasar → cepat netes &amp; rasanya asam.</li>
         </ol>
+        <p><b>Tips thermos/dispenser:</b> aliran cerat thermos cenderung deras — pegang cerat <b>dekat ke permukaan bubuk</b> &amp; tuang <b>setipis mungkin</b> biar bubuk gak ketebuk. Tuang sering-sering &amp; berhenti sejenak biar air sempat nembus.</p>
         <p>1 g air ≈ 1 ml — pakai timbangan aja, lebih akurat dari gelas ukur.</p>
       </div>
     </details>
 
     <div class="card">
       <h2>Target Porsi</h2>
-      <p class="hint">Mau bikin berapa? Atur jumlah gelas &amp; seberapa besarnya — total air langsung dihitung. Banyak bubuk V60 bebas, gak ada batas basket.</p>
+      <p class="hint">Conemu ukuran 01 — 1 gelas paling pas, 2 gelas masih bisa tapi tuang bertahap biar cone gak penuh.</p>
       <div class="grid2">
         <div class="field">
           <label>Jumlah porsi / gelas</label>
           <div class="inrow">
-            <input type="number" id="v-porsi" min="1" max="6" step="1" value="1" />
+            <input type="number" id="v-porsi" min="1" max="2" step="1" value="1" />
             <span class="unit">gelas</span>
           </div>
         </div>
@@ -450,13 +437,13 @@
     </div>
 
     <div class="card">
-      <h2>Kapasitas Alat &amp; Rekomendasi Bubuk</h2>
-      <p class="hint">Isi berapa gram bubuk paling banyak yang muat di cone kamu. Kalau rekomendasinya kegedean, bakal muncul peringatan.</p>
+      <h2>Kapasitas Cone &amp; Rekomendasi Bubuk</h2>
+      <p class="hint">V60 01 biasanya muat ±15 g bubuk. Kalau rekomendasinya kegedean, bakal muncul peringatan.</p>
       <div class="grid2">
         <div class="field">
           <label>Maks bubuk ditampung (cone)</label>
           <div class="inrow">
-            <input type="number" id="v-kap" min="1" max="100" step="1" value="30" />
+            <input type="number" id="v-kap" min="1" max="100" step="1" value="15" />
             <span class="unit">gram</span>
           </div>
         </div>
@@ -480,7 +467,7 @@
 
     <div class="card">
       <h2>Fase Tuangan</h2>
-      <p class="hint">Semua air masuk ke <b>satu wadah tampung</b> (jug/carafe/gelas besar) — bukan dibagi per gelas. 60% &amp; 100% itu tahapan di timbangan: berhenti di 60% total, lanjut sampai 100%, baru dibagi rata ke gelas. Taruh timbangan di bawah wadah biar tahu kapan berhenti.</p>
+      <p class="hint">Semua air masuk ke <b>satu wadah tampung</b> (carafe/gelas besar) — bukan dibagi per gelas. 60% &amp; 100% itu tahapan di timbangan: berhenti di 60% total, lanjut sampai 100%, baru dibagi rata ke gelas.</p>
       <div class="result">
         <div class="kpis">
           <div class="kpi"><div class="n" id="v-t1">–</div><div class="l">Tuangan 1 (60%)</div></div>
@@ -492,7 +479,7 @@
 
     <div class="card">
       <h2>Tambahan Gula / Susu (opsional)</h2>
-      <p class="hint">Buat yang pengen manis. Takaran <b>per gelas</b>, total otomatis × jumlah gelas. Referensi Sanger khas Aceh: kopi:susu = 3:1 (susu hemat, kopi dominan). Level tetap selera lidahmu.</p>
+      <p class="hint">Buat yang pengen manis. Takaran <b>per gelas</b>, total otomatis × jumlah gelas. Referensi Sanger khas Aceh: kopi:susu = 3:1.</p>
       <div class="chips" id="v-pemanis-type">
         <div class="chip active" data-type="gula"><svg class="ic"><use href="#i-droplet"/></svg> Gula</div>
         <div class="chip" data-type="susu"><svg class="ic"><use href="#i-cup"/></svg> Susu (SKM) — Sanger</div>
@@ -509,7 +496,7 @@
 
     <div class="card">
       <h2>Timer Digital</h2>
-      <p class="hint">Timer kecil di bawah layar. Alur: <b>▶</b> mulai → rendam awal otomatis berhenti &amp; bunyi di 45 detik · <b>▶</b> tuang sampai 60% → <b>⏸</b> berhenti di 60% · <b>▶</b> tuang sampai 100% → <b>⏸</b> selesai. Tetap terlihat walau halaman di-scroll.</p>
+      <p class="hint">Alur: <b>▶</b> mulai → rendam awal otomatis berhenti &amp; bunyi di 45 detik · <b>▶</b> tuang sampai 60% → <b>⏸</b> berhenti di 60% · <b>▶</b> tuang sampai 100% → <b>⏸</b> selesai. Tetap terlihat walau halaman di-scroll.</p>
     </div>
 
   <div class="timerfab" id="v-timerfab" aria-label="Timer V60">
@@ -519,7 +506,22 @@
     <button class="tf-btn stop" id="v-timer-pause" title="Jeda / Berhenti"><svg class="ic"><use href="#i-pause"/></svg></button>
     <button class="tf-btn" id="v-timer-reset" title="Reset"><svg class="ic"><use href="#i-reset"/></svg></button>
   </div>
+
+  <div class="card" id="v-savecard"></div>
   </section>
+
+  <div class="card">
+    <h2>Preset Racikan</h2>
+    <p class="hint">Simpan setelan pemanis + rasio alat yang <b>sedang aktif</b> untuk dipakai ulang, mis. "Sanger 3:1" atau "V60 harian".</p>
+    <div class="field">
+      <label>Nama preset</label>
+      <div class="inrow">
+        <input type="text" id="p-name" placeholder="mis. Sanger klasik Aceh" />
+      </div>
+    </div>
+    <button class="btn btn-primary" id="p-save"><svg class="ic"><use href="#i-bookmark"/></svg> Simpan preset saat ini</button>
+    <div id="p-list" style="margin-top:14px"></div>
+  </div>
 
   <div class="card">
     <h2>Kalkulator Bebas</h2>
@@ -559,6 +561,24 @@
     </div>
     <p class="hint" id="io-count" style="margin:2px 0 14px;font-size:12.5px"></p>
     <div id="loglist"></div>
+  </div>
+
+  <div class="card">
+    <div class="savedhead">
+      <h2 style="margin:0"><svg class="ic"><use href="#i-download"/></svg> Pembaruan Aplikasi</h2>
+    </div>
+    <p class="hint" style="margin-top:-4px">Tarik perubahan terbaru langsung dari repositori Git (GitHub). Siapa pun boleh klik — kalau ada versi baru, halaman otomatis dimuat ulang.</p>
+    <div class="result">
+      <div class="kpis">
+        <div class="kpi"><div class="n" id="upd-ver">–</div><div class="l">Versi saat ini</div></div>
+        <div class="kpi"><div class="n" id="upd-latest">–</div><div class="l">Versi terbaru</div></div>
+      </div>
+      <div class="note-line" id="upd-msg">Klik "Periksa Pembaruan" untuk melihat status.</div>
+    </div>
+    <div class="iorow" style="margin-top:14px">
+      <button class="btn btn-ghost io" id="upd-check"><svg class="ic"><use href="#i-reset"/></svg> Periksa Pembaruan</button>
+      <button class="btn btn-primary io" id="upd-run"><svg class="ic"><use href="#i-download"/></svg> Update Sekarang</button>
+    </div>
   </div>
 
   <footer>
@@ -655,7 +675,8 @@
   // ---------- state ----------
   var state = {
     tygo: { pemanis:null, customG:null, pemanisType:"gula" },
-    verdict: { tygo:null },
+    v60:  { pemanis:null, customG:null, pemanisType:"gula" },
+    verdict: { tygo:null, v60:null },
     filter: "all"
   };
 
@@ -693,9 +714,10 @@
              : "Tanpa pemanis";
       var row=el("div","logitem");
       row.style.borderLeftColor="var(--crema)";
+      var toolLabel = p.tool==="v60" ? "V60 Cone" : "Tygopresso";
       row.innerHTML =
         '<div class="main">'+
-          '<div class="t1">'+escapeHtml(p.name)+'</div>'+
+          '<div class="t1">'+escapeHtml(p.name)+'<span class="badge">'+toolLabel+'</span></div>'+
           '<div class="specs">'+PEM_LABEL(p.type)+' · '+escapeHtml(pm)+' · Rasio 1:'+p.ratio+'</div>'+
         '</div>'+
         '<button class="chip" data-pk="'+p.id+'" style="padding:7px 12px">Pakai</button>'+
@@ -706,10 +728,12 @@
   function savePreset(){
     var name=$("p-name").value.trim();
     if(!name){ toast("Isi nama preset dulu"); return; }
-    var st=state.tygo;
+    var tool = ACTIVE;
+    var st = state[tool] || state.tygo;
+    var ratio = tool==="v60" ? (parseFloat($("v-rasio").value)||15) : (parseFloat($("t-ratio").value)||2);
     var p={
-      id: Date.now(), name:name,
-      ratio: parseFloat($("t-ratio").value)||2,
+      id: Date.now(), name:name, tool:tool,
+      ratio: ratio,
       type: st.pemanisType,
       mode: st.customG!=null ? "manual" : (st.pemanis!=null ? "choice" : null),
       idx: st.customG!=null ? null : st.pemanis,
@@ -720,12 +744,23 @@
     toast("Preset disimpan");
   }
   function applyPreset(p){
-    state.tygo.pemanis = p.mode==="choice" ? p.idx : null;
-    state.tygo.customG = p.mode==="manual" ? p.gram : null;
-    state.tygo.pemanisType = p.type;
-    $("t-ratio").value = p.ratio;
-    setPemanisType(p.type);
-    calcTygo();
+    switchPanel(p.tool==="v60" ? "v60" : "tygo");
+    if(p.tool==="v60"){
+      state.v60.pemanis = p.mode==="choice" ? p.idx : null;
+      state.v60.customG = p.mode==="manual" ? p.gram : null;
+      state.v60.pemanisType = p.type;
+      $("v-rasio").value = p.ratio;
+      setPemanisV(p.type);
+      calcV60();
+      renderVSaveCard();
+    }else{
+      state.tygo.pemanis = p.mode==="choice" ? p.idx : null;
+      state.tygo.customG = p.mode==="manual" ? p.gram : null;
+      state.tygo.pemanisType = p.type;
+      $("t-ratio").value = p.ratio;
+      setPemanisType(p.type);
+      calcTygo();
+    }
     toast('Preset "'+p.name+'" diterapkan');
   }
 
@@ -1065,22 +1100,25 @@
     ],
     v60: [
       {t:"Target Porsi", ic:"i-cup",
-       d:"Atur 1 gelas atau lebih & ukuran per gelas. Semakin banyak kopi, semakin besar total airnya.",
+       d:"Atur 1–2 gelas & ukuran per gelas. Semakin banyak kopi, semakin besar total airnya.",
        el:"v-porsi",
        ok:function(){ return num(g("v-porsi"))>0 && num(g("v-perporsi"))>0; },
        msg:"Isi dulu jumlah porsi & ukuran per gelas."},
       {t:"Kapasitas & Rasio", ic:"i-droplet",
-       d:"Cek maks bubuk yang muat di cone kamu, lalu pilih rasio (1:12–18). Rekomendasi bubuk dihitung otomatis.",
+       d:"V60 01 muat ±15 g bubuk. Cek rekomendasi bubuknya — kalau lewat kapasitas bakal muncul peringatan.",
        el:"v-kap", ok:null},
       {t:"Fase Tuangan", ic:"i-info",
-       d:"Total air dibagi tahap: rendam awal (2× bubuk, diam 30–45 detik) → tuang ke 60% → tuang ke 100%. Semua masuk satu wadah, baru dibagi ke gelas.",
+       d:"Rendam awal (2× bubuk, diam 30–45 detik) → tuang ke 60% → tuang ke 100%. Semua masuk satu wadah, baru dibagi ke gelas.",
        el:"v-t2info", ok:null},
       {t:"Gula / Susu (opsional)", ic:"i-cup", opt:true,
        d:"Buat yang pengen manis, pilih level gula atau susu. Kalau tidak pakai, langsung Lanjut saja.",
        el:"v-sweets", ok:null},
       {t:"Timer & Seduh", ic:"i-play",
-       d:"Timer kecil di bawah layar: ▶ mulai → otomatis berhenti & bunyi di 45 detik → ▶ tuang ke 60% → ⏸ → ▶ tuang ke 100% → ⏸. Selesai!",
-       el:"v-timerfab", ok:null}
+       d:"Timer di bawah layar: ▶ mulai → otomatis berhenti & bunyi di 45 detik → ▶ tuang ke 60% → ⏸ → ▶ tuang ke 100% → ⏸. Selesai!",
+       el:"v-timerfab", ok:null},
+      {t:"Penilaian & Simpan", ic:"i-bookmark", opt:true,
+       d:"Pilih penilaian (Enak/Biasa/Kurang) lalu klik Simpan agar tercatat di Catatan Rasa.",
+       el:"v-savecard", ok:null}
     ]
   };
   var gState = {tool:"tygo", i:0, timer:null};
@@ -1098,7 +1136,7 @@
   function gRender(){
     var steps=GUIDE[gState.tool];
     var s=steps[gState.i];
-    $("g-tool").textContent = gState.tool==="tygo" ? "Tygopresso" : "V60 Cone F-402";
+    $("g-tool").textContent = gState.tool==="tygo" ? "Tygopresso" : "V60 Cone";
     $("g-tool-img").src = gState.tool==="tygo" ? "img/Tygoespresso.png" : "img/vcon.png";
     $("g-icon").setAttribute("href", "#"+s.ic);
     $("g-idx").textContent = "Langkah "+(gState.i+1)+" dari "+steps.length;
@@ -1166,9 +1204,40 @@
     if(localStorage.getItem(GK)!=="direct"){ $("guide-w").hidden=false; }
   }catch(e){ $("guide-w").hidden=false; }
 
+  function vFmt(ms){
+    var s=Math.floor(ms/1000), m=Math.floor(s/60); s=s%60;
+    function p(x,n){ return String(x).padStart(n,"0"); }
+    return p(m,2)+":"+p(s,2)+"."+p(ms%1000,3);
+  }
+
+  // ---------- timer Tygopresso ----------
+  var TT = {running:false, elapsed:0, last:null, tId:null};
+  function tTick(){
+    TT.elapsed += Date.now()-TT.last; TT.last=Date.now();
+    $("t-timer").textContent = vFmt(TT.elapsed);
+  }
+  $("t-timer-start").addEventListener("click", function(){
+    if(TT.running) return;
+    TT.running=true; TT.last=Date.now();
+    $("t-timerfab").classList.add("on");
+    TT.tId=setInterval(tTick, 200); tTick();
+  });
+  $("t-timer-pause").addEventListener("click", function(){
+    if(!TT.running) return;
+    TT.running=false; clearInterval(TT.tId);
+    TT.elapsed += Date.now()-TT.last;
+    $("t-timer").textContent = vFmt(TT.elapsed);
+    $("t-timerfab").classList.remove("on");
+  });
+  $("t-timer-reset").addEventListener("click", function(){
+    TT.running=false; clearInterval(TT.tId); TT.elapsed=0;
+    $("t-timer").textContent = "00:00.000";
+    $("t-timerfab").classList.remove("on");
+  });
+
   // ---------- V60 ----------
-  function vDash(n){ return n>0 ? n : "–"; }
   function num(n){ var x=parseFloat(n); return isFinite(x)&&x>0 ? x : 0; }
+  function vDash(n){ return n>0 ? n : "–"; }
   function calcV60(){
     var porsi = num(g("v-porsi"))||1;
     var per   = num(g("v-perporsi"))||200;
@@ -1188,10 +1257,10 @@
     var warn=$("v-warn");
     if(kap>0 && bubuk>0 && bubuk>kap){
       warn.style.display="flex";
-      warn.innerHTML = ic('frown') + " Bubuk yang dibutuhkan "+bubuk+" g, tapi cone kamu cuma muat "+kap+" g — kurangi jumlah gelas, perkecil ukuran per gelas, atau encerkan rasionya.";
-    } else if(porsi>=3){
+      warn.innerHTML = ic('frown') + " Bubuk yang dibutuhkan "+bubuk+" g, tapi cone 01 muat sekitar "+kap+" g — kurangi jumlah gelas, perkecil ukuran per gelas, atau encerkan rasionya.";
+    } else if(porsi>=2){
       warn.style.display="flex";
-      warn.innerHTML = ic('frown') + " 3 gelas atau lebih sekaligus itu lumayan penuh buat cone V60 — hasilnya bisa kurang rata. Coba pecah jadi 2× seduh (contoh: 3 gelas = seduh 2 gelas dulu, tambah 1 gelas).";
+      warn.innerHTML = ic('frown') + " 2 gelas sekaligus di cone 01 itu penuh banget — hasilnya bisa kurang rata. Kalau bisa, seduh 1 gelas dulu, ulangi untuk gelas berikutnya.";
     } else {
       warn.style.display="none";
     }
@@ -1233,11 +1302,6 @@
     $("v-timerfab").classList.add("alarm");
     setTimeout(function(){ $("v-timerfab").classList.remove("alarm"); }, 1600);
   }
-  function vFmt(ms){
-    var s=Math.floor(ms/1000), m=Math.floor(s/60); s=s%60;
-    function p(x,n){ return String(x).padStart(n,"0"); }
-    return p(m,2)+":"+p(s,2)+"."+p(ms%1000,3);
-  }
   function vTick(){
     VT.elapsed += Date.now()-VT.last; VT.last=Date.now();
     if(VT.phase==="bloom" && VT.elapsed>=BLOOM_MS){
@@ -1277,31 +1341,6 @@
     $("v-timerfab").classList.remove("alarm");
   });
 
-  // ---------- timer Tygopresso ----------
-  var TT = {running:false, elapsed:0, last:null, tId:null};
-  function tTick(){
-    TT.elapsed += Date.now()-TT.last; TT.last=Date.now();
-    $("t-timer").textContent = vFmt(TT.elapsed);
-  }
-  $("t-timer-start").addEventListener("click", function(){
-    if(TT.running) return;
-    TT.running=true; TT.last=Date.now();
-    $("t-timerfab").classList.add("on");
-    TT.tId=setInterval(tTick, 200); tTick();
-  });
-  $("t-timer-pause").addEventListener("click", function(){
-    if(!TT.running) return;
-    TT.running=false; clearInterval(TT.tId);
-    TT.elapsed += Date.now()-TT.last;
-    $("t-timer").textContent = vFmt(TT.elapsed);
-    $("t-timerfab").classList.remove("on");
-  });
-  $("t-timer-reset").addEventListener("click", function(){
-    TT.running=false; clearInterval(TT.tId); TT.elapsed=0;
-    $("t-timer").textContent = "00:00.000";
-    $("t-timerfab").classList.remove("on");
-  });
-
   // ---------- pemanis V60 (proporsional total air) ----------
   var V_SUGAR = [
     {cat:"Pahit", sub:"dikit aja", ratio:0.025, cls:"s0"},
@@ -1313,22 +1352,28 @@
     {cat:"Sedikit manis", sub:"sanger standar", ratio:0.125, cls:"s1"},
     {cat:"Manis", sub:"sanger manis", ratio:0.2, cls:"s2"}
   ];
-  var vPem = { type:"gula", pick:null, custom:null };
-  function VARR(){ return vPem.type==="susu" ? V_SKM : V_SUGAR; }
-  function VUNIT(){ return vPem.type==="susu" ? "g SKM" : "g gula"; }
+  function VARR(){ return state.v60.pemanisType==="susu" ? V_SKM : V_SUGAR; }
+  function VUNIT(){ return state.v60.pemanisType==="susu" ? "g SKM" : "g gula"; }
   function vBase(){
     var porsi = num(g("v-porsi"))||1;
     var per   = num(g("v-perporsi"))||200;
     return round(porsi*per);
   }
+  function setPemanisV(t){
+    state.v60.pemanisType=t;
+    document.querySelectorAll("#v-pemanis-type .chip").forEach(function(x){
+      x.classList.toggle("active", x.getAttribute("data-type")===t);
+    });
+    renderVSweets(); renderVSaveCard();
+  }
   function vCustomCard(){
     var c=el("div","sweet s2");
     c.innerHTML =
       '<div class="cat">Kustom<small>input sendiri (manual, g per gelas)</small></div>'+
-      '<div class="val"><input type="number" min="0" step="1" value="'+(vPem.custom!=null?vPem.custom:"")+'" placeholder="g /gelas"/></div>'+
-      '<div style="margin-top:10px"><button type="button" class="chip'+(vPem.custom!=null?' active':'')+'">'+(vPem.custom!=null?ic('check')+' dipakai':'pakai ini')+'</button></div>';
+      '<div class="val"><input type="number" min="0" step="1" value="'+(state.v60.customG!=null?state.v60.customG:"")+'" placeholder="g /gelas"/></div>'+
+      '<div style="margin-top:10px"><button type="button" class="chip'+(state.v60.customG!=null?' active':'')+'">'+(state.v60.customG!=null?ic('check')+' dipakai':'pakai ini')+'</button></div>';
     var inp=c.querySelector("input"), btn=c.querySelector("button");
-    function set(v){ vPem.custom=v; if(v!=null) vPem.pick=null; }
+    function set(v){ state.v60.customG=v; if(v!=null) state.v60.pemanis=null; }
     inp.addEventListener("input", function(){
       set(parseFloat(inp.value)>0?parseFloat(inp.value):null);
       updVSweet();
@@ -1343,9 +1388,9 @@
     var box=$("v-sweets"); box.innerHTML="";
     var arr=VARR();
     var per = num(g("v-perporsi"))||200;
-    $("v-sweet-title").innerHTML = (vPem.type==="susu" ? ic('cup') : ic('droplet'))+' Rekomendasi '+VUNIT()+' — ikut total air (ubah ukuran/jumlah gelas langsung kena)';
+    $("v-sweet-title").innerHTML = (state.v60.pemanisType==="susu" ? ic('cup') : ic('droplet'))+' Rekomendasi '+VUNIT()+' — ikut total air (ubah ukuran/jumlah gelas langsung kena)';
     arr.forEach(function(s,i){
-      var sel = vPem.pick===i;
+      var sel = state.v60.pemanis===i;
       var pg = round(per*s.ratio);
       var c=el("div","sweet "+s.cls);
       c.innerHTML =
@@ -1358,25 +1403,21 @@
     box.appendChild(vCustomCard());
     box.querySelectorAll("[data-i]").forEach(function(btn){
       btn.addEventListener("click", function(){
-        vPem.pick = parseInt(btn.getAttribute("data-i"),10);
-        vPem.custom = null;
+        state.v60.pemanis = parseInt(btn.getAttribute("data-i"),10);
+        state.v60.customG = null;
         renderVSweets(); updVSweet();
       });
     });
   }
   $("v-pemanis-type").addEventListener("click", function(e){
     var b=e.target.closest(".chip"); if(!b) return;
-    vPem.type=b.getAttribute("data-type");
-    this.querySelectorAll(".chip").forEach(function(x){ x.classList.remove("active"); });
-    b.classList.add("active");
-    vPem.pick=null; vPem.custom=null;
-    renderVSweets(); updVSweet();
+    setPemanisV(b.getAttribute("data-type"));
   });
   function updVSweet(){
     var total = vBase();
     var porsi = num(g("v-porsi"))||1;
     var arr = VARR();
-    var perSweet = vPem.pick!=null ? round(total*arr[vPem.pick].ratio/porsi) : (vPem.custom!=null ? vPem.custom : null);
+    var perSweet = state.v60.pemanis!=null ? round(total*arr[state.v60.pemanis].ratio/porsi) : (state.v60.customG!=null ? state.v60.customG : null);
     if(perSweet==null){
       $("v-sweet-total").textContent = "–";
       $("v-sweet-note").textContent = "Pilih level atau isi takaran manual di bawah.";
@@ -1384,8 +1425,76 @@
     }
     var totalSweet = round(perSweet*porsi);
     $("v-sweet-total").textContent = totalSweet+" g";
-    var info = vPem.pick!=null ? arr[vPem.pick].sub : "manual";
+    var info = state.v60.pemanis!=null ? arr[state.v60.pemanis].sub : "manual";
     $("v-sweet-note").textContent = info+" · "+perSweet+" g per gelas × "+porsi+" gelas = "+totalSweet+" g";
+  }
+
+  // ---------- kartu simpan V60 ----------
+  function renderVSaveCard(){
+    var card=$("v-savecard");
+    var st=state.v60;
+    var S=VARR();
+    var picked=st.pemanis;
+    var pickedName = picked!=null ? S[picked].cat : (st.customG!=null ? "Kustom" : null);
+    card.innerHTML =
+      '<h2>'+ic('bookmark')+' Simpan Catatan Rasa</h2>'+
+      '<p class="hint">Tandai apakah seduhan ini <b>enak</b> atau tidak, biar lain kali tinggal ikuti.</p>'+
+      (pickedName? '' : '<p class="hint" style="color:var(--meh)">Pilih dulu satu level pemanis di atas untuk mencatatnya (opsional).</p>')+
+      '<div class="field"><label>Penilaian rasa</label>'+
+        '<div class="verdicts">'+
+          '<button class="verdict" data-v="good">'+ic('smile')+' Enak</button>'+
+          '<button class="verdict" data-v="meh">'+ic('meh')+' Biasa</button>'+
+          '<button class="verdict" data-v="bad">'+ic('frown')+' Kurang</button>'+
+        '</div></div>'+
+      '<div class="field"><label>Catatan (opsional)</label>'+
+        '<textarea id="v-note" rows="2" placeholder="mis. pas banget, jangan tambah air lagi..."></textarea></div>'+
+      '<button class="btn btn-primary" id="v-save">'+ic('bookmark')+' Simpan catatan ini</button>';
+    card.querySelectorAll(".verdict").forEach(function(b){
+      if(state.verdict.v60===b.getAttribute("data-v")) b.classList.add("active");
+      b.addEventListener("click", function(){
+        state.verdict.v60 = this.getAttribute("data-v");
+        card.querySelectorAll(".verdict").forEach(function(x){ x.classList.remove("active"); });
+        this.classList.add("active");
+      });
+    });
+    $("v-save").addEventListener("click", doSaveV);
+  }
+  function doSaveV(){
+    if(!state.verdict.v60){ toast("Pilih penilaian dulu"); return; }
+    var porsi = num(g("v-porsi"))||1;
+    var per   = num(g("v-perporsi"))||200;
+    var rasio = parseFloat($("v-rasio").value)||15;
+    var total = round(porsi*per);
+    var bubuk = total>0 ? round(total/rasio) : 0;
+    if(bubuk<=0){ toast("Atur target porsi dulu"); return; }
+    var noteTxt = $("v-note").value.trim();
+    var t = state.v60.pemanisType;
+    var S = VARR();
+    var unit = VUNIT();
+    var ti = state.v60.pemanis;
+    var pemanis = ti!=null
+      ? {label:S[ti].cat, val:round(total*S[ti].ratio/porsi), unit:unit, mode:"by choice", type:PEM_LABEL(t)}
+      : (state.v60.customG!=null
+        ? {label:"Kustom", val:round(state.v60.customG), unit:unit, mode:"manual", type:PEM_LABEL(t)}
+        : null);
+    var specs = "Dose "+bubuk+"g · Air "+total+"g (1:"+rasio+")"
+      + (pemanis? " · "+pemanis.type+" ("+pemanis.label+" · "+pemanis.val+pemanis.unit+" · "+pemanis.mode+")" : "");
+    var notes = loadNotes();
+    notes.unshift({
+      id: "n"+notes.length+"_"+ (notes[0]?(parseInt(notes[0].id.split("_")[1]||"0",10)+1):1),
+      drink: "brew",
+      verdict: state.verdict.v60,
+      dose: bubuk, ratio: rasio, yield: total,
+      pemanis: pemanis,
+      specs: specs,
+      note: noteTxt,
+      date: nowStr()
+    });
+    saveNotes(notes);
+    renderLog();
+    state.verdict.v60=null;
+    renderVSaveCard();
+    toast("Catatan tersimpan");
   }
 
   // ---------- kalkulator bebas ----------
@@ -1456,16 +1565,63 @@
     this.value = "";
   });
 
+  // ---------- update dari git ----------
+  function updReq(path, method, cb){
+    if(typeof fetch!=="function"){ cb({ offline: true }); return; }
+    fetch(path, { method: method || "GET" })
+      .then(function(r){ return r.json().catch(function(){ return {}; }); })
+      .then(cb)
+      .catch(function(){ cb({ offline: true }); });
+  }
+  function updSetMsg(t){ var m=$("upd-msg"); if(m) m.textContent = t; }
+  function updRenderStatus(d){
+    if(d.offline){ updSetMsg("Server update tidak ditemukan — halaman ini dibuka langsung sebagai file. Jalankan server (node server.js) agar tombol ini berfungsi."); return; }
+    if(d.error){ updSetMsg("Gagal memeriksa: " + d.error); return; }
+    if(d.behind>0){ updSetMsg("Ada " + d.behind + " pembaruan tertunda — klik 'Update Sekarang'."); }
+    else { updSetMsg("Sudah versi terbaru."); }
+  }
+  function updLoadVersion(){
+    updReq("/api/version", "GET", function(d){
+      if(!d.offline && !d.error && d.local){
+        $("upd-ver").textContent = d.local;
+        $("upd-ver").title = "branch " + d.branch;
+      }
+    });
+  }
+  $("upd-check").addEventListener("click", function(){
+    var b=this; b.disabled=true;
+    updSetMsg("Memeriksa pembaruan…");
+    updReq("/api/update/status", "GET", function(d){
+      if(d.remote){ $("upd-latest").textContent = d.remote; }
+      updRenderStatus(d);
+      b.disabled=false;
+    });
+  });
+  $("upd-run").addEventListener("click", function(){
+    var b=this; b.disabled=true;
+    updSetMsg("Menarik pembaruan dari Git…");
+    updReq("/api/update", "POST", function(d){
+      if(d.ok){
+        updSetMsg("Pembaruan diterapkan. Memuat ulang…");
+        setTimeout(function(){ location.reload(); }, 1200);
+      }else{
+        updSetMsg("Gagal: " + String(d.output || "terjadi kesalahan").slice(0, 500));
+        b.disabled=false;
+        $("upd-check").disabled=false;
+      }
+    });
+  });
+
   // ---------- init ----------
   loadCalib();
   calcTygo();
   calcV60();
-  renderVSweets();
-  updVSweet();
+  renderVSaveCard();
   calcFree();
   renderPresets();
   renderSaveCard();
   renderLog();
+  updLoadVersion();
 })();
 </script>
 </body>
