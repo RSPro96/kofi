@@ -423,7 +423,7 @@
         <div class="field">
           <label>Ukuran per gelas</label>
           <div class="inrow">
-            <input type="number" id="v-perporsi" min="100" max="400" step="10" value="200" />
+            <input type="number" id="v-perporsi" min="40" max="400" step="10" value="80" />
             <span class="unit">g air</span>
           </div>
         </div>
@@ -1240,7 +1240,7 @@
   function vDash(n){ return n>0 ? n : "–"; }
   function calcV60(){
     var porsi = num(g("v-porsi"))||1;
-    var per   = num(g("v-perporsi"))||200;
+    var per   = num(g("v-perporsi"))||80;
     var rasio = parseFloat($("v-rasio").value)||15;
     var kap   = num(g("v-kap"));
     var total = round(porsi*per);
@@ -1356,7 +1356,7 @@
   function VUNIT(){ return state.v60.pemanisType==="susu" ? "g SKM" : "g gula"; }
   function vBase(){
     var porsi = num(g("v-porsi"))||1;
-    var per   = num(g("v-perporsi"))||200;
+    var per   = num(g("v-perporsi"))||80;
     return round(porsi*per);
   }
   function setPemanisV(t){
@@ -1387,7 +1387,7 @@
   function renderVSweets(){
     var box=$("v-sweets"); box.innerHTML="";
     var arr=VARR();
-    var per = num(g("v-perporsi"))||200;
+    var per = num(g("v-perporsi"))||80;
     $("v-sweet-title").innerHTML = (state.v60.pemanisType==="susu" ? ic('cup') : ic('droplet'))+' Rekomendasi '+VUNIT()+' — ikut total air (ubah ukuran/jumlah gelas langsung kena)';
     arr.forEach(function(s,i){
       var sel = state.v60.pemanis===i;
@@ -1462,7 +1462,7 @@
   function doSaveV(){
     if(!state.verdict.v60){ toast("Pilih penilaian dulu"); return; }
     var porsi = num(g("v-porsi"))||1;
-    var per   = num(g("v-perporsi"))||200;
+    var per   = num(g("v-perporsi"))||80;
     var rasio = parseFloat($("v-rasio").value)||15;
     var total = round(porsi*per);
     var bubuk = total>0 ? round(total/rasio) : 0;
