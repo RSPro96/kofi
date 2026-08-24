@@ -848,12 +848,7 @@
     $("t-rasio-now").textContent = bersih>0&&aktual>0 ? "1:"+round(ratioNow) : "–";
 
     var warn=$("t-warn");
-    if(s1>0 && bersih>9){
-      warn.style.display="flex";
-      warn.innerHTML = '<svg class="ic"><use href="#i-frown"/></svg> Kapasitas melebihi batas: kopi bersih '+round(bersih)+'g (&gt; 9g keranjang).';
-    } else {
-      warn.style.display="none";
-    }
+    warn.style.display="none";
 
     var ring=$("t-ringkas");
     if(bersih>0 && aktual>0){
@@ -1163,6 +1158,7 @@
     gState.i = 0;
     $("guide-wiz").hidden=false;
     $("g-reopen").style.display="none";
+    ["t-timerfab","v-timerfab"].forEach(function(id){ var e=$(id); if(e) e.style.display="none"; });
     gRender();
   }
   function closeGuide(){
@@ -1172,6 +1168,7 @@
     $("guide-w").hidden=true;
     $("guide-wiz").hidden=true;
     $("g-reopen").style.display="inline-flex";
+    ["t-timerfab","v-timerfab"].forEach(function(id){ var e=$(id); if(e) e.style.display=""; });
   }
   $("g-next").addEventListener("click", function(){
     var steps=GUIDE[gState.tool];
