@@ -664,9 +664,9 @@
   ];
   // SKM sanger — khas Aceh kopi:susu = 3:1 (susu hemat, kopi dominan). 0.35 ≈ 1/3
   var SANGER_SKM = [
-    {cat:"Pahit / kuat", sub:"klasik Aceh, 3:1 kopi:susu", ratio:0.35, cls:"s0"},
-    {cat:"Sedikit manis", sub:"sanger standar", ratio:0.60, cls:"s1"},
-    {cat:"Manis", sub:"sanger manis", ratio:0.90, cls:"s2"}
+    {cat:"Pahit / kuat", sub:"klasik Aceh, hemat susu", ratio:0.20, cls:"s0"},
+    {cat:"Sedikit manis", sub:"sanger standar", ratio:0.35, cls:"s1"},
+    {cat:"Manis", sub:"sanger manis", ratio:0.55, cls:"s2"}
   ];
   function PEM(t){ return t==="susu" ? SANGER_SKM : ESP_SUGAR; }
   function PEM_LABEL(t){ return t==="susu" ? "Susu (SKM)" : "Gula"; }
@@ -1345,9 +1345,9 @@
     {cat:"Manis", sub:"manis mantap", ratio:0.075, cls:"s2"}
   ];
   var V_SKM = [
-    {cat:"Pahit / kuat", sub:"klasik Aceh, 3:1 kopi:susu", ratio:0.075, cls:"s0"},
-    {cat:"Sedikit manis", sub:"sanger standar", ratio:0.125, cls:"s1"},
-    {cat:"Manis", sub:"sanger manis", ratio:0.2, cls:"s2"}
+    {cat:"Pahit / kuat", sub:"klasik Aceh, hemat susu", ratio:0.04, cls:"s0"},
+    {cat:"Sedikit manis", sub:"sanger standar", ratio:0.075, cls:"s1"},
+    {cat:"Manis", sub:"sanger manis", ratio:0.12, cls:"s2"}
   ];
   function VARR(){ return state.v60.pemanisType==="susu" ? V_SKM : V_SUGAR; }
   function VUNIT(){ return state.v60.pemanisType==="susu" ? "g SKM" : "g gula"; }
