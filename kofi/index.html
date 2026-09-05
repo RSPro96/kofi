@@ -202,6 +202,14 @@
   .g-pickname{font-size:12.5px;font-weight:800;color:var(--cream);display:flex;align-items:center;justify-content:center;gap:6px}
   .g-pickname .ic{width:15px;height:15px;color:var(--crema)}
   .g-pickcard.sel{border-color:var(--crema);box-shadow:0 0 0 3px rgba(255,211,150,.2)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .g-drinks{display:flex;flex-direction:column;gap:8px;margin:0 0 14px;text-align:left}
+  .g-drinkitem{background:var(--field);border:2px solid var(--line);border-radius:12px;padding:11px 13px;cursor:pointer;transition:.15s;display:block;width:100%;text-align:left}
+  .g-drinkitem:hover{border-color:var(--crema-soft)}
+  .g-drinkitem.sel{border-color:var(--crema);box-shadow:0 0 0 3px rgba(255,211,150,.2)}
+  .g-dname{font-size:14px;font-weight:800;color:var(--cream);display:flex;align-items:center;gap:7px}
+  .g-dname .ic{width:15px;height:15px;color:var(--crema)}
+  .g-dsub{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.45}
   .g-pickcard.sel .g-pickname{color:var(--crema)}
   .g-pickhint{font-size:12.5px;color:var(--muted);margin:-8px 0 12px;min-height:16px}
   .g-pickhint.ok{color:var(--cream)}
@@ -630,6 +638,7 @@
 <div class="ovl" id="guide-w" hidden>
   <div class="sheet-center">
     <div class="g-icon"><svg class="ic"><use href="#i-cup"/></svg></div>
+    <div id="g-step1">
     <h2>Alat apa yang kamu pakai?</h2>
     <p>Pilih alatnya dulu, lalu pilih cara pakainya:<br/>dipandu satu-satu, atau langsung atur sendiri.</p>
     <div class="g-pick">
@@ -643,9 +652,18 @@
       </button>
     </div>
     <div id="g-pickhint" class="g-pickhint">Cek foto alatmu di atas.</div>
-    <button class="btn btn-primary g-big" id="g-start" disabled><svg class="ic"><use href="#i-play"/></svg> Pandu Saya Satu per Satu</button>
+    <button class="btn btn-primary g-big" id="g-start" disabled><svg class="ic"><use href="#i-play"/></svg> Lanjut: Pilih Minuman</button>
     <button class="btn btn-ghost g-big" id="g-direct">Langsung Saja</button>
     <label class="g-remember"><input type="checkbox" id="g-remember"/> Selalu langsung saja (jangan tanya lagi)</label>
+    </div>
+
+    <div id="g-step2" hidden>
+      <h2>Mau bikin apa?</h2>
+      <p>Langkah panduannya menyesuaikan resep yang kamu pilih.<br/>Semua pakai bahan yang sudah kamu punya.</p>
+      <div class="g-drinks" id="g-drinks"></div>
+      <button class="btn btn-primary g-big" id="g-go" disabled><svg class="ic"><use href="#i-play"/></svg> Mulai Panduan</button>
+      <button class="btn btn-ghost g-big" id="g-back2">Kembali</button>
+    </div>
   </div>
 </div>
 
@@ -1219,13 +1237,7 @@
        d:"Tekan alat 8 bar sampai air habis. Setelah jadi, isi berat gelas + espresso (di kartu Result). Hasilnya jadi dasar takaran pemanis.",
        el:"t-gelas1",
        ok:function(){ return g("t-gelas1")>0; },
-       msg:"Tekan dulu kopinya, lalu isi berat gelas + espresso."},
-      {t:"Takaran Pemanis", ic:"i-cup", opt:true,
-       d:"Pilih level gula, sirup gula 1:1, atau susu (SKM) sesuai selera. Angkanya ikut berat kopi di gelas tadi. Boleh dibiarkan — nanti diisi saat mau simpan. Tekan Lanjut untuk lanjut.",
-       el:"t-sweets", ok:null},
-      {t:"Penilaian & Simpan", ic:"i-bookmark", opt:true,
-       d:"Pilih penilaian (Enak/Biasa/Kurang) lalu klik Simpan agar tercatat di Catatan Rasa. Sudah selesai, selamat meracik!",
-       el:"t-savecard", ok:null}
+       msg:"Tekan dulu kopinya, lalu isi berat gelas + espresso."}
     ],
     v60: [
       {t:"Target Porsi", ic:"i-cup",
@@ -1239,22 +1251,107 @@
       {t:"Fase Tuangan", ic:"i-info",
        d:"Rendam awal (2× bubuk, diam 30–45 detik) → tuang ke 60% → tuang ke 100%. Semua masuk satu wadah, baru dibagi ke gelas.",
        el:"v-t2info", ok:null},
-      {t:"Gula / Sirup / Susu (opsional)", ic:"i-cup", opt:true,
-       d:"Buat yang pengen manis, pilih level gula, sirup gula 1:1, atau susu. Kalau tidak pakai, langsung Lanjut saja.",
-       el:"v-sweets", ok:null},
       {t:"Timer & Seduh", ic:"i-play",
        d:"Timer di bawah layar: ▶ mulai → otomatis berhenti & bunyi di 45 detik → ▶ tuang ke 60% → ⏸ → ▶ tuang ke 100% → ⏸. Selesai!",
-       el:"v-timerfab", ok:null},
-      {t:"Penilaian & Simpan", ic:"i-bookmark", opt:true,
-       d:"Pilih penilaian (Enak/Biasa/Kurang) lalu klik Simpan agar tercatat di Catatan Rasa.",
-       el:"v-savecard", ok:null}
+       el:"v-timerfab", ok:null}
     ]
   };
-  var gState = {tool:"tygo", i:0, timer:null};
+  // ---------- resep: langkah dasar + langkah khas tiap minuman ----------
+  var SIMPAN = {
+    tygo: {t:"Penilaian & Simpan", ic:"i-bookmark", opt:true,
+           d:"Pilih penilaian (Enak/Biasa/Kurang) lalu klik Simpan agar tercatat di Catatan Rasa. Sudah selesai, selamat meracik!",
+           el:"t-savecard", ok:null},
+    v60:  {t:"Penilaian & Simpan", ic:"i-bookmark", opt:true,
+           d:"Pilih penilaian (Enak/Biasa/Kurang) lalu klik Simpan agar tercatat di Catatan Rasa.",
+           el:"v-savecard", ok:null}
+  };
+  var SAJI = {tygo:"t-savecard", v60:"v-savecard"};
+
+  var RESEP = {
+   tygo: [
+    {id:"espresso", nama:"Espresso Polos", ic:"i-cup",
+     sub:"Kopi murni tanpa tambahan. Paling jujur untuk mengukur mutu bubuk dan cara pressmu.",
+     pemanis:null,
+     saji:["Sajikan langsung di cangkir kecil selagi panas. Espresso paling enak dalam 1-2 menit pertama; setelah itu crema-nya hilang dan rasanya berubah jadi datar."]},
+
+    {id:"espresso_manis", nama:"Espresso Manis", ic:"i-droplet",
+     sub:"Espresso + gula atau sirup gula 1:1. Pilihan paling hemat bahan.",
+     pemanis:"gula",
+     pd:"Pilih Gula untuk gula pasir, atau Sirup Gula 1:1 kalau kamu sudah bikin sirupnya. Angkanya ikut berat kopi di gelas tadi.",
+     saji:["Masukkan gula atau sirup selagi espresso masih panas, aduk sampai benar-benar larut.",
+           "Gula pasir butuh diaduk lebih lama dan bisa mengendap di dasar. Sirup 1:1 langsung menyatu - itu keunggulannya."]},
+
+    {id:"americano", nama:"Americano", ic:"i-droplet",
+     sub:"Espresso diencerkan air panas. Lebih ringan, cocok diminum lama-lama.",
+     pemanis:null,
+     saji:["Siapkan gelas berisi air panas 100-120 ml dari teko. Diamkan 30 detik dulu supaya tidak terlalu mendidih.",
+           "Tuang espresso ke dalam air panas, bukan sebaliknya. Kalau air yang dituang ke espresso, crema-nya pecah.",
+           "Cicipi dulu sebelum menambah apa pun. Americano dari arabica sering sudah terasa manis alami."]},
+
+    {id:"sanger", nama:"Sanger Espresso", ic:"i-cup",
+     sub:"Espresso + SKM, dikocok sampai berbuih. Versi espresso dari sanger khas Aceh.",
+     pemanis:"susu",
+     pd:"Chip Susu (SKM) sudah dipilihkan. Level Sanger standar itu titik awal yang aman; kalau bubukmu arabica, tetap di level ini karena manisnya membulatkan rasa asam.",
+     saji:["Masukkan SKM sesuai angka di atas ke espresso yang masih panas.",
+           "Kocok kuat dengan whisk kecil atau sendok sampai muncul buih di permukaan. Buih inilah ciri khas sanger - datangnya dari kocokan, bukan dari mesin uap.",
+           "Tambahkan air panas 100-120 ml, aduk sebentar, sajikan selagi hangat."]},
+
+    {id:"sanger_vanila", nama:"Sanger Espresso Vanilla", ic:"i-cup",
+     sub:"SKM + sirup vanilla, total manisnya dijaga tetap seimbang.",
+     pemanis:"kombo",
+     pd:"Mode Sanger + Sirup sudah dipilihkan, sirupnya Sirup Vanilla. Slider Porsi manis dari sirup mengatur pembagian: makin ke kanan makin harum vanilla, makin ke kiri makin tebal susunya.",
+     saji:["Masukkan SKM sesuai angka di atas ke espresso panas, kocok dulu sampai berbuih.",
+           "Baru masukkan sirup vanilla. Kalau keduanya masuk bersamaan, buihnya lebih susah naik karena sirup memberatkan.",
+           "Tambahkan air panas 100-120 ml. Cicipi: kalau vanilla-nya kurang terasa, naikkan slider porsi sirup - jangan menambah SKM, nanti kemanisan."]}
+   ],
+   v60: [
+    {id:"v60_polos", nama:"V60 Polos", ic:"i-droplet",
+     sub:"Kopi tubruk saring tanpa tambahan. Di sini karakter arabica paling terasa.",
+     pemanis:null,
+     saji:["Tuang ke gelas saji. Tunggu 2-3 menit sampai suhunya turun sedikit - rasa manis alaminya baru keluar saat tidak terlalu panas."]},
+
+    {id:"v60_manis", nama:"V60 Manis", ic:"i-droplet",
+     sub:"V60 + gula atau sirup gula 1:1.",
+     pemanis:"gula",
+     pd:"Takarannya ikut total air, bukan berat kopi - jadi kalau kamu ubah jumlah atau ukuran gelas, angkanya langsung menyesuaikan.",
+     saji:["Masukkan gula atau sirup selagi kopi masih panas, aduk sampai larut.",
+           "Kalau sudah dingin, gula pasir sulit larut. Sirup 1:1 tetap bisa."]},
+
+    {id:"v60_susu", nama:"V60 Susu (SKM)", ic:"i-cup",
+     sub:"V60 + susu kental manis, versi ringan dari kopi susu.",
+     pemanis:"susu",
+     pd:"Mulai dari level paling kiri dulu. Kopi V60 jauh lebih ringan daripada espresso, jadi SKM gampang mendominasi.",
+     saji:["Masukkan SKM selagi kopi masih panas, aduk rata.",
+           "Cicipi sebelum menambah. Beda dengan sanger yang kopinya pekat, di sini susu gampang menutupi kopinya."]}
+   ]
+  };
+  function resepById(tool, id){
+    var arr=RESEP[tool]||[];
+    for(var i=0;i<arr.length;i++){ if(arr[i].id===id) return arr[i]; }
+    return arr[0];
+  }
+  // rakit: langkah dasar alat + langkah pemanis (kalau resepnya manis) + penyajian + simpan
+  function buildSteps(tool, id){
+    var r = resepById(tool, id);
+    var out = GUIDE[tool].slice();
+    if(r.pemanis){
+      out.push({t:"Takaran Pemanis", ic:"i-cup", opt:true,
+                d:r.pd || "Pilih level manis sesuai selera.",
+                el: tool==="tygo" ? "t-sweets" : "v-sweets", ok:null});
+    }
+    (r.saji||[]).forEach(function(txt, i){
+      out.push({t:"Penyajian"+((r.saji.length>1)?" "+(i+1):""), ic:"i-coffee",
+                d:txt, el:SAJI[tool], ok:null});
+    });
+    out.push(SIMPAN[tool]);
+    return out;
+  }
+
+  var gState = {tool:"tygo", drink:"espresso", steps:null, i:0, timer:null};
   function gRing(){
     clearTimeout(gState.timer);
     document.querySelectorAll(".guide-ring").forEach(function(x){ x.classList.remove("guide-ring"); });
-    var s=GUIDE[gState.tool][gState.i];
+    var s=gState.steps[gState.i];
     var t=document.getElementById(s.el);
     if(t){
       var card=t.closest(".card")||t;
@@ -1263,9 +1360,9 @@
     }
   }
   function gRender(){
-    var steps=GUIDE[gState.tool];
+    var steps=gState.steps;
     var s=steps[gState.i];
-    $("g-tool").textContent = gState.tool==="tygo" ? "Tygopresso" : "V60 Cone";
+    $("g-tool").textContent = resepById(gState.tool, gState.drink).nama;
     $("g-tool-img").src = gState.tool==="tygo" ? "img/Tygoespresso.png" : "img/vcon.png";
     $("g-icon").setAttribute("href", "#"+s.ic);
     $("g-idx").textContent = "Langkah "+(gState.i+1)+" dari "+steps.length;
@@ -1287,9 +1384,20 @@
   document.querySelectorAll(".g-pickcard").forEach(function(x){
     x.addEventListener("click", function(){ pickTool(x.getAttribute("data-tool")); });
   });
-  function startGuide(tool){
+  function startGuide(tool, drink){
     gState.tool = tool || gPick || ACTIVE;
+    var r = resepById(gState.tool, drink || gState.drink);
+    gState.drink = r.id;
+    gState.steps = buildSteps(gState.tool, r.id);
     gState.i = 0;
+    if(r.pemanis){
+      if(gState.tool==="tygo"){
+        if(r.pemanis==="kombo") setKomboSirup("vanila");
+        setPemanisType(r.pemanis);
+      }else{
+        setPemanisV(r.pemanis==="kombo" ? "susu" : r.pemanis);
+      }
+    }
     $("guide-wiz").hidden=false;
     $("g-reopen").style.display="none";
     ["t-timerfab","v-timerfab"].forEach(function(id){ var e=$(id); if(e) e.style.display="none"; });
@@ -1305,7 +1413,7 @@
     ["t-timerfab","v-timerfab"].forEach(function(id){ var e=$(id); if(e) e.style.display=""; });
   }
   $("g-next").addEventListener("click", function(){
-    var steps=GUIDE[gState.tool];
+    var steps=gState.steps;
     var s=steps[gState.i];
     if(!s.opt && s.ok && !s.ok()){ toast(s.msg); gRing(); return; }
     gState.i++;
@@ -1320,11 +1428,39 @@
     if(gState.i>0){ gState.i--; gRender(); }
   });
   $("g-close").addEventListener("click", closeGuide);
-  $("g-reopen").addEventListener("click", function(){ $("guide-w").hidden=false; });
+  $("g-reopen").addEventListener("click", function(){ showStep(1); $("guide-w").hidden=false; });
+  var gDrink = null;
+  function renderDrinks(tool){
+    var box=$("g-drinks"); box.innerHTML="";
+    gDrink=null; $("g-go").disabled=true;
+    (RESEP[tool]||[]).forEach(function(r){
+      var b=el("button","g-drinkitem",
+        '<span class="g-dname">'+ic(r.ic.replace(/^i-/,""))+r.nama+'</span>'+
+        '<span class="g-dsub">'+r.sub+'</span>');
+      b.type="button";
+      b.addEventListener("click", function(){
+        gDrink=r.id;
+        box.querySelectorAll(".g-drinkitem").forEach(function(x){ x.classList.remove("sel"); });
+        b.classList.add("sel");
+        $("g-go").disabled=false;
+      });
+      box.appendChild(b);
+    });
+  }
+  function showStep(n){
+    $("g-step1").hidden = n!==1;
+    $("g-step2").hidden = n!==2;
+  }
   $("g-start").addEventListener("click", function(){
+    renderDrinks(gPick);
+    showStep(2);
+  });
+  $("g-back2").addEventListener("click", function(){ showStep(1); });
+  $("g-go").addEventListener("click", function(){
     $("guide-w").hidden=true;
+    showStep(1);
     switchPanel(gPick);
-    startGuide(gPick);
+    startGuide(gPick, gDrink);
   });
   $("g-direct").addEventListener("click", function(){
     if($("g-remember").checked){ try{ localStorage.setItem(GK,"direct"); }catch(e){} }
