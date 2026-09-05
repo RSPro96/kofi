@@ -367,7 +367,7 @@
 
   <div class="card">
     <h2>Takaran Pemanis</h2>
-    <p class="hint">Pilih bahan pemanis: <b>Gula</b> pasir, <b>Sirup Gula 1:1</b> (buatan sendiri), atau <b>Susu (SKM)</b> untuk Sanger Espresso. Lalu pilih level.</p>
+    <p class="hint">Takaran mengikuti <b>berat kopi yang benar-benar ada di gelas</b> (timbangan − gelas kosong), bukan target yield. Pilih bahan: <b>Gula</b> pasir, <b>Sirup Gula 1:1</b> (buatan sendiri), atau <b>Susu (SKM)</b> untuk Sanger Espresso. Lalu pilih level.</p>
     <div class="chips" id="t-pemanis">
       <div class="chip active" data-type="gula"><svg class="ic"><use href="#i-droplet"/></svg> Gula</div>
       <div class="chip" data-type="sirup"><svg class="ic"><use href="#i-droplet"/></svg> Sirup Gula 1:1</div>
@@ -784,17 +784,16 @@
   // ---------- sweets + kustom ----------
   function renderTygoSweets(){
     var box=$("t-sweets"); box.innerHTML="";
-    var dose = g("t-sendok1")-g("t-wadah0");
-    var yieldG = g("t-gelas1")-g("t-gelas0");
-    var ratio = parseFloat($("t-ratio").value)||2;
-    var base = yieldG>0 ? yieldG : (dose>0 ? round(dose*ratio) : 0);
-    var est = base>0 && yieldG<=0;
+    // dasar takaran = kopi bersih di gelas (timbangan - gelas kosong), bukan target yield
+    var base = round(g("t-gelas1")-g("t-gelas0"));
+    if(base<0) base=0;
     var t = state.tygo.pemanisType;
     var S = PEM(t);
     var st = state.tygo;
     $("t-sweet-title").innerHTML = (t==="susu" ? ic('cup') : ic('droplet'))+' Rekomendasi '+PEM_LABEL(t)+' — pilih level manis'
       + (t==="sirup" ? ' <small style="font-weight:400;color:var(--muted)">(sirup 1:1 = separuh gula, jadi gramnya 2x gula pasir)</small>' : '')
-      + (est ? ' <small style="font-weight:400;color:var(--muted)">(memakai target yield '+base+' g · berat hasil press belum diisi)</small>' : '');
+      + (base>0 ? ' <small style="font-weight:400;color:var(--muted)">(dari '+base+' g kopi di gelas)</small>'
+                : ' <small style="font-weight:400;color:var(--meh)">(timbang gelas + hasil press dulu)</small>');
     S.forEach(function(s, i){
       var gram = round(base*s.ratio);
       var sel = st.pemanis===i;
@@ -1096,7 +1095,7 @@
        ok:function(){ return g("t-gelas1")>0; },
        msg:"Tekan dulu kopinya, lalu isi berat gelas + espresso."},
       {t:"Takaran Pemanis", ic:"i-cup", opt:true,
-       d:"Pilih level gula atau susu (SKM) sesuai selera. Boleh dibiarkan — nanti diisi saat mau simpan. Tekan Lanjut untuk lanjut.",
+       d:"Pilih level gula, sirup gula 1:1, atau susu (SKM) sesuai selera. Angkanya ikut berat kopi di gelas tadi. Boleh dibiarkan — nanti diisi saat mau simpan. Tekan Lanjut untuk lanjut.",
        el:"t-sweets", ok:null},
       {t:"Penilaian & Simpan", ic:"i-bookmark", opt:true,
        d:"Pilih penilaian (Enak/Biasa/Kurang) lalu klik Simpan agar tercatat di Catatan Rasa. Sudah selesai, selamat meracik!",
