@@ -331,6 +331,14 @@
       </div>
     </div>
     <div class="field">
+      <label>Jenis Biji</label>
+      <div class="chips" id="t-biji">
+        <div class="chip active" data-biji="arabica"><svg class="ic"><use href="#i-droplet"/></svg> Arabica</div>
+        <div class="chip" data-biji="robusta"><svg class="ic"><use href="#i-cup"/></svg> Robusta</div>
+      </div>
+      <p class="hint" id="t-biji-note" style="margin:8px 0 0;font-size:12.5px"></p>
+    </div>
+    <div class="field">
       <label>Target rasio (1:X)</label>
       <div class="inrow">
         <input type="range" id="t-ratio" min="1" max="3" step="0.1" value="2" />
@@ -382,7 +390,7 @@
 
   <div class="card">
     <h2>Timer Press</h2>
-    <p class="hint">Timer kecil di bawah layar — mulai pas mulai press. Target 25–30 detik; tetap terlihat walau halaman di-scroll.</p>
+    <p class="hint">Timer kecil di bawah layar — mulai pas mulai press. <span id="t-timer-target">Target 30–40 detik</span>; tetap terlihat walau halaman di-scroll.</p>
   </div>
 
   <div class="timerfab" id="t-timerfab" aria-label="Timer Tygopresso">
@@ -694,6 +702,15 @@
     sirup:  "1:1 = separuh gula, jadi 2x gula pasir",
     vanila: "botolan ±65% gula · bareng SKM, turunkan SKM ke Pahit"
   };
+  // jenis biji: hanya mengatur yang bisa dikontrol (panas, pre-infusion, durasi).
+  // Yield tidak diikutkan — kapasitas wadah bubuk kecil dan tetap, jadi rasio
+  // aktual ditentukan alat, bukan pilihan biji.
+  var BIJI = {
+    arabica: {label:"Arabica", press:"30–40 detik",
+      note:"Padat, susah diekstrak → kejar panas. Panaskan alat + gelas dengan air panas dulu (buang airnya), air langsung dari teko, pre-infusion: tekan pelan sampai bubuk basah, tunggu 10–15 detik, baru tekan penuh. Asam tipis dan hambar = kurang ekstraksi, bukan watak bijinya."},
+    robusta: {label:"Robusta", press:"25–30 detik",
+      note:"Gembur, cepat terekstrak → direm. Alat tetap dipanaskan, tapi diamkan air 30–60 detik dulu (±92–95 °C) dan langsung tekan penuh tanpa pre-infusion. Pahit serak di tenggorokan = kelewat ekstrak."}
+  };
   function B(t){ return BAHAN[t] || BAHAN.gula; }
   function PEM(t){ return t==="susu" ? SANGER_SKM : t==="vanila" ? ESP_VANILLA : t==="sirup" ? ESP_SYRUP : ESP_SUGAR; }
   function PEM_LABEL(t){ return B(t).label; }
@@ -705,7 +722,7 @@
 
   // ---------- state ----------
   var state = {
-    tygo: { pemanis:null, customG:null, pemanisType:"gula" },
+    tygo: { pemanis:null, customG:null, pemanisType:"gula", biji:"arabica" },
     v60:  { pemanis:null, customG:null, pemanisType:"gula" },
     verdict: { tygo:null, v60:null },
     filter: "all"
@@ -718,11 +735,12 @@
     if(c.wadah!=null)  $("t-wadah0").value  = c.wadah;
     if(c.sendok!=null) $("t-sendok0").value = c.sendok;
     if(c.gelas!=null)  $("t-gelas0").value  = c.gelas;
+    setBiji(c.biji || "arabica");
     calibStatus();
   }
   function saveCalib(){
     try{ localStorage.setItem(CAL_KEY, JSON.stringify({
-      wadah:g("t-wadah0"), sendok:g("t-sendok0"), gelas:g("t-gelas0")
+      wadah:g("t-wadah0"), sendok:g("t-sendok0"), gelas:g("t-gelas0"), biji:state.tygo.biji
     })); }catch(e){}
   }
   function calibStatus(){
@@ -793,6 +811,18 @@
       calcTygo();
     }
     toast('Preset "'+p.name+'" diterapkan');
+  }
+
+  // ---------- jenis biji ----------
+  function setBiji(b){
+    if(!BIJI[b]) b="arabica";
+    state.tygo.biji=b;
+    document.querySelectorAll("#t-biji .chip").forEach(function(x){
+      x.classList.toggle("active", x.getAttribute("data-biji")===b);
+    });
+    $("t-biji-note").textContent = BIJI[b].note;
+    $("t-timer-target").textContent = "Target "+BIJI[b].press;
+    saveCalib();
   }
 
   // ---------- pemanis type ----------
@@ -1549,6 +1579,10 @@
   $("t-pemanis").addEventListener("click", function(e){
     var c=e.target.closest(".chip"); if(!c) return;
     setPemanisType(c.getAttribute("data-type"));
+  });
+  $("t-biji").addEventListener("click", function(e){
+    var c=e.target.closest(".chip"); if(!c) return;
+    setBiji(c.getAttribute("data-biji"));
   });
 
   $("p-save").addEventListener("click", savePreset);
