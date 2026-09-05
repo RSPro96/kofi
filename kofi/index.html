@@ -215,6 +215,7 @@
   .rsp-tbl .rsp-b{font-weight:700}
   .rsp-tbl .rsp-n{font-weight:800;color:var(--crema);white-space:nowrap;font-size:15px}
   .rsp-tbl .rsp-x{display:block;font-size:11.5px;color:var(--muted);font-weight:600;margin-top:2px}
+  .rsp-menu{margin-top:2px}
   .rsp-slot{margin-top:12px}
   .rsp-slot .rsp-lbl{font-size:12px;font-weight:800;color:var(--muted);margin-bottom:6px;display:block}
   .rsp-tot{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.5}
@@ -1369,13 +1370,14 @@
     var box=$(RBOX[tool]), st=stOf(tool), list=RESEP[tool]||[];
     if(!st.resep) st.resep=list[0].id;
     var r=resepById(tool, st.resep), base=resepBase(tool);
-    var opts=list.map(function(x){
-      return '<option value="'+x.id+'"'+(x.id===st.resep?' selected':'')+'>'+x.nama+'</option>';
+    var menu=list.map(function(x){
+      return '<button type="button" class="g-drinkitem'+(x.id===st.resep?' sel':'')+'" data-resep="'+x.id+'">'+
+        '<span class="g-dname">'+ic(x.ic.replace(/^i-/,""))+x.nama+'</span>'+
+        '<span class="g-dsub">'+x.sub+'</span></button>';
     }).join("");
 
-    var html = '<div class="field"><label>Menu</label>'+
-      '<select id="'+tool+'-resep-sel">'+opts+'</select>'+
-      '<p class="hint" style="margin:8px 0 0;font-size:12.5px">'+r.sub+'</p></div>';
+    var html = '<div class="field"><label>Mau bikin apa?</label>'+
+      '<div class="g-drinks rsp-menu">'+menu+'</div></div>';
 
     if(!r.pm){
       html += '<div class="rsp-banner"><div class="rsp-head">'+ic('info')+'Tanpa pemanis</div>'+
@@ -1425,9 +1427,12 @@
 
   function bindResep(tool){
     var box=$(RBOX[tool]), st=stOf(tool);
-    var sel=box.querySelector("select");
-    if(sel) sel.addEventListener("change", function(){
-      st.resep=this.value; st.pilih={}; saveCalib(); renderResep(tool); saveCardOf(tool);
+    box.querySelectorAll("[data-resep]").forEach(function(b){
+      b.addEventListener("click", function(){
+        if(st.resep===b.getAttribute("data-resep")) return;
+        st.resep=b.getAttribute("data-resep"); st.pilih={};
+        saveCalib(); renderResep(tool); saveCardOf(tool);
+      });
     });
     var lv=box.querySelector("[id$='-rsp-lv']");
     if(lv) lv.addEventListener("click", function(e){
