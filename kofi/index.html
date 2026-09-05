@@ -617,7 +617,8 @@
         <p><b>Seduhan kedua.</b> Daun yang sama masih bisa dipakai sekali lagi. Tuang air panasnya segera &mdash; jangan dibiarkan lama sampai daunnya dingin dan basah menganggur. Tambah waktunya jadi 4&ndash;5 menit karena rasanya sudah berkurang.</p>
         <p><b>Yang perlu diperhatikan:</b></p>
         <ul>
-          <li><b>Ruang seduh jauh lebih kecil daripada badan kacanya.</b> Tekomu tertulis 750 ml, tapi itu isi keseluruhan &mdash; yang membatasi berapa gelas sekali seduh adalah ruang seduhnya. Ukur sekali, lalu isi angkanya di kartu Takaran supaya aplikasi bisa memperingatkan.</li>
+          <li><b>Ruang seduh jauh lebih kecil daripada badan kacanya.</b> Angka di kemasan (K1 dijual dalam 350, 500, dan 700 ml) itu isi teko keseluruhan &mdash; yang membatasi berapa gelas sekali seduh adalah ruang seduhnya. Ukur sekali, lalu isi angkanya di kartu Takaran supaya aplikasi bisa memperingatkan.</li>
+          <li><b>Kalau sekali seduh tidak muat</b>, tidak harus dibagi jadi dua kali. Seduh saja di wadah lain yang lebih besar (teko biasa, panci kecil, gelas ukur), lalu <b>saring lewat V60 cone</b> ke wadah penampung. Hasilnya sama saja &mdash; yang penting daunnya berhenti kontak dengan air tepat waktu.</li>
           <li>Kacanya tahan panas, tapi <b>bukan untuk di atas kompor</b>. Jangan dipanaskan langsung, dan jangan tuang air mendidih ke teko yang masih dingin dari kulkas.</li>
           <li><b>Selalu ada sisa air sedikit</b> tertahan di bawah katup setelah ditekan. Itu normal, bukan bocor.</li>
           <li>Setelah selesai, <b>buka bagian saringannya dan bilas</b>. Minyak teh menempel di katup dan lama-lama mengubah rasa seduhan berikutnya.</li>
@@ -638,6 +639,8 @@
         </ol>
         <p><b>Daun menyerap air.</b> Teh cacah menahan ±2,5 ml air per gram, jadi air yang dituang selalu lebih banyak daripada teh yang keluar. Angka <b>Air panas</b> di kartu Takaran sudah memperhitungkan ini &mdash; tinggal ikuti.</p>
         <p><b>Suhu air:</b> teh melati paling enak di ±85&ndash;90 &deg;C, bukan air mendidih. Kalau pakai teko pemanas, tunggu 1&ndash;2 menit setelah mendidih sebelum dituang.</p>
+        <p><b>Pakai V60 cone untuk menyaring.</b> Kalau seduhannya kebanyakan untuk ruang seduh teko, seduh saja di wadah lain lalu tuang lewat V60 &mdash; fungsinya cuma jadi penyaring, bukan diseduh gaya pour over. Rendam daunnya di wadah terpisah selama 3&ndash;4 menit seperti biasa, baru dituang. Dua catatan: <b>kertas filter menyerap ±10&ndash;15 ml</b> (tambahkan segitu ke air seduhnya) dan sedikit meredam aroma melati, jadi kalau ada saringan logam atau kain, itu lebih baik untuk teh. Basahi dulu kertasnya dengan air panas dan buang airnya, sama seperti waktu bikin kopi.</p>
+        <p><b>Jangan diseduh gaya pour over.</b> Menuang air pelan-pelan menembus daun teh menghasilkan rasa yang jauh lebih tipis daripada direndam &mdash; daun teh butuh waktu kontak, bukan aliran. V60 di sini murni pengganti saringan.</p>
         <p><b>Gram atau ml?</b> Untuk teh dan air 1 g = 1 ml. Susu UHT, SKM, dan sirup lebih berat dari air, jadi tiap takaran di bawah ditulis dua-duanya &mdash; pakai yang alatnya ada.</p>
       </div>
     </details>
@@ -685,7 +688,7 @@
           <input type="number" id="th-kap" min="50" max="1000" step="10" value="400" />
           <span class="unit">ml</span>
         </div>
-        <p class="hint" style="margin:6px 0 0;font-size:12.5px">Angka 750 ml di kemasan itu <b>isi teko keseluruhan</b>, bukan ruang seduhnya &mdash; ruang seduh selalu jauh lebih kecil. <b>400 ml masih tebakan</b>: ukur sekali saja dengan mengisi ruang seduh (bagian dalam yang ada saringannya) pakai gelas takar sampai batas atasnya, lalu ganti angka di sini supaya peringatannya akurat.</p>
+        <p class="hint" style="margin:6px 0 0;font-size:12.5px">Angka di kemasan itu <b>isi teko keseluruhan</b>, bukan ruang seduhnya. Untuk K1 versi 700 ml, saringannya berukuran luar 8 &times; 8 &times; 10,5 cm &mdash; isi cairannya kira-kira <b>300&ndash;400 ml</b>, dan <b>400 ml di sini masih tebakan</b>. Ukur sekali saja: isi ruang seduh pakai gelas takar sampai batas atasnya, lalu ganti angka di sini supaya peringatannya akurat.</p>
       </div>
       <div class="warn" id="th-warn" style="margin-top:14px"></div>
       <div id="th-out"></div>
@@ -2436,8 +2439,9 @@
     var batch = Math.ceil(h.air/kap);
     w.style.display="flex";
     w.innerHTML = ic('frown')+" Air seduhnya "+h.air+" ml, tapi ruang seduh cuma muat "+kap+" ml. "+
-      "Seduh "+batch+" kali bergantian (masing-masing ±"+r5(h.air/batch)+" ml air dan ±"+round(h.daun/batch)+" g daun), "+
-      "atau kurangi jumlah gelas. Jangan diisi melewati batas atas — air yang meluap lewat tanpa tersaring.";
+      "Pilihannya: seduh "+batch+" kali bergantian (masing-masing ±"+r5(h.air/batch)+" ml air dan ±"+round(h.daun/batch)+" g daun), "+
+      "seduh sekaligus di wadah lain lalu saring lewat V60 cone, atau kurangi jumlah gelas. "+
+      "Jangan diisi melewati batas atas — air yang meluap lewat tanpa tersaring.";
   }
 
   function renderTeh(){
