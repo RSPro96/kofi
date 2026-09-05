@@ -480,10 +480,11 @@
     </div>
 
     <div class="card">
-      <h2>Tambahan Gula / Susu (opsional)</h2>
+      <h2>Tambahan Gula / Sirup / Susu (opsional)</h2>
       <p class="hint">Buat yang pengen manis. Takaran <b>per gelas</b>, total otomatis × jumlah gelas. Referensi Sanger khas Aceh: kopi:susu = 3:1.</p>
       <div class="chips" id="v-pemanis-type">
         <div class="chip active" data-type="gula"><svg class="ic"><use href="#i-droplet"/></svg> Gula</div>
+        <div class="chip" data-type="sirup"><svg class="ic"><use href="#i-droplet"/></svg> Sirup Gula 1:1</div>
         <div class="chip" data-type="susu"><svg class="ic"><use href="#i-cup"/></svg> Susu (SKM) — Sanger</div>
       </div>
       <div class="sweet-title" id="v-sweet-title"></div>
@@ -1113,8 +1114,8 @@
       {t:"Fase Tuangan", ic:"i-info",
        d:"Rendam awal (2× bubuk, diam 30–45 detik) → tuang ke 60% → tuang ke 100%. Semua masuk satu wadah, baru dibagi ke gelas.",
        el:"v-t2info", ok:null},
-      {t:"Gula / Susu (opsional)", ic:"i-cup", opt:true,
-       d:"Buat yang pengen manis, pilih level gula atau susu. Kalau tidak pakai, langsung Lanjut saja.",
+      {t:"Gula / Sirup / Susu (opsional)", ic:"i-cup", opt:true,
+       d:"Buat yang pengen manis, pilih level gula, sirup gula 1:1, atau susu. Kalau tidak pakai, langsung Lanjut saja.",
        el:"v-sweets", ok:null},
       {t:"Timer & Seduh", ic:"i-play",
        d:"Timer di bawah layar: ▶ mulai → otomatis berhenti & bunyi di 45 detik → ▶ tuang ke 60% → ⏸ → ▶ tuang ke 100% → ⏸. Selesai!",
@@ -1357,8 +1358,9 @@
     {cat:"Sedikit manis", sub:"sanger standar", ratio:0.075, cls:"s1"},
     {cat:"Manis", sub:"sanger manis", ratio:0.12, cls:"s2"}
   ];
-  function VARR(){ return state.v60.pemanisType==="susu" ? V_SKM : V_SUGAR; }
-  function VUNIT(){ return state.v60.pemanisType==="susu" ? "g SKM" : "g gula"; }
+  var V_SYRUP = V_SUGAR.map(function(s){ return {cat:s.cat, sub:s.sub, ratio:s.ratio*2, cls:s.cls}; });
+  function VARR(){ var t=state.v60.pemanisType; return t==="susu" ? V_SKM : t==="sirup" ? V_SYRUP : V_SUGAR; }
+  function VUNIT(){ return PEM_UNIT(state.v60.pemanisType); }
   function vBase(){
     var porsi = num(g("v-porsi"))||1;
     var per   = num(g("v-perporsi"))||80;
@@ -1393,7 +1395,9 @@
     var box=$("v-sweets"); box.innerHTML="";
     var arr=VARR();
     var per = num(g("v-perporsi"))||80;
-    $("v-sweet-title").innerHTML = (state.v60.pemanisType==="susu" ? ic('cup') : ic('droplet'))+' Rekomendasi '+VUNIT()+' — ikut total air (ubah ukuran/jumlah gelas langsung kena)';
+    var vt = state.v60.pemanisType;
+    $("v-sweet-title").innerHTML = (vt==="susu" ? ic('cup') : ic('droplet'))+' Rekomendasi '+PEM_LABEL(vt)+' — ikut total air (ubah ukuran/jumlah gelas langsung kena)'
+      + (vt==="sirup" ? ' <small style="font-weight:400;color:var(--muted)">(sirup 1:1 = separuh gula, jadi gramnya 2x gula pasir)</small>' : '');
     arr.forEach(function(s,i){
       var sel = state.v60.pemanis===i;
       var pg = round(per*s.ratio);
@@ -1401,7 +1405,7 @@
       c.innerHTML =
         '<div class="cat">'+s.cat+'<small>'+s.sub+'</small></div>'+
         '<div class="val"><span class="big">'+pg+'</span> <span class="u">g /gelas</span>'+
-        '<div class="approx">± '+sdm(pg)+' sdm /gelas</div></div>'+
+        '<div class="approx">± '+sdm(pg, PEM_SDM(vt))+' sdm /gelas</div></div>'+
         '<div style="margin-top:10px"><button class="chip'+(sel?' active':'')+'" data-i="'+i+'">'+(sel?ic('check')+' dipilih':'pilih ini')+'</button></div>';
       box.appendChild(c);
     });
