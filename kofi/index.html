@@ -203,6 +203,21 @@
   .g-pickname .ic{width:15px;height:15px;color:var(--crema)}
   .g-pickcard.sel{border-color:var(--crema);box-shadow:0 0 0 3px rgba(255,211,150,.2)}
   .btn:disabled{opacity:.45;cursor:not-allowed}
+  .modeswitch{margin-bottom:14px}
+  .rsp-banner{background:var(--field);border:1.5px solid var(--crema-soft);border-radius:14px;padding:14px;margin-top:14px}
+  .rsp-head{font-size:14px;font-weight:800;color:var(--cream);display:flex;align-items:center;gap:8px;margin-bottom:4px}
+  .rsp-head .ic{width:16px;height:16px;color:var(--crema)}
+  .rsp-sub{font-size:12.5px;color:var(--muted);line-height:1.5;margin:0 0 12px}
+  .rsp-tbl{width:100%;border-collapse:collapse;margin-top:4px}
+  .rsp-tbl th{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);text-align:left;font-weight:800;padding:0 0 7px}
+  .rsp-tbl th:last-child,.rsp-tbl td:last-child{text-align:right}
+  .rsp-tbl td{padding:9px 0;border-top:1px solid var(--line);font-size:13.5px;color:var(--cream);vertical-align:top}
+  .rsp-tbl .rsp-b{font-weight:700}
+  .rsp-tbl .rsp-n{font-weight:800;color:var(--crema);white-space:nowrap;font-size:15px}
+  .rsp-tbl .rsp-x{display:block;font-size:11.5px;color:var(--muted);font-weight:600;margin-top:2px}
+  .rsp-slot{margin-top:12px}
+  .rsp-slot .rsp-lbl{font-size:12px;font-weight:800;color:var(--muted);margin-bottom:6px;display:block}
+  .rsp-tot{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.5}
   .g-drinks{display:flex;flex-direction:column;gap:8px;margin:0 0 14px;text-align:left}
   .g-drinkitem{background:var(--field);border:2px solid var(--line);border-radius:12px;padding:11px 13px;cursor:pointer;transition:.15s;display:block;width:100%;text-align:left}
   .g-drinkitem:hover{border-color:var(--crema-soft)}
@@ -385,33 +400,22 @@
 
   <div class="card">
     <h2>Takaran Pemanis</h2>
-    <p class="hint">Takaran mengikuti <b>berat kopi yang benar-benar ada di gelas</b> (timbangan − gelas kosong), bukan target yield. Pilih bahan: <b>Gula</b> pasir, <b>Sirup Gula 1:1</b> (buatan sendiri), <b>Sirup Vanilla</b> (botolan), atau <b>Susu (SKM)</b> untuk Sanger Espresso. Lalu pilih level.</p>
-    <div class="chips" id="t-pemanis">
-      <div class="chip active" data-type="gula"><svg class="ic"><use href="#i-droplet"/></svg> Gula</div>
-      <div class="chip" data-type="sirup"><svg class="ic"><use href="#i-droplet"/></svg> Sirup Gula 1:1</div>
-      <div class="chip" data-type="vanila"><svg class="ic"><use href="#i-droplet"/></svg> Sirup Vanilla</div>
-      <div class="chip" data-type="susu"><svg class="ic"><use href="#i-cup"/></svg> Susu (SKM) — Sanger</div>
-      <div class="chip" data-type="kombo"><svg class="ic"><use href="#i-cup"/></svg> Sanger + Sirup</div>
+    <p class="hint">Takaran mengikuti <b>berat kopi yang benar-benar ada di gelas</b> (timbangan − gelas kosong), bukan target yield. Ada dua cara: <b>Manual</b> — pilih bahan dan level sendiri. <b>Ikut Resep</b> — pilih menunya, semua bahan yang dibutuhkan langsung tampil sekaligus beserta takarannya.</p>
+    <div class="chips modeswitch" id="t-mode">
+      <div class="chip active" data-mode="manual"><svg class="ic"><use href="#i-droplet"/></svg> Manual</div>
+      <div class="chip" data-mode="resep"><svg class="ic"><use href="#i-cup"/></svg> Ikut Resep</div>
     </div>
-    <div id="t-kombo-ctl" style="display:none">
-      <div class="field" style="margin-top:14px">
-        <label>Sirup yang dipakai</label>
-        <div class="chips" id="t-kombo-sirup">
-          <div class="chip" data-ksirup="sirup"><svg class="ic"><use href="#i-droplet"/></svg> Sirup Gula 1:1</div>
-          <div class="chip active" data-ksirup="vanila"><svg class="ic"><use href="#i-droplet"/></svg> Sirup Vanilla</div>
-        </div>
+    <div id="t-manual-box">
+      <div class="chips" id="t-pemanis">
+        <div class="chip active" data-type="gula"><svg class="ic"><use href="#i-droplet"/></svg> Gula</div>
+        <div class="chip" data-type="sirup"><svg class="ic"><use href="#i-droplet"/></svg> Sirup Gula 1:1</div>
+        <div class="chip" data-type="vanila"><svg class="ic"><use href="#i-droplet"/></svg> Sirup Vanilla</div>
+        <div class="chip" data-type="susu"><svg class="ic"><use href="#i-cup"/></svg> Susu (SKM) — Sanger</div>
       </div>
-      <div class="field">
-        <label>Porsi manis dari sirup</label>
-        <div class="inrow">
-          <input type="range" id="t-kombo-share" min="0" max="100" step="5" value="50" />
-          <span class="unit" id="t-kombo-share-out" style="min-width:52px;text-align:right">50%</span>
-        </div>
-        <p class="hint" style="margin:6px 0 0;font-size:12.5px">Sisanya dari SKM. Naikkan kalau aroma sirup kurang terasa, turunkan kalau badan susunya jadi tipis. Di 0% hasilnya sama persis dengan sanger biasa.</p>
-      </div>
+      <div class="sweet-title" id="t-sweet-title"></div>
+      <div class="sweets" id="t-sweets"></div>
     </div>
-    <div class="sweet-title" id="t-sweet-title"></div>
-    <div class="sweets" id="t-sweets"></div>
+    <div id="t-resep-box" style="display:none"></div>
   </div>
 
   <div class="card">
@@ -518,15 +522,22 @@
 
     <div class="card">
       <h2>Tambahan Gula / Sirup / Susu (opsional)</h2>
-      <p class="hint">Buat yang pengen manis. Takaran <b>per gelas</b>, total otomatis × jumlah gelas. Referensi Sanger khas Aceh: kopi:susu = 3:1.</p>
-      <div class="chips" id="v-pemanis-type">
-        <div class="chip active" data-type="gula"><svg class="ic"><use href="#i-droplet"/></svg> Gula</div>
-        <div class="chip" data-type="sirup"><svg class="ic"><use href="#i-droplet"/></svg> Sirup Gula 1:1</div>
-        <div class="chip" data-type="vanila"><svg class="ic"><use href="#i-droplet"/></svg> Sirup Vanilla</div>
-        <div class="chip" data-type="susu"><svg class="ic"><use href="#i-cup"/></svg> Susu (SKM) — Sanger</div>
+      <p class="hint">Takaran <b>per gelas</b>, total otomatis × jumlah gelas. <b>Manual</b> untuk pilih bahan sendiri, <b>Ikut Resep</b> untuk mengikuti menu. Referensi Sanger khas Aceh: kopi:susu = 3:1.</p>
+      <div class="chips modeswitch" id="v-mode">
+        <div class="chip active" data-mode="manual"><svg class="ic"><use href="#i-droplet"/></svg> Manual</div>
+        <div class="chip" data-mode="resep"><svg class="ic"><use href="#i-cup"/></svg> Ikut Resep</div>
       </div>
-      <div class="sweet-title" id="v-sweet-title"></div>
-      <div class="sweets" id="v-sweets"></div>
+      <div id="v-manual-box">
+        <div class="chips" id="v-pemanis-type">
+          <div class="chip active" data-type="gula"><svg class="ic"><use href="#i-droplet"/></svg> Gula</div>
+          <div class="chip" data-type="sirup"><svg class="ic"><use href="#i-droplet"/></svg> Sirup Gula 1:1</div>
+          <div class="chip" data-type="vanila"><svg class="ic"><use href="#i-droplet"/></svg> Sirup Vanilla</div>
+          <div class="chip" data-type="susu"><svg class="ic"><use href="#i-cup"/></svg> Susu (SKM) — Sanger</div>
+        </div>
+        <div class="sweet-title" id="v-sweet-title"></div>
+        <div class="sweets" id="v-sweets"></div>
+      </div>
+      <div id="v-resep-box" style="display:none"></div>
       <div class="result" style="margin-top:14px">
         <div class="kpis">
           <div class="kpi"><div class="n" id="v-sweet-total">–</div><div class="l">Total Takaran</div></div>
@@ -733,13 +744,11 @@
     gula:   {label:"Gula",           unit:"g gula",  sdm:12, gula:1},
     sirup:  {label:"Sirup Gula 1:1", unit:"g sirup", sdm:15, gula:0.5},
     vanila: {label:"Sirup Vanilla",  unit:"g sirup", sdm:15, gula:0.65},
-    susu:   {label:"Susu (SKM)",     unit:"g SKM",   sdm:12, gula:0.55}, // sdm sirup 15 g: cairan lebih berat
-    kombo:  {label:"Sanger + Sirup", unit:"g SKM",   sdm:12, gula:0.55}
+    susu:   {label:"Susu (SKM)",     unit:"g SKM",   sdm:12, gula:0.55} // sdm sirup 15 g: cairan lebih berat
   };
   var CATATAN = {
     sirup:  "1:1 = separuh gula, jadi 2x gula pasir",
-    vanila: "botolan ±65% gula · bareng SKM, turunkan SKM ke Pahit",
-    kombo:  "total manis tetap seukuran level sanger, dibagi antara SKM dan sirup"
+    vanila: "botolan ±65% gula · bareng SKM, turunkan SKM ke Pahit"
   };
   // jenis biji: hanya mengatur yang bisa dikontrol (panas, pre-infusion, durasi).
   // Yield tidak diikutkan — kapasitas wadah bubuk kecil dan tetap, jadi rasio
@@ -751,15 +760,7 @@
       note:"Gembur, cepat terekstrak → direm. Alat tetap dipanaskan, tapi diamkan air 30–60 detik dulu (±92–95 °C) dan langsung tekan penuh tanpa pre-infusion. Pahit serak di tenggorokan = kelewat ekstrak."}
   };
   function B(t){ return BAHAN[t] || BAHAN.gula; }
-  function PEM(t){ return (t==="susu"||t==="kombo") ? SANGER_SKM : t==="vanila" ? ESP_VANILLA : t==="sirup" ? ESP_SYRUP : ESP_SUGAR; }
-  // bagi total manis satu level sanger antara SKM dan sirup, share = porsi sirup
-  function komboGram(base, i){
-    var lv = SANGER_SKM[i]; if(!lv || !(base>0)) return null;
-    var k = state.tygo.kombo;
-    var total = base * lv.ratio * BAHAN.susu.gula; // gula ekivalen
-    return { skm: round(total*(1-k.share)/BAHAN.susu.gula),
-             sir: round(total*k.share/B(k.sirup).gula) };
-  }
+  function PEM(t){ return t==="susu" ? SANGER_SKM : t==="vanila" ? ESP_VANILLA : t==="sirup" ? ESP_SYRUP : ESP_SUGAR; }
   function PEM_LABEL(t){ return B(t).label; }
   function PEM_UNIT(t){ return B(t).unit; }
   function PEM_SDM(t){ return B(t).sdm; }
@@ -770,8 +771,9 @@
   // ---------- state ----------
   var state = {
     tygo: { pemanis:null, customG:null, pemanisType:"gula", biji:"arabica",
-            kombo:{ sirup:"vanila", share:0.5 } },
-    v60:  { pemanis:null, customG:null, pemanisType:"gula" },
+            mode:"manual", resep:null, level:1, pilih:{} },
+    v60:  { pemanis:null, customG:null, pemanisType:"gula",
+            mode:"manual", resep:null, level:1, pilih:{} },
     verdict: { tygo:null, v60:null },
     filter: "all"
   };
@@ -784,16 +786,16 @@
     if(c.sendok!=null) $("t-sendok0").value = c.sendok;
     if(c.gelas!=null)  $("t-gelas0").value  = c.gelas;
     setBiji(c.biji || "arabica");
-    if(c.kombo){
-      setKomboSirup(c.kombo.sirup);
-      setKomboShare((c.kombo.share!=null ? c.kombo.share : 0.5)*100);
-    }
+    if(c.resep){ state.tygo.resep=c.resep; state.tygo.level=c.level!=null?c.level:1;
+                 state.tygo.pilih=c.pilih||{}; }
+    setMode("tygo", c.mode==="resep" ? "resep" : "manual");
     calibStatus();
   }
   function saveCalib(){
     try{ localStorage.setItem(CAL_KEY, JSON.stringify({
       wadah:g("t-wadah0"), sendok:g("t-sendok0"), gelas:g("t-gelas0"),
-      biji:state.tygo.biji, kombo:state.tygo.kombo
+      biji:state.tygo.biji, mode:state.tygo.mode, resep:state.tygo.resep,
+      level:state.tygo.level, pilih:state.tygo.pilih
     })); }catch(e){}
   }
   function calibStatus(){
@@ -820,7 +822,7 @@
       row.innerHTML =
         '<div class="main">'+
           '<div class="t1">'+escapeHtml(p.name)+'<span class="badge">'+toolLabel+'</span></div>'+
-          '<div class="specs">'+(p.type==="kombo"&&p.ksirup ? "Sanger + "+PEM_LABEL(p.ksirup) : PEM_LABEL(p.type))+' · '+escapeHtml(pm)+' · Rasio 1:'+p.ratio+'</div>'+
+          '<div class="specs">'+(p.pmode==="resep"&&p.resep ? escapeHtml(resepById(p.tool==="v60"?"v60":"tygo", p.resep).nama) : PEM_LABEL(p.type)+' · '+escapeHtml(pm))+' · Rasio 1:'+p.ratio+'</div>'+
         '</div>'+
         '<button class="chip" data-pk="'+p.id+'" style="padding:7px 12px">Pakai</button>'+
         '<button class="del" data-pd="'+p.id+'" title="Hapus">'+ic('x')+'</button>';
@@ -837,8 +839,8 @@
       id: Date.now(), name:name, tool:tool,
       ratio: ratio,
       type: st.pemanisType,
-      ksirup: st.kombo ? st.kombo.sirup : null,
-      kshare: st.kombo ? st.kombo.share : null,
+      pmode: st.mode, resep: st.resep, level: st.level,
+      pilih: st.pilih ? JSON.parse(JSON.stringify(st.pilih)) : {},
       mode: st.customG!=null ? "manual" : (st.pemanis!=null ? "choice" : null),
       idx: st.customG!=null ? null : st.pemanis,
       gram: st.customG
@@ -861,8 +863,7 @@
       state.tygo.pemanis = p.mode==="choice" ? p.idx : null;
       state.tygo.customG = p.mode==="manual" ? p.gram : null;
       state.tygo.pemanisType = p.type;
-      if(p.ksirup) setKomboSirup(p.ksirup);
-      if(p.kshare!=null) setKomboShare(p.kshare*100);
+      restoreResep("tygo", p);
       $("t-ratio").value = p.ratio;
       setPemanisType(p.type);
       calcTygo();
@@ -879,23 +880,6 @@
     });
     $("t-biji-note").textContent = BIJI[b].note;
     $("t-timer-target").textContent = "Target "+BIJI[b].press;
-    saveCalib();
-  }
-
-  // ---------- kombinasi SKM + sirup ----------
-  function setKomboSirup(v){
-    if(!BAHAN[v]) v="vanila";
-    state.tygo.kombo.sirup=v;
-    document.querySelectorAll("#t-kombo-sirup .chip").forEach(function(x){
-      x.classList.toggle("active", x.getAttribute("data-ksirup")===v);
-    });
-    saveCalib();
-  }
-  function setKomboShare(pct){
-    pct = Math.max(0, Math.min(100, parseFloat(pct)||0));
-    state.tygo.kombo.share = pct/100;
-    $("t-kombo-share").value = pct;
-    $("t-kombo-share-out").textContent = pct+"%";
     saveCalib();
   }
 
@@ -921,19 +905,11 @@
       + PEM_NOTE(t)
       + (base>0 ? ' <small style="font-weight:400;color:var(--muted)">(dari '+base+' g kopi di gelas)</small>'
                 : ' <small style="font-weight:400;color:var(--meh)">(timbang gelas + hasil press dulu)</small>');
-    $("t-kombo-ctl").style.display = t==="kombo" ? "" : "none";
     S.forEach(function(s, i){
       var sel = st.pemanis===i;
-      var val;
-      if(t==="kombo"){
-        var k = komboGram(base, i);
-        val = '<div class="val"><span class="big">'+(k?k.skm:"–")+'</span> <span class="u">g SKM</span>'+
-              '<div class="approx">+ <b>'+(k?k.sir:"–")+'</b> '+PEM_UNIT(st.kombo.sirup)+'</div></div>';
-      }else{
-        var gram = round(base*s.ratio);
-        val = '<div class="val"><span class="big">'+ (base>0?gram:"–") +'</span> <span class="u">'+PEM_UNIT(t)+'</span>'+
-              '<div class="approx">± '+ (base>0?sdm(gram, PEM_SDM(t)):"–") +' sdm</div></div>';
-      }
+      var gram = round(base*s.ratio);
+      var val = '<div class="val"><span class="big">'+ (base>0?gram:"–") +'</span> <span class="u">'+PEM_UNIT(t)+'</span>'+
+                '<div class="approx">± '+ (base>0?sdm(gram, PEM_SDM(t)):"–") +' sdm</div></div>';
       var c=el("div","sweet "+s.cls);
       c.innerHTML =
         '<div class="cat">'+s.cat+'<small>'+s.sub+'</small></div>'+ val +
@@ -947,7 +923,7 @@
         renderTygoSweets(); renderSaveCard();
       });
     });
-    if(t!=="kombo") box.appendChild(customCard());
+    box.appendChild(customCard());
   }
   function customCard(){
     var st=state.tygo;
@@ -1005,7 +981,7 @@
     } else {
       ring.textContent = "Isi berat wadah + bubuk untuk mulai.";
     }
-    renderTygoSweets();
+    if(state.tygo.mode==="resep") renderResep("tygo"); else renderTygoSweets();
   }
 
   // ---------- kartu simpan ----------
@@ -1056,19 +1032,13 @@
     var unit = PEM_UNIT(t);
     var st = state.tygo;
     var ti = st.pemanis;
-    var pemanis;
-    if(t==="kombo" && ti!=null){
-      var k = komboGram(yieldG, ti);
-      pemanis = {label:S[ti].cat, val:k.skm, unit:"g SKM", mode:"by choice",
-                 type:"Sanger + "+PEM_LABEL(st.kombo.sirup),
-                 plus:k.sir+PEM_UNIT(st.kombo.sirup)};
-    }else{
-      pemanis = ti!=null
+    var pemanis = st.mode==="resep"
+      ? resepPemanis("tygo", yieldG)
+      : (ti!=null
         ? {label:S[ti].cat, val:round(yieldG*S[ti].ratio), unit:unit, mode:"by choice", type:PEM_LABEL(t)}
         : (st.customG!=null
           ? {label:"Kustom", val:round(st.customG), unit:unit, mode:"manual", type:PEM_LABEL(t)}
-          : null);
-    }
+          : null));
 
     var specs = "Dose "+dose+"g · Yield "+yieldG+"g (1:"+ratio+") · press 8 bar"
       + (pemanis? " · "+pemanis.type+" ("+pemanis.label+" · "+pemanis.val+pemanis.unit
@@ -1269,62 +1239,88 @@
 
   var RESEP = {
    tygo: [
-    {id:"espresso", nama:"Espresso Polos", ic:"i-cup",
+    {id:"espresso", nama:"Espresso Polos", ic:"i-cup", pm:null,
      sub:"Kopi murni tanpa tambahan. Paling jujur untuk mengukur mutu bubuk dan cara pressmu.",
-     pemanis:null,
      saji:["Sajikan langsung di cangkir kecil selagi panas. Espresso paling enak dalam 1-2 menit pertama; setelah itu crema-nya hilang dan rasanya berubah jadi datar."]},
 
     {id:"espresso_manis", nama:"Espresso Manis", ic:"i-droplet",
+     pm:{lv:"gula", slots:[{opsi:["gula","sirup","vanila"], porsi:1}]},
      sub:"Espresso + gula atau sirup gula 1:1. Pilihan paling hemat bahan.",
-     pemanis:"gula",
      pd:"Pilih Gula untuk gula pasir, atau Sirup Gula 1:1 kalau kamu sudah bikin sirupnya. Angkanya ikut berat kopi di gelas tadi.",
      saji:["Masukkan gula atau sirup selagi espresso masih panas, aduk sampai benar-benar larut.",
            "Gula pasir butuh diaduk lebih lama dan bisa mengendap di dasar. Sirup 1:1 langsung menyatu - itu keunggulannya."]},
 
-    {id:"americano", nama:"Americano", ic:"i-droplet",
+    {id:"americano", nama:"Americano", ic:"i-droplet", pm:null,
      sub:"Espresso diencerkan air panas. Lebih ringan, cocok diminum lama-lama.",
-     pemanis:null,
      saji:["Siapkan gelas berisi air panas 100-120 ml dari teko. Diamkan 30 detik dulu supaya tidak terlalu mendidih.",
            "Tuang espresso ke dalam air panas, bukan sebaliknya. Kalau air yang dituang ke espresso, crema-nya pecah.",
            "Cicipi dulu sebelum menambah apa pun. Americano dari arabica sering sudah terasa manis alami."]},
 
     {id:"sanger", nama:"Sanger Espresso", ic:"i-cup",
+     pm:{lv:"sanger", slots:[{opsi:["susu"], porsi:1}]},
      sub:"Espresso + SKM, dikocok sampai berbuih. Versi espresso dari sanger khas Aceh.",
-     pemanis:"susu",
      pd:"Chip Susu (SKM) sudah dipilihkan. Level Sanger standar itu titik awal yang aman; kalau bubukmu arabica, tetap di level ini karena manisnya membulatkan rasa asam.",
      saji:["Masukkan SKM sesuai angka di atas ke espresso yang masih panas.",
            "Kocok kuat dengan whisk kecil atau sendok sampai muncul buih di permukaan. Buih inilah ciri khas sanger - datangnya dari kocokan, bukan dari mesin uap.",
            "Tambahkan air panas 100-120 ml, aduk sebentar, sajikan selagi hangat."]},
 
     {id:"sanger_vanila", nama:"Sanger Espresso Vanilla", ic:"i-cup",
+     pm:{lv:"sanger", slots:[{opsi:["susu"], porsi:0.6},{opsi:["vanila","sirup"], porsi:0.4}]},
      sub:"SKM + sirup vanilla, total manisnya dijaga tetap seimbang.",
-     pemanis:"kombo",
      pd:"Mode Sanger + Sirup sudah dipilihkan, sirupnya Sirup Vanilla. Slider Porsi manis dari sirup mengatur pembagian: makin ke kanan makin harum vanilla, makin ke kiri makin tebal susunya.",
      saji:["Masukkan SKM sesuai angka di atas ke espresso panas, kocok dulu sampai berbuih.",
            "Baru masukkan sirup vanilla. Kalau keduanya masuk bersamaan, buihnya lebih susah naik karena sirup memberatkan.",
            "Tambahkan air panas 100-120 ml. Cicipi: kalau vanilla-nya kurang terasa, naikkan slider porsi sirup - jangan menambah SKM, nanti kemanisan."]}
    ],
    v60: [
-    {id:"v60_polos", nama:"V60 Polos", ic:"i-droplet",
+    {id:"v60_polos", nama:"V60 Polos", ic:"i-droplet", pm:null,
      sub:"Kopi tubruk saring tanpa tambahan. Di sini karakter arabica paling terasa.",
-     pemanis:null,
      saji:["Tuang ke gelas saji. Tunggu 2-3 menit sampai suhunya turun sedikit - rasa manis alaminya baru keluar saat tidak terlalu panas."]},
 
     {id:"v60_manis", nama:"V60 Manis", ic:"i-droplet",
+     pm:{lv:"gula", slots:[{opsi:["gula","sirup","vanila"], porsi:1}]},
      sub:"V60 + gula atau sirup gula 1:1.",
-     pemanis:"gula",
      pd:"Takarannya ikut total air, bukan berat kopi - jadi kalau kamu ubah jumlah atau ukuran gelas, angkanya langsung menyesuaikan.",
      saji:["Masukkan gula atau sirup selagi kopi masih panas, aduk sampai larut.",
            "Kalau sudah dingin, gula pasir sulit larut. Sirup 1:1 tetap bisa."]},
 
     {id:"v60_susu", nama:"V60 Susu (SKM)", ic:"i-cup",
+     pm:{lv:"sanger", slots:[{opsi:["susu"], porsi:1}]},
      sub:"V60 + susu kental manis, versi ringan dari kopi susu.",
-     pemanis:"susu",
      pd:"Mulai dari level paling kiri dulu. Kopi V60 jauh lebih ringan daripada espresso, jadi SKM gampang mendominasi.",
      saji:["Masukkan SKM selagi kopi masih panas, aduk rata.",
            "Cicipi sebelum menambah. Beda dengan sanger yang kopinya pekat, di sini susu gampang menutupi kopinya."]}
    ]
   };
+  // ---------- mesin resep: hitung tiap bahan pemanis dalam satu banner ----------
+  function levelArr(tool, lv){
+    if(tool==="v60") return lv==="sanger" ? V_SKM : V_SUGAR;
+    return lv==="sanger" ? SANGER_SKM : ESP_SUGAR;
+  }
+  function resepBase(tool){
+    return tool==="v60" ? round(num(g("v-perporsi"))||0)
+                        : Math.max(0, round(g("t-gelas1")-g("t-gelas0")));
+  }
+  // total manis satu level, dinyatakan dalam gram gula ekivalen
+  function totalGula(tool, lv, i, base){
+    var a=levelArr(tool, lv)[i]; if(!a) return 0;
+    return base * a.ratio * (lv==="sanger" ? BAHAN.susu.gula : 1);
+  }
+  // bahan terpilih untuk satu slot: yang disimpan user, atau opsi pertama
+  function slotBahan(st, idx, slot){
+    var v = st.pilih ? st.pilih[idx] : null;
+    return (v && slot.opsi.indexOf(v)>=0) ? v : slot.opsi[0];
+  }
+  function hitungResep(tool, r, st, base){
+    if(!r.pm) return [];
+    var tot = totalGula(tool, r.pm.lv, st.level, base);
+    return r.pm.slots.map(function(slot, i){
+      var b = slotBahan(st, i, slot);
+      return {idx:i, slot:slot, bahan:b, label:B(b).label, unit:B(b).unit,
+              gram: base>0 ? round(tot*slot.porsi/B(b).gula) : null,
+              sdm:  base>0 ? sdm(round(tot*slot.porsi/B(b).gula), B(b).sdm) : null};
+    });
+  }
   function resepById(tool, id){
     var arr=RESEP[tool]||[];
     for(var i=0;i<arr.length;i++){ if(arr[i].id===id) return arr[i]; }
@@ -1334,10 +1330,10 @@
   function buildSteps(tool, id){
     var r = resepById(tool, id);
     var out = GUIDE[tool].slice();
-    if(r.pemanis){
+    if(r.pm){
       out.push({t:"Takaran Pemanis", ic:"i-cup", opt:true,
                 d:r.pd || "Pilih level manis sesuai selera.",
-                el: tool==="tygo" ? "t-sweets" : "v-sweets", ok:null});
+                el: RBOX[tool], ok:null});
     }
     (r.saji||[]).forEach(function(txt, i){
       out.push({t:"Penyajian"+((r.saji.length>1)?" "+(i+1):""), ic:"i-coffee",
@@ -1345,6 +1341,118 @@
     });
     out.push(SIMPAN[tool]);
     return out;
+  }
+
+  // ---------- banner takaran pemanis mode resep ----------
+  var RBOX = {tygo:"t-resep-box", v60:"v-resep-box"};
+  var MBOX = {tygo:"t-manual-box", v60:"v-manual-box"};
+  function stOf(tool){ return tool==="v60" ? state.v60 : state.tygo; }
+
+  function setMode(tool, mode){
+    var st=stOf(tool);
+    st.mode = mode==="resep" ? "resep" : "manual";
+    document.querySelectorAll("#"+(tool==="v60"?"v-mode":"t-mode")+" .chip").forEach(function(x){
+      x.classList.toggle("active", x.getAttribute("data-mode")===st.mode);
+    });
+    $(MBOX[tool]).style.display = st.mode==="manual" ? "" : "none";
+    $(RBOX[tool]).style.display = st.mode==="resep" ? "" : "none";
+    if(st.mode==="resep") renderResep(tool); else if(tool==="tygo") renderTygoSweets(); else renderVSweets();
+    saveCalib();
+  }
+  function restoreResep(tool, p){
+    var st=stOf(tool);
+    if(p.resep){ st.resep=p.resep; st.level=p.level!=null?p.level:1; st.pilih=p.pilih||{}; }
+    setMode(tool, p.pmode==="resep" ? "resep" : "manual");
+  }
+
+  function renderResep(tool){
+    var box=$(RBOX[tool]), st=stOf(tool), list=RESEP[tool]||[];
+    if(!st.resep) st.resep=list[0].id;
+    var r=resepById(tool, st.resep), base=resepBase(tool);
+    var opts=list.map(function(x){
+      return '<option value="'+x.id+'"'+(x.id===st.resep?' selected':'')+'>'+x.nama+'</option>';
+    }).join("");
+
+    var html = '<div class="field"><label>Menu</label>'+
+      '<select id="'+tool+'-resep-sel">'+opts+'</select>'+
+      '<p class="hint" style="margin:8px 0 0;font-size:12.5px">'+r.sub+'</p></div>';
+
+    if(!r.pm){
+      html += '<div class="rsp-banner"><div class="rsp-head">'+ic('info')+'Tanpa pemanis</div>'+
+        '<p class="rsp-sub" style="margin:0">'+r.nama+' disajikan polos. Kalau tetap mau manis, '+
+        'pindah ke mode Manual dan pilih bahannya sendiri.</p></div>';
+      box.innerHTML=html; bindResep(tool); return;
+    }
+
+    var LV = levelArr(tool, r.pm.lv);
+    html += '<div class="field" style="margin-top:14px"><label>Level manis</label><div class="chips" id="'+tool+'-rsp-lv">'+
+      LV.map(function(l,i){
+        return '<div class="chip'+(i===st.level?' active':'')+'" data-lv="'+i+'">'+l.cat+'</div>';
+      }).join("")+'</div></div>';
+
+    r.pm.slots.forEach(function(slot, i){
+      if(slot.opsi.length<2) return;
+      var cur=slotBahan(st, i, slot);
+      html += '<div class="rsp-slot"><span class="rsp-lbl">Pilih salah satu '+
+        (r.pm.slots.length>1 ? '(bagian '+(i+1)+')' : '')+'</span><div class="chips" data-slot="'+i+'">'+
+        slot.opsi.map(function(o){
+          return '<div class="chip'+(o===cur?' active':'')+'" data-bahan="'+o+'">'+B(o).label+'</div>';
+        }).join("")+'</div></div>';
+    });
+
+    var comp = hitungResep(tool, r, st, base);
+    var per = tool==="v60" ? " /gelas" : "";
+    var rows = comp.map(function(c){
+      return '<tr><td><span class="rsp-b">'+c.label+'</span>'+
+             (c.slot.opsi.length>1 ? '<span class="rsp-x">bisa diganti di atas</span>'
+                                   : '<span class="rsp-x">wajib untuk menu ini</span>')+'</td>'+
+             '<td><span class="rsp-n">'+(c.gram!=null?c.gram:"–")+' '+c.unit.replace(/^g /,"g ")+per+'</span>'+
+             '<span class="rsp-x">± '+(c.sdm!=null?c.sdm:"–")+' sdm</span></td></tr>';
+    }).join("");
+
+    html += '<div class="rsp-banner"><div class="rsp-head">'+ic('cup')+'Takaran pemanis '+r.nama+'</div>'+
+      '<p class="rsp-sub">'+(comp.length>1
+        ? 'Semua bahan di bawah dipakai <b>bersamaan</b>. Porsinya sudah dibagi supaya total manisnya tetap seukuran level '+LV[st.level].cat.toLowerCase()+'.'
+        : 'Satu bahan untuk menu ini, di level '+LV[st.level].cat.toLowerCase()+'.')+'</p>'+
+      '<table class="rsp-tbl"><thead><tr><th>Bahan</th><th>Takaran</th></tr></thead><tbody>'+rows+'</tbody></table>'+
+      '<div class="rsp-tot">'+(base>0
+        ? (tool==="v60" ? 'Dihitung dari '+base+' ml air per gelas.' : 'Dihitung dari '+base+' g kopi di gelas.')
+        : (tool==="v60" ? 'Isi dulu ukuran per gelas di atas.' : 'Timbang dulu gelas + hasil press di kartu Hasil Seduhan.'))+'</div></div>';
+
+    box.innerHTML=html;
+    bindResep(tool);
+  }
+
+  function bindResep(tool){
+    var box=$(RBOX[tool]), st=stOf(tool);
+    var sel=box.querySelector("select");
+    if(sel) sel.addEventListener("change", function(){
+      st.resep=this.value; st.pilih={}; saveCalib(); renderResep(tool); saveCardOf(tool);
+    });
+    var lv=box.querySelector("[id$='-rsp-lv']");
+    if(lv) lv.addEventListener("click", function(e){
+      var c=e.target.closest(".chip"); if(!c) return;
+      st.level=parseInt(c.getAttribute("data-lv"),10)||0;
+      saveCalib(); renderResep(tool); saveCardOf(tool);
+    });
+    box.querySelectorAll("[data-slot]").forEach(function(row){
+      row.addEventListener("click", function(e){
+        var c=e.target.closest(".chip"); if(!c) return;
+        st.pilih[row.getAttribute("data-slot")]=c.getAttribute("data-bahan");
+        saveCalib(); renderResep(tool); saveCardOf(tool);
+      });
+    });
+  }
+  function saveCardOf(tool){ if(tool==="v60") renderVSaveCard(); else renderSaveCard(); }
+  // ringkasan pemanis mode resep untuk Catatan Rasa
+  function resepPemanis(tool, base){
+    var st=stOf(tool), r=resepById(tool, st.resep);
+    if(!r.pm) return {label:"Tanpa pemanis", val:0, unit:"", mode:"resep", type:r.nama};
+    var c=hitungResep(tool, r, st, base);
+    if(!c.length || c[0].gram==null) return null;
+    return {label:levelArr(tool, r.pm.lv)[st.level].cat, val:c[0].gram, unit:c[0].unit,
+            mode:"resep", type:r.nama,
+            plus:c.slice(1).map(function(x){ return x.gram+x.unit; }).join(" + ")};
   }
 
   var gState = {tool:"tygo", drink:"espresso", steps:null, i:0, timer:null};
@@ -1390,14 +1498,9 @@
     gState.drink = r.id;
     gState.steps = buildSteps(gState.tool, r.id);
     gState.i = 0;
-    if(r.pemanis){
-      if(gState.tool==="tygo"){
-        if(r.pemanis==="kombo") setKomboSirup("vanila");
-        setPemanisType(r.pemanis);
-      }else{
-        setPemanisV(r.pemanis==="kombo" ? "susu" : r.pemanis);
-      }
-    }
+    var st=stOf(gState.tool);
+    st.resep=r.id; st.pilih={};
+    setMode(gState.tool, "resep");
     $("guide-wiz").hidden=false;
     $("g-reopen").style.display="none";
     ["t-timerfab","v-timerfab"].forEach(function(id){ var e=$(id); if(e) e.style.display="none"; });
@@ -1534,7 +1637,7 @@
     $("v-t2info").textContent = total>0
       ? "Alur: 1) rendam awal "+bloom+" g → diem 30–45 detik · 2) tuang pelan sampai 60% ("+t1+" g) · 3) lanjut sampai 100% ("+t2+" g). Total waktu dari mulai sampai air habis = 2,5–3 menit."
       : "Atur jumlah porsi & ukuran per gelas untuk mulai.";
-    renderVSweets();
+    if(state.v60.mode==="resep") renderResep("v60"); else renderVSweets();
     updVSweet();
   }
 
@@ -1744,13 +1847,16 @@
     var S = VARR();
     var unit = VUNIT();
     var ti = state.v60.pemanis;
-    var pemanis = ti!=null
-      ? {label:S[ti].cat, val:round(total*S[ti].ratio/porsi), unit:unit, mode:"by choice", type:PEM_LABEL(t)}
-      : (state.v60.customG!=null
-        ? {label:"Kustom", val:round(state.v60.customG), unit:unit, mode:"manual", type:PEM_LABEL(t)}
-        : null);
+    var pemanis = state.v60.mode==="resep"
+      ? resepPemanis("v60", resepBase("v60"))
+      : (ti!=null
+        ? {label:S[ti].cat, val:round(total*S[ti].ratio/porsi), unit:unit, mode:"by choice", type:PEM_LABEL(t)}
+        : (state.v60.customG!=null
+          ? {label:"Kustom", val:round(state.v60.customG), unit:unit, mode:"manual", type:PEM_LABEL(t)}
+          : null));
     var specs = "Dose "+bubuk+"g · Air "+total+"g (1:"+rasio+")"
-      + (pemanis? " · "+pemanis.type+" ("+pemanis.label+" · "+pemanis.val+pemanis.unit+" · "+pemanis.mode+")" : "");
+      + (pemanis? " · "+pemanis.type+" ("+pemanis.label+" · "+pemanis.val+pemanis.unit
+          + (pemanis.plus? " + "+pemanis.plus : "") + " · "+pemanis.mode+")" : "");
     var notes = loadNotes();
     notes.unshift({
       id: "n"+notes.length+"_"+ (notes[0]?(parseInt(notes[0].id.split("_")[1]||"0",10)+1):1),
@@ -1789,18 +1895,16 @@
     var c=e.target.closest(".chip"); if(!c) return;
     setPemanisType(c.getAttribute("data-type"));
   });
+  ["tygo","v60"].forEach(function(tool){
+    $(tool==="v60"?"v-mode":"t-mode").addEventListener("click", function(e){
+      var c=e.target.closest(".chip"); if(!c) return;
+      setMode(tool, c.getAttribute("data-mode"));
+      saveCardOf(tool);
+    });
+  });
   $("t-biji").addEventListener("click", function(e){
     var c=e.target.closest(".chip"); if(!c) return;
     setBiji(c.getAttribute("data-biji"));
-  });
-  $("t-kombo-sirup").addEventListener("click", function(e){
-    var c=e.target.closest(".chip"); if(!c) return;
-    setKomboSirup(c.getAttribute("data-ksirup"));
-    renderTygoSweets(); renderSaveCard();
-  });
-  $("t-kombo-share").addEventListener("input", function(){
-    setKomboShare(this.value);
-    renderTygoSweets(); renderSaveCard();
   });
 
   $("p-save").addEventListener("click", savePreset);
