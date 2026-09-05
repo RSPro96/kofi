@@ -508,9 +508,10 @@
         <div class="field">
           <label>Target rasio (1:X)</label>
           <div class="inrow">
-            <input type="range" id="v-rasio" min="12" max="18" step="1" value="15" />
+            <input type="range" id="v-rasio" min="5" max="18" step="1" value="15" />
             <span class="unit" id="v-rasio-out" style="min-width:52px;text-align:right">1:15</span>
           </div>
+          <p class="hint" style="margin:6px 0 0;font-size:12.5px">1:12–1:18 itu rentang pour over normal. Di bawah 1:10 hasilnya <b>konsentrat</b> — bukan untuk diminum langsung, tapi pengganti espresso di minuman susu.</p>
         </div>
       </div>
       <div class="result">
@@ -1299,6 +1300,21 @@
      saji:["Masukkan gula atau sirup selagi kopi masih panas, aduk sampai larut.",
            "Kalau sudah dingin, gula pasir sulit larut. Sirup 1:1 tetap bisa."]},
 
+    {id:"v60_pekat", nama:"Konsentrat V60", ic:"i-droplet", pm:null, pekat:true, setara:0.6,
+     sub:"Rasio 1:5, 15 g bubuk. Bukan minuman jadi — ini pengganti espresso untuk menu susu.",
+     saji:["Konsentrat ini terlalu pekat kalau diminum langsung. Fungsinya menggantikan espresso, bukan jadi kopi seduh biasa.",
+           "Hasilnya sekitar 45 ml, bukan 75 ml — bubuk menahan air kira-kira dua kali beratnya sendiri, dan itu normal.",
+           "Untuk minuman susu, pakai <b>1,5x</b> dari jumlah espresso yang tertulis di resep. Resep minta 20 g espresso, tuang 30 g konsentrat.",
+           "Tahan 2 hari di kulkas dalam wadah tertutup, tapi aromanya paling bagus di jam pertama."]},
+
+    {id:"v60_sanger", nama:"Sanger V60", ic:"i-cup", pekat:true, setara:0.6,
+     pm:{lv:"sanger", slots:[{opsi:["susu"], porsi:1}]},
+     sub:"Sanger tanpa Tygopresso, memakai konsentrat V60 1:5 sebagai ganti espresso.",
+     pd:"Takarannya dihitung dari kekuatan konsentrat, bukan dari total air seperti menu V60 lain — jadi angkanya sebanding dengan sanger espresso, tidak melonjak.",
+     saji:["Masukkan SKM sesuai angka di atas ke konsentrat yang masih panas, aduk sampai larut.",
+           "Kocok kuat sampai berbuih. Buihnya akan lebih tipis daripada sanger espresso — konsentrat V60 tidak punya crema, dan sebagian buih sanger memang datang dari situ.",
+           "Tambahkan air panas 80–90 ml. Konsentratnya sudah 45 ml, jadi airnya lebih sedikit daripada versi espresso."]},
+
     {id:"v60_susu", nama:"V60 Susu (SKM)", ic:"i-cup",
      pm:{lv:"sanger", slots:[{opsi:["susu"], porsi:1}]},
      sub:"V60 + susu kental manis, versi ringan dari kopi susu.",
@@ -1308,18 +1324,39 @@
    ]
   };
   // ---------- mesin resep: hitung tiap bahan pemanis dalam satu banner ----------
-  function levelArr(tool, lv){
-    if(tool==="v60") return lv==="sanger" ? V_SKM : V_SUGAR;
+  function levelArr(tool, r){
+    var lv = r && r.pm ? r.pm.lv : "gula";
+    if(tool==="v60" && !(r && r.pekat)) return lv==="sanger" ? V_SKM : V_SUGAR;
     return lv==="sanger" ? SANGER_SKM : ESP_SUGAR;
   }
+  // hasil konsentrat = air total - air yang tertahan ampas (~2x berat bubuk)
+  function hasilPekat(){
+    var total = round((num(g("v-porsi"))||1) * (num(g("v-perporsi"))||0));
+    var rasio = parseFloat($("v-rasio").value)||15;
+    var bubuk = total>0 ? total/rasio : 0;
+    return Math.max(0, round(total - bubuk*2));
+  }
   function resepBase(tool){
-    return tool==="v60" ? round(num(g("v-perporsi"))||0)
-                        : Math.max(0, round(g("t-gelas1")-g("t-gelas0")));
+    if(tool!=="v60") return Math.max(0, round(g("t-gelas1")-g("t-gelas0")));
+    var r = resepById("v60", stOf("v60").resep);
+    // konsentrat lebih encer daripada espresso, jadi volumenya dikonversi dulu
+    // ke "setara espresso" supaya takaran pemanisnya sebanding
+    if(r && r.pekat) return round(hasilPekat() * (r.setara||0.6));
+    return round(num(g("v-perporsi"))||0);
+  }
+  // resep konsentrat menetapkan parameter seduhnya sendiri
+  function applyResepV60(r){
+    if(r.pekat){
+      $("v-porsi").value = 1; $("v-perporsi").value = 75; $("v-rasio").value = 5;
+    }else if((parseFloat($("v-rasio").value)||15) < 10){
+      $("v-perporsi").value = 80; $("v-rasio").value = 15;
+    }
+    calcV60();
   }
   // total manis satu level, dinyatakan dalam gram gula ekivalen
-  function totalGula(tool, lv, i, base){
-    var a=levelArr(tool, lv)[i]; if(!a) return 0;
-    return base * a.ratio * (lv==="sanger" ? BAHAN.susu.gula : 1);
+  function totalGula(tool, r, i, base){
+    var a=levelArr(tool, r)[i]; if(!a) return 0;
+    return base * a.ratio * (r.pm.lv==="sanger" ? BAHAN.susu.gula : 1);
   }
   // bahan terpilih untuk satu slot: yang disimpan user, atau opsi pertama
   function slotBahan(st, idx, slot){
@@ -1328,7 +1365,7 @@
   }
   function hitungResep(tool, r, st, base){
     if(!r.pm) return [];
-    var tot = totalGula(tool, r.pm.lv, st.level, base);
+    var tot = totalGula(tool, r, st.level, base);
     return r.pm.slots.map(function(slot, i){
       var b = slotBahan(st, i, slot);
       return {idx:i, slot:slot, bahan:b, label:B(b).label, unit:B(b).unit,
@@ -1400,7 +1437,7 @@
       box.innerHTML=html; bindResep(tool); return;
     }
 
-    var LV = levelArr(tool, r.pm.lv);
+    var LV = levelArr(tool, r);
     html += '<div class="field" style="margin-top:14px"><label>Level manis</label><div class="chips" id="'+tool+'-rsp-lv">'+
       LV.map(function(l,i){
         return '<div class="chip'+(i===st.level?' active':'')+'" data-lv="'+i+'">'+l.cat+'</div>';
@@ -1432,7 +1469,9 @@
         : 'Satu bahan untuk menu ini, di level '+LV[st.level].cat.toLowerCase()+'.')+'</p>'+
       '<table class="rsp-tbl"><thead><tr><th>Bahan</th><th>Takaran</th></tr></thead><tbody>'+rows+'</tbody></table>'+
       '<div class="rsp-tot">'+(base>0
-        ? (tool==="v60" ? 'Dihitung dari '+base+' ml air per gelas.' : 'Dihitung dari '+base+' g kopi di gelas.')
+        ? (tool!=="v60" ? 'Dihitung dari '+base+' g kopi di gelas.'
+           : r.pekat ? 'Dihitung dari ±'+hasilPekat()+' ml konsentrat, setara ±'+base+' g espresso.'
+           : 'Dihitung dari '+base+' ml air per gelas.')
         : (tool==="v60" ? 'Isi dulu ukuran per gelas di atas.' : 'Timbang dulu gelas + hasil press di kartu Hasil Seduhan.'))+'</div></div>';
 
     box.innerHTML=html;
@@ -1445,7 +1484,9 @@
       b.addEventListener("click", function(){
         if(st.resep===b.getAttribute("data-resep")) return;
         st.resep=b.getAttribute("data-resep"); st.pilih={};
-        saveCalib(); renderResep(tool); saveCardOf(tool);
+        saveCalib();
+        if(tool==="v60") applyResepV60(resepById("v60", st.resep)); else renderResep(tool);
+        saveCardOf(tool);
       });
     });
     var lv=box.querySelector("[id$='-rsp-lv']");
@@ -1469,7 +1510,7 @@
     if(!r.pm) return {label:"Tanpa pemanis", val:0, unit:"", mode:"resep", type:r.nama};
     var c=hitungResep(tool, r, st, base);
     if(!c.length || c[0].gram==null) return null;
-    return {label:levelArr(tool, r.pm.lv)[st.level].cat, val:c[0].gram, unit:c[0].unit,
+    return {label:levelArr(tool, r)[st.level].cat, val:c[0].gram, unit:c[0].unit,
             mode:"resep", type:r.nama,
             plus:c.slice(1).map(function(x){ return x.gram+x.unit; }).join(" + ")};
   }
@@ -1520,6 +1561,7 @@
     var st=stOf(gState.tool);
     st.resep=r.id; st.pilih={};
     setMode(gState.tool, "resep");
+    if(gState.tool==="v60") applyResepV60(r);
     $("guide-wiz").hidden=false;
     $("g-reopen").style.display="none";
     ["t-timerfab","v-timerfab"].forEach(function(id){ var e=$(id); if(e) e.style.display="none"; });
