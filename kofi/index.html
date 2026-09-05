@@ -108,7 +108,9 @@
   @media(max-width:760px){
     /* di layar kecil dua tombol melayang ini terlalu memakan tempat: dikecilkan ~35% */
     .timerfab{bottom:76px;gap:4px;padding:5px 7px;border-width:1px}
-    .timerfab .tf-label{font-size:9px;gap:3px;padding-left:2px}
+    /* satu baris: kalau "Rendam Awal" terlipat, timer V60 jadi lebih tinggi
+       dan tombol panduan di atasnya ikut meleset */
+    .timerfab .tf-label{font-size:9px;gap:3px;padding-left:2px;white-space:nowrap}
     .timerfab .tf-label .ic{width:11px;height:11px}
     .timerfab .tf-n{font-size:13.5px;min-width:82px;letter-spacing:.3px}
     .tf-btn{width:23px;height:23px;border-width:1px}
@@ -264,7 +266,8 @@
   .g-reopen:hover{background:rgba(169,116,26,1);border-color:#ffe082}
   .g-reopen:active{transform:scale(.95)}
   @media(max-width:760px){
-    .g-reopen{bottom:136px;gap:5px;padding:7px 11px;font-size:9.5px;border-width:1px}
+    /* 113 = timerfab (bottom 76 + tinggi 35) + 2px, jarak yang sama dengan navbar ke timer */
+    .g-reopen{bottom:113px;gap:5px;padding:7px 11px;font-size:9.5px;border-width:1px}
     .g-reopen .ic{width:12px;height:12px}
   }
   @media(prefers-reduced-motion:reduce){.g-bar,.g-progress,.sheet,.ovl{transition:none!important;animation:none!important}}
