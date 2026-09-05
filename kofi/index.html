@@ -603,6 +603,29 @@
 
   <section id="panel-teh" class="panel" style="display:none">
     <details class="edu">
+      <summary><svg class="ic"><use href="#i-cup"/></svg> Cara pakai teko saringan tekan <svg class="ic caret"><use href="#i-chevron"/></svg></summary>
+      <div class="body">
+        <p><b>One Two Cups K1</b> punya dua ruang: <b>ruang seduh</b> di dalam (yang ada saringan dan katupnya) dan <b>badan kaca</b> di bawah sebagai penampung. Daun teh tidak pernah masuk ke badan kaca &mdash; itu inti alatnya.</p>
+        <ol>
+          <li><b>Panaskan dulu.</b> Tuang air panas ke ruang seduh, tekan tombolnya supaya turun, lalu buang airnya. Teko dingin menurunkan suhu seduhan dan rasanya jadi tipis.</li>
+          <li><b>Masukkan daun</b> ke ruang seduh, bukan ke badan kaca.</li>
+          <li><b>Tuang air panas</b> (±85&ndash;90 &deg;C) sampai semua daun terendam. <b>Jangan melewati batas atas ruang seduh</b> &mdash; kalau meluap, air lewat begitu saja tanpa tersaring.</li>
+          <li><b>Tutup dan nyalakan timer</b> 3&ndash;4 menit. Tutupnya menahan panas, jadi jangan dibuka-buka untuk mengintip.</li>
+          <li><b>Tekan tombol di tutup.</b> Katup di dasar ruang seduh membuka dan teh turun ke badan kaca dalam ±5&ndash;10 detik. Lepas tombolnya setelah tetesannya berhenti.</li>
+          <li><b>Tuang dari cerat</b> ke gelas. Daunnya tetap tertinggal di atas, jadi ekstraksinya benar-benar berhenti &mdash; itu keunggulan teko ini dibanding merendam terus di gelas biasa.</li>
+        </ol>
+        <p><b>Seduhan kedua.</b> Daun yang sama masih bisa dipakai sekali lagi. Tuang air panasnya segera &mdash; jangan dibiarkan lama sampai daunnya dingin dan basah menganggur. Tambah waktunya jadi 4&ndash;5 menit karena rasanya sudah berkurang.</p>
+        <p><b>Yang perlu diperhatikan:</b></p>
+        <ul>
+          <li><b>Ruang seduh jauh lebih kecil daripada badan kacanya.</b> Tekomu tertulis 750 ml, tapi itu isi keseluruhan &mdash; yang membatasi berapa gelas sekali seduh adalah ruang seduhnya. Ukur sekali, lalu isi angkanya di kartu Takaran supaya aplikasi bisa memperingatkan.</li>
+          <li>Kacanya tahan panas, tapi <b>bukan untuk di atas kompor</b>. Jangan dipanaskan langsung, dan jangan tuang air mendidih ke teko yang masih dingin dari kulkas.</li>
+          <li><b>Selalu ada sisa air sedikit</b> tertahan di bawah katup setelah ditekan. Itu normal, bukan bocor.</li>
+          <li>Setelah selesai, <b>buka bagian saringannya dan bilas</b>. Minyak teh menempel di katup dan lama-lama mengubah rasa seduhan berikutnya.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="edu">
       <summary><svg class="ic"><use href="#i-leaf"/></svg> Cara seduh teh melati <svg class="ic caret"><use href="#i-chevron"/></svg></summary>
       <div class="body">
         <p>Semua menu di sini berangkat dari <b>satu seduhan dasar</b>: teh cacah melati diseduh air panas, didiamkan <b>3&ndash;4 menit</b>, lalu <b>disaring</b>. Untuk menu bersusu, tehnya sengaja dibuat lebih pekat supaya rasanya tidak tenggelam di balik susu.</p>
@@ -610,7 +633,8 @@
           <li><b>Teh biasa</b> (tanpa susu) &mdash; 3,5 g daun untuk ±220 ml teh jadi.</li>
           <li><b>Teh pekat</b> (untuk menu bersusu) &mdash; 4 g daun untuk ±140&ndash;150 ml teh jadi.</li>
           <li><b>Waktu seduh</b> 3 menit (aroma lebih ringan) sampai 4 menit (lebih kuat). Lewat 5 menit rasanya mulai sepat.</li>
-          <li><b>Saring begitu waktunya habis.</b> Daun yang dibiarkan terendam terus akan terus mengeluarkan rasa pahit.</li>
+          <li><b>Air yang dituang masuk ke ruang seduh</b>, jadi yang jadi batas bukan besarnya teko tapi besarnya ruang seduh. Isi angkanya di kartu Takaran.</li>
+          <li><b>Tekan tombolnya begitu waktunya habis.</b> Daun yang dibiarkan terendam terus akan terus mengeluarkan rasa pahit &mdash; teko ini justru dibuat untuk menghentikannya.</li>
         </ol>
         <p><b>Daun menyerap air.</b> Teh cacah menahan ±2,5 ml air per gram, jadi air yang dituang selalu lebih banyak daripada teh yang keluar. Angka <b>Air panas</b> di kartu Takaran sudah memperhitungkan ini &mdash; tinggal ikuti.</p>
         <p><b>Suhu air:</b> teh melati paling enak di ±85&ndash;90 &deg;C, bukan air mendidih. Kalau pakai teko pemanas, tunggu 1&ndash;2 menit setelah mendidih sebelum dituang.</p>
@@ -655,12 +679,21 @@
           <div class="chips" id="th-level"></div>
         </div>
       </div>
+      <div class="field">
+        <label>Kapasitas ruang seduh teko</label>
+        <div class="inrow">
+          <input type="number" id="th-kap" min="50" max="1000" step="10" value="400" />
+          <span class="unit">ml</span>
+        </div>
+        <p class="hint" style="margin:6px 0 0;font-size:12.5px">Angka 750 ml di kemasan itu <b>isi teko keseluruhan</b>, bukan ruang seduhnya &mdash; ruang seduh selalu jauh lebih kecil. <b>400 ml masih tebakan</b>: ukur sekali saja dengan mengisi ruang seduh (bagian dalam yang ada saringannya) pakai gelas takar sampai batas atasnya, lalu ganti angka di sini supaya peringatannya akurat.</p>
+      </div>
+      <div class="warn" id="th-warn" style="margin-top:14px"></div>
       <div id="th-out"></div>
     </div>
 
     <div class="card">
       <h2>Timer Seduh</h2>
-      <p class="hint">Hitung mundur dari waktu seduh. Tekan <b>&#9654;</b> tepat setelah air dituang; saat bunyi, langsung saring daunnya.</p>
+      <p class="hint">Hitung mundur dari waktu seduh. Tekan <b>&#9654;</b> tepat setelah air dituang; saat bunyi, langsung tekan tombol di tutup teko supaya tehnya turun.</p>
       <div class="chips" id="th-target"></div>
     </div>
 
@@ -1393,11 +1426,17 @@
       {t:"Atur Porsi & Manis", ic:"i-droplet",
        d:"Tentukan jumlah gelas dan level manis. Untuk percobaan pertama pakai level Ringan — menambah manis gampang, menguranginya tidak bisa.",
        el:"th-gelas", ok:null},
-      {t:"Seduh Tehnya", ic:"i-leaf",
-       d:"Timbang daun dan tuang air panas sesuai angka di kartu Takaran. Air ideal ±85–90 °C, bukan mendidih.",
+      {t:"Panaskan Teko", ic:"i-cup", tehOnly:true,
+       d:"Tuang air panas ke ruang seduh, tekan tombolnya supaya turun ke badan kaca, lalu buang airnya. Teko dingin bikin seduhan jadi tipis.",
+       el:"th-kap", ok:null},
+      {t:"Isi Daun & Air", ic:"i-leaf", tehOnly:true,
+       d:"Masukkan daun ke ruang seduh — bukan ke badan kaca — lalu tuang air panas ±85–90 °C sesuai angka di kartu Takaran. Jangan sampai melewati batas atas ruang seduh.",
        el:"th-out", ok:null},
-      {t:"Timer & Saring", ic:"i-play",
-       d:"Nyalakan timer di bawah layar begitu air dituang. Saat bunyi, langsung saring daunnya — jangan dibiarkan terendam.",
+      {t:"Tutup & Timer", ic:"i-play", tehOnly:true,
+       d:"Tutup tekonya, nyalakan timer di bawah layar. Jangan dibuka-buka untuk mengintip — panasnya keluar.",
+       el:"th-timerfab", ok:null},
+      {t:"Tekan Tombol", ic:"i-droplet", tehOnly:true,
+       d:"Begitu timer bunyi, tekan tombol di tutup. Teh turun ke badan kaca dalam ±5–10 detik, daunnya tertinggal di atas dan ekstraksi berhenti. Lepas tombol setelah tetesannya habis.",
        el:"th-timerfab", ok:null}
     ]
   };
@@ -1545,6 +1584,7 @@
   function buildSteps(tool, id){
     var r = resepById(tool, id);
     var out = GUIDE[tool].slice();
+    if(tool==="teh" && !r.daun) out = out.filter(function(x){ return !x.tehOnly; });
     if(r.pm){
       out.push({t:"Takaran Pemanis", ic:"i-cup", opt:true,
                 d:r.pd || "Pilih level manis sesuai selera.",
@@ -2269,42 +2309,42 @@
      sub:"Paling sederhana — aroma melati tetap yang paling depan.",
      daun:3.5, teh:220,
      bahan:[{t:"sirup", min:15, max:20}],
-     saji:["Saring daunnya, lalu masukkan sirup gula selagi teh masih hangat dan aduk sampai rata."]},
+     saji:["Tuang teh dari teko ke gelas, masukkan sirup gula selagi masih hangat, aduk sampai rata."]},
 
     {id:"teh_vanila", nama:"Vanilla Jasmine Tea", ic:"i-droplet",
      sub:"Teh melati hangat beraroma vanilla, tanpa susu.",
      daun:3.5, teh:220,
      bahan:[{t:"vanila", min:15, max:20}],
      catatan:["Sirup vanilla sudah mengandung gula, jadi jangan langsung menambah sirup gula. Cicipi dulu — tambahkan hanya kalau memang masih kurang manis."],
-     saji:["Saring daunnya, masukkan sirup vanilla selagi hangat, aduk rata.",
+     saji:["Tuang teh dari teko ke gelas, masukkan sirup vanilla selagi hangat, aduk rata.",
            "Cicipi dulu sebelum memutuskan menambah sirup gula."]},
 
     {id:"milk_tea", nama:"Jasmine Milk Tea", ic:"i-cup",
      sub:"Milk tea sederhana — teh dibuat pekat supaya tidak tenggelam di susu.",
      daun:4, teh:150,
      bahan:[{t:"uht", min:80, max:80},{t:"sirup", min:10, max:15}],
-     saji:["Saring tehnya, lalu masukkan susu UHT dan sirup gula. Aduk rata, sajikan hangat."]},
+     saji:["Tuang teh dari teko ke gelas, masukkan susu UHT dan sirup gula. Aduk rata, sajikan hangat."]},
 
     {id:"vanilla_milk_tea", nama:"Vanilla Jasmine Milk Tea", ic:"i-cup",
      sub:"Teh melati pekat, susu, dan vanilla dalam satu gelas.",
      daun:4, teh:150,
      bahan:[{t:"uht", min:75, max:75},{t:"vanila", min:15, max:20}],
      catatan:["Percobaan pertama tidak perlu sirup gula — sirup vanilla sudah memberi rasa manis."],
-     saji:["Saring tehnya, masukkan susu UHT, lalu sirup vanilla. Aduk rata."]},
+     saji:["Tuang teh dari teko ke gelas, masukkan susu UHT, lalu sirup vanilla. Aduk rata."]},
 
     {id:"teh_skm", nama:"Teh Susu SKM", ic:"i-cup",
      sub:"Lebih creamy dan lebih manis, memakai susu kental manis.",
      daun:4, teh:170,
      bahan:[{t:"skm", min:20, max:20},{t:"sirup", min:0, max:10}],
      catatan:["SKM sudah cukup manis. Cicipi dulu sebelum menambah sirup gula — di level Ringan sirupnya memang 0."],
-     saji:["Saring tehnya, masukkan SKM selagi panas, aduk sampai benar-benar larut.",
+     saji:["Tuang teh dari teko ke gelas, masukkan SKM selagi masih panas, aduk sampai benar-benar larut.",
            "Cicipi. Tambahkan sirup gula sedikit demi sedikit hanya kalau masih kurang."]},
 
     {id:"creamy_milk_tea", nama:"Creamy Jasmine Milk Tea", ic:"i-cup",
      sub:"Gabungan susu UHT dan SKM — lebih bulat daripada salah satunya saja.",
      daun:4, teh:140,
      bahan:[{t:"uht", min:70, max:70},{t:"skm", min:15, max:15},{t:"sirup", min:0, max:5}],
-     saji:["Saring tehnya, masukkan SKM dulu dan aduk sampai larut selagi panas.",
+     saji:["Tuang teh dari teko ke gelas, masukkan SKM dulu dan aduk sampai larut selagi panas.",
            "Baru masukkan susu UHT, aduk rata. Cicipi sebelum menambah sirup gula."]},
 
     {id:"creamy_vanilla", nama:"Creamy Vanilla Jasmine Tea", ic:"i-leaf", top:true,
@@ -2313,7 +2353,7 @@
      bahan:[{t:"uht", min:70, max:70},{t:"skm", min:10, max:10},{t:"vanila", min:10, max:15}],
      catatan:["Mulai dari level Ringan (vanilla 10 ml). Kalau aromanya kurang menonjol, naikkan ke level Manis (15 ml) — bukan menambah SKM.",
               "Jangan menambah sirup gula sebelum dicicipi. Kalau memang perlu, tambahkan 5 ml sekali."],
-     saji:["Saring tehnya, masukkan susu UHT, lalu SKM, aduk sampai SKM benar-benar larut.",
+     saji:["Tuang teh dari teko ke gelas, masukkan susu UHT, lalu SKM, aduk sampai SKM benar-benar larut.",
            "Terakhir masukkan sirup vanilla, aduk rata, lalu cicipi."]},
 
     {id:"susu_vanila", nama:"Susu Vanilla Hangat", ic:"i-droplet",
@@ -2330,6 +2370,7 @@
     return TMENU[0];
   }
   function tGelas(){ var v=parseInt($("th-gelas").value,10); return (v>0&&v<=6) ? v : 1; }
+  function tKap(){ var v=parseFloat($("th-kap").value); return v>0 ? v : 0; }
   function r5(v){ return Math.round(v/5)*5; }
   // takaran satu bahan di level tertentu: 0 = batas bawah, 2 = batas atas
   function tAmt(b, lv){
@@ -2388,8 +2429,20 @@
     return {menu:m, gelas:gel, level:lv, daun:daun, air:air, comp:comp};
   }
 
+  // ruang seduh lebih kecil daripada badan kacanya — itu yang membatasi jumlah gelas
+  function renderTehWarn(h){
+    var w=$("th-warn"), kap=tKap();
+    if(h.menu.daun<=0 || kap<=0 || h.air<=kap){ w.style.display="none"; return; }
+    var batch = Math.ceil(h.air/kap);
+    w.style.display="flex";
+    w.innerHTML = ic('frown')+" Air seduhnya "+h.air+" ml, tapi ruang seduh cuma muat "+kap+" ml. "+
+      "Seduh "+batch+" kali bergantian (masing-masing ±"+r5(h.air/batch)+" ml air dan ±"+round(h.daun/batch)+" g daun), "+
+      "atau kurangi jumlah gelas. Jangan diisi melewati batas atas — air yang meluap lewat tanpa tersaring.";
+  }
+
   function renderTeh(){
     var h=tHitung(), m=h.menu, box=$("th-out");
+    renderTehWarn(h);
     var perlbl = h.gelas>1 ? " /gelas" : "";
     var rows = h.comp.map(function(c){
       var p=tPair(h.gelas>1 ? c.tot : c.per, c.t);
@@ -2412,7 +2465,7 @@
           '<td><span class="rsp-n">'+h.daun+' g</span></td></tr>'+
         '<tr><td><span class="rsp-b">Air panas</span><span class="rsp-x">±85–90 °C · sudah termasuk ±'+round(m.daun*SERAP*h.gelas)+' ml yang diserap daun</span></td>'+
           '<td><span class="rsp-n">'+h.air+' ml</span></td></tr>'+
-        '<tr><td><span class="rsp-b">Waktu seduh</span><span class="rsp-x">saring begitu waktunya habis</span></td>'+
+        '<tr><td><span class="rsp-b">Waktu seduh</span><span class="rsp-x">tekan tombol begitu waktunya habis</span></td>'+
           '<td><span class="rsp-n">3–4 menit</span></td></tr>'+
         '</tbody></table>';
     }
@@ -2450,7 +2503,7 @@
     var now=Date.now();
     THT.left -= now-THT.last; THT.last=now;
     if(THT.left<=0){
-      THT.left=0; thStop(); thShow(); thPhase("Saring!");
+      THT.left=0; thStop(); thShow(); thPhase("Tekan tombol!");
       beepV();
       $("th-timerfab").classList.add("alarm");
       setTimeout(function(){ $("th-timerfab").classList.remove("alarm"); }, 2400);
@@ -2530,6 +2583,7 @@
     renderTehMenu(); renderTehLevel(); renderThTarget(); renderTeh(); renderThSaveCard();
     thShow();
     $("th-gelas").addEventListener("input", renderTeh);
+    $("th-kap").addEventListener("input", renderTeh);
     $("th-timer-start").addEventListener("click", function(){
       if(THT.running || THT.left<=0) return;
       THT.running=true; THT.last=Date.now();
