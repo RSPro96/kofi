@@ -383,6 +383,24 @@
       <div class="chip" data-type="sirup"><svg class="ic"><use href="#i-droplet"/></svg> Sirup Gula 1:1</div>
       <div class="chip" data-type="vanila"><svg class="ic"><use href="#i-droplet"/></svg> Sirup Vanilla</div>
       <div class="chip" data-type="susu"><svg class="ic"><use href="#i-cup"/></svg> Susu (SKM) — Sanger</div>
+      <div class="chip" data-type="kombo"><svg class="ic"><use href="#i-cup"/></svg> Sanger + Sirup</div>
+    </div>
+    <div id="t-kombo-ctl" style="display:none">
+      <div class="field" style="margin-top:14px">
+        <label>Sirup yang dipakai</label>
+        <div class="chips" id="t-kombo-sirup">
+          <div class="chip" data-ksirup="sirup"><svg class="ic"><use href="#i-droplet"/></svg> Sirup Gula 1:1</div>
+          <div class="chip active" data-ksirup="vanila"><svg class="ic"><use href="#i-droplet"/></svg> Sirup Vanilla</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Porsi manis dari sirup</label>
+        <div class="inrow">
+          <input type="range" id="t-kombo-share" min="0" max="100" step="5" value="50" />
+          <span class="unit" id="t-kombo-share-out" style="min-width:52px;text-align:right">50%</span>
+        </div>
+        <p class="hint" style="margin:6px 0 0;font-size:12.5px">Sisanya dari SKM. Naikkan kalau aroma sirup kurang terasa, turunkan kalau badan susunya jadi tipis. Di 0% hasilnya sama persis dengan sanger biasa.</p>
+      </div>
     </div>
     <div class="sweet-title" id="t-sweet-title"></div>
     <div class="sweets" id="t-sweets"></div>
@@ -692,15 +710,18 @@
   var ESP_SYRUP   = skala(ESP_SUGAR, SIRUP_1_1);
   var ESP_VANILLA = skala(ESP_SUGAR, SIRUP_BOTOL);
 
+  // gula = kadar gula per gram bahan, dipakai untuk menyamakan manis antar bahan
   var BAHAN = {
-    gula:   {label:"Gula",           unit:"g gula",  sdm:12},
-    sirup:  {label:"Sirup Gula 1:1", unit:"g sirup", sdm:15},
-    vanila: {label:"Sirup Vanilla",  unit:"g sirup", sdm:15},
-    susu:   {label:"Susu (SKM)",     unit:"g SKM",   sdm:12} // sdm sirup 15 g: cairan lebih berat
+    gula:   {label:"Gula",           unit:"g gula",  sdm:12, gula:1},
+    sirup:  {label:"Sirup Gula 1:1", unit:"g sirup", sdm:15, gula:0.5},
+    vanila: {label:"Sirup Vanilla",  unit:"g sirup", sdm:15, gula:0.65},
+    susu:   {label:"Susu (SKM)",     unit:"g SKM",   sdm:12, gula:0.55}, // sdm sirup 15 g: cairan lebih berat
+    kombo:  {label:"Sanger + Sirup", unit:"g SKM",   sdm:12, gula:0.55}
   };
   var CATATAN = {
     sirup:  "1:1 = separuh gula, jadi 2x gula pasir",
-    vanila: "botolan ±65% gula · bareng SKM, turunkan SKM ke Pahit"
+    vanila: "botolan ±65% gula · bareng SKM, turunkan SKM ke Pahit",
+    kombo:  "total manis tetap seukuran level sanger, dibagi antara SKM dan sirup"
   };
   // jenis biji: hanya mengatur yang bisa dikontrol (panas, pre-infusion, durasi).
   // Yield tidak diikutkan — kapasitas wadah bubuk kecil dan tetap, jadi rasio
@@ -712,7 +733,15 @@
       note:"Gembur, cepat terekstrak → direm. Alat tetap dipanaskan, tapi diamkan air 30–60 detik dulu (±92–95 °C) dan langsung tekan penuh tanpa pre-infusion. Pahit serak di tenggorokan = kelewat ekstrak."}
   };
   function B(t){ return BAHAN[t] || BAHAN.gula; }
-  function PEM(t){ return t==="susu" ? SANGER_SKM : t==="vanila" ? ESP_VANILLA : t==="sirup" ? ESP_SYRUP : ESP_SUGAR; }
+  function PEM(t){ return (t==="susu"||t==="kombo") ? SANGER_SKM : t==="vanila" ? ESP_VANILLA : t==="sirup" ? ESP_SYRUP : ESP_SUGAR; }
+  // bagi total manis satu level sanger antara SKM dan sirup, share = porsi sirup
+  function komboGram(base, i){
+    var lv = SANGER_SKM[i]; if(!lv || !(base>0)) return null;
+    var k = state.tygo.kombo;
+    var total = base * lv.ratio * BAHAN.susu.gula; // gula ekivalen
+    return { skm: round(total*(1-k.share)/BAHAN.susu.gula),
+             sir: round(total*k.share/B(k.sirup).gula) };
+  }
   function PEM_LABEL(t){ return B(t).label; }
   function PEM_UNIT(t){ return B(t).unit; }
   function PEM_SDM(t){ return B(t).sdm; }
@@ -722,7 +751,8 @@
 
   // ---------- state ----------
   var state = {
-    tygo: { pemanis:null, customG:null, pemanisType:"gula", biji:"arabica" },
+    tygo: { pemanis:null, customG:null, pemanisType:"gula", biji:"arabica",
+            kombo:{ sirup:"vanila", share:0.5 } },
     v60:  { pemanis:null, customG:null, pemanisType:"gula" },
     verdict: { tygo:null, v60:null },
     filter: "all"
@@ -736,11 +766,16 @@
     if(c.sendok!=null) $("t-sendok0").value = c.sendok;
     if(c.gelas!=null)  $("t-gelas0").value  = c.gelas;
     setBiji(c.biji || "arabica");
+    if(c.kombo){
+      setKomboSirup(c.kombo.sirup);
+      setKomboShare((c.kombo.share!=null ? c.kombo.share : 0.5)*100);
+    }
     calibStatus();
   }
   function saveCalib(){
     try{ localStorage.setItem(CAL_KEY, JSON.stringify({
-      wadah:g("t-wadah0"), sendok:g("t-sendok0"), gelas:g("t-gelas0"), biji:state.tygo.biji
+      wadah:g("t-wadah0"), sendok:g("t-sendok0"), gelas:g("t-gelas0"),
+      biji:state.tygo.biji, kombo:state.tygo.kombo
     })); }catch(e){}
   }
   function calibStatus(){
@@ -767,7 +802,7 @@
       row.innerHTML =
         '<div class="main">'+
           '<div class="t1">'+escapeHtml(p.name)+'<span class="badge">'+toolLabel+'</span></div>'+
-          '<div class="specs">'+PEM_LABEL(p.type)+' · '+escapeHtml(pm)+' · Rasio 1:'+p.ratio+'</div>'+
+          '<div class="specs">'+(p.type==="kombo"&&p.ksirup ? "Sanger + "+PEM_LABEL(p.ksirup) : PEM_LABEL(p.type))+' · '+escapeHtml(pm)+' · Rasio 1:'+p.ratio+'</div>'+
         '</div>'+
         '<button class="chip" data-pk="'+p.id+'" style="padding:7px 12px">Pakai</button>'+
         '<button class="del" data-pd="'+p.id+'" title="Hapus">'+ic('x')+'</button>';
@@ -784,6 +819,8 @@
       id: Date.now(), name:name, tool:tool,
       ratio: ratio,
       type: st.pemanisType,
+      ksirup: st.kombo ? st.kombo.sirup : null,
+      kshare: st.kombo ? st.kombo.share : null,
       mode: st.customG!=null ? "manual" : (st.pemanis!=null ? "choice" : null),
       idx: st.customG!=null ? null : st.pemanis,
       gram: st.customG
@@ -806,6 +843,8 @@
       state.tygo.pemanis = p.mode==="choice" ? p.idx : null;
       state.tygo.customG = p.mode==="manual" ? p.gram : null;
       state.tygo.pemanisType = p.type;
+      if(p.ksirup) setKomboSirup(p.ksirup);
+      if(p.kshare!=null) setKomboShare(p.kshare*100);
       $("t-ratio").value = p.ratio;
       setPemanisType(p.type);
       calcTygo();
@@ -822,6 +861,23 @@
     });
     $("t-biji-note").textContent = BIJI[b].note;
     $("t-timer-target").textContent = "Target "+BIJI[b].press;
+    saveCalib();
+  }
+
+  // ---------- kombinasi SKM + sirup ----------
+  function setKomboSirup(v){
+    if(!BAHAN[v]) v="vanila";
+    state.tygo.kombo.sirup=v;
+    document.querySelectorAll("#t-kombo-sirup .chip").forEach(function(x){
+      x.classList.toggle("active", x.getAttribute("data-ksirup")===v);
+    });
+    saveCalib();
+  }
+  function setKomboShare(pct){
+    pct = Math.max(0, Math.min(100, parseFloat(pct)||0));
+    state.tygo.kombo.share = pct/100;
+    $("t-kombo-share").value = pct;
+    $("t-kombo-share-out").textContent = pct+"%";
     saveCalib();
   }
 
@@ -847,14 +903,22 @@
       + PEM_NOTE(t)
       + (base>0 ? ' <small style="font-weight:400;color:var(--muted)">(dari '+base+' g kopi di gelas)</small>'
                 : ' <small style="font-weight:400;color:var(--meh)">(timbang gelas + hasil press dulu)</small>');
+    $("t-kombo-ctl").style.display = t==="kombo" ? "" : "none";
     S.forEach(function(s, i){
-      var gram = round(base*s.ratio);
       var sel = st.pemanis===i;
+      var val;
+      if(t==="kombo"){
+        var k = komboGram(base, i);
+        val = '<div class="val"><span class="big">'+(k?k.skm:"–")+'</span> <span class="u">g SKM</span>'+
+              '<div class="approx">+ <b>'+(k?k.sir:"–")+'</b> '+PEM_UNIT(st.kombo.sirup)+'</div></div>';
+      }else{
+        var gram = round(base*s.ratio);
+        val = '<div class="val"><span class="big">'+ (base>0?gram:"–") +'</span> <span class="u">'+PEM_UNIT(t)+'</span>'+
+              '<div class="approx">± '+ (base>0?sdm(gram, PEM_SDM(t)):"–") +' sdm</div></div>';
+      }
       var c=el("div","sweet "+s.cls);
       c.innerHTML =
-        '<div class="cat">'+s.cat+'<small>'+s.sub+'</small></div>'+
-        '<div class="val"><span class="big">'+ (base>0?gram:"–") +'</span> <span class="u">'+PEM_UNIT(t)+'</span>'+
-        '<div class="approx">± '+ (base>0?sdm(gram, PEM_SDM(t)):"–") +' sdm</div></div>'+
+        '<div class="cat">'+s.cat+'<small>'+s.sub+'</small></div>'+ val +
         '<div style="margin-top:10px"><button class="chip'+(sel?' active':'')+'" data-pick="'+i+'">'+(sel? ic('check')+' dipilih':'pilih ini')+'</button></div>';
       box.appendChild(c);
     });
@@ -865,7 +929,7 @@
         renderTygoSweets(); renderSaveCard();
       });
     });
-    box.appendChild(customCard());
+    if(t!=="kombo") box.appendChild(customCard());
   }
   function customCard(){
     var st=state.tygo;
@@ -974,14 +1038,23 @@
     var unit = PEM_UNIT(t);
     var st = state.tygo;
     var ti = st.pemanis;
-    var pemanis = ti!=null
-      ? {label:S[ti].cat, val:round(yieldG*S[ti].ratio), unit:unit, mode:"by choice", type:PEM_LABEL(t)}
-      : (st.customG!=null
-        ? {label:"Kustom", val:round(st.customG), unit:unit, mode:"manual", type:PEM_LABEL(t)}
-        : null);
+    var pemanis;
+    if(t==="kombo" && ti!=null){
+      var k = komboGram(yieldG, ti);
+      pemanis = {label:S[ti].cat, val:k.skm, unit:"g SKM", mode:"by choice",
+                 type:"Sanger + "+PEM_LABEL(st.kombo.sirup),
+                 plus:k.sir+PEM_UNIT(st.kombo.sirup)};
+    }else{
+      pemanis = ti!=null
+        ? {label:S[ti].cat, val:round(yieldG*S[ti].ratio), unit:unit, mode:"by choice", type:PEM_LABEL(t)}
+        : (st.customG!=null
+          ? {label:"Kustom", val:round(st.customG), unit:unit, mode:"manual", type:PEM_LABEL(t)}
+          : null);
+    }
 
     var specs = "Dose "+dose+"g · Yield "+yieldG+"g (1:"+ratio+") · press 8 bar"
-      + (pemanis? " · "+pemanis.type+" ("+pemanis.label+" · "+pemanis.val+pemanis.unit+" · "+pemanis.mode+")" : "");
+      + (pemanis? " · "+pemanis.type+" ("+pemanis.label+" · "+pemanis.val+pemanis.unit
+          + (pemanis.plus? " + "+pemanis.plus : "") + " · "+pemanis.mode+")" : "");
 
     var notes = loadNotes();
     notes.unshift({
@@ -1583,6 +1656,15 @@
   $("t-biji").addEventListener("click", function(e){
     var c=e.target.closest(".chip"); if(!c) return;
     setBiji(c.getAttribute("data-biji"));
+  });
+  $("t-kombo-sirup").addEventListener("click", function(e){
+    var c=e.target.closest(".chip"); if(!c) return;
+    setKomboSirup(c.getAttribute("data-ksirup"));
+    renderTygoSweets(); renderSaveCard();
+  });
+  $("t-kombo-share").addEventListener("input", function(){
+    setKomboShare(this.value);
+    renderTygoSweets(); renderSaveCard();
   });
 
   $("p-save").addEventListener("click", savePreset);
