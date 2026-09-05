@@ -214,6 +214,15 @@
   .g-pickname{font-size:12.5px;font-weight:800;color:var(--cream);display:flex;align-items:center;justify-content:center;gap:6px}
   .g-pickname .ic{width:15px;height:15px;color:var(--crema)}
   .g-pickcard.sel{border-color:var(--crema);box-shadow:0 0 0 3px rgba(255,211,150,.2)}
+  .g-pickcard.wide{grid-column:1 / -1}
+  .g-pickicon{width:100%;height:56px;display:flex;align-items:center;justify-content:center;background:var(--bg);border-radius:8px;margin-bottom:8px}
+  .g-pickicon .ic{width:28px;height:28px;color:var(--crema)}
+  .th-sec{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:800;margin:14px 0 2px}
+  .th-sec:first-child{margin-top:0}
+  .th-tips{list-style:none;padding:0;margin:12px 0 0}
+  .th-tips li{font-size:12.5px;color:var(--muted);line-height:1.5;padding-left:16px;position:relative;margin-top:6px}
+  .th-tips li:before{content:"";position:absolute;left:0;top:7px;width:6px;height:6px;border-radius:50%;background:var(--crema-soft)}
+  .th-star{font-size:11px;font-weight:800;color:var(--onaccent);background:var(--crema);border-radius:999px;padding:2px 7px;margin-left:7px}
   .btn:disabled{opacity:.45;cursor:not-allowed}
   .modeswitch{margin-bottom:14px}
   .rsp-banner{background:var(--field);border:1.5px solid var(--crema-soft);border-radius:14px;padding:14px;margin-top:14px}
@@ -283,6 +292,7 @@
   <symbol id="i-cup" viewBox="0 0 24 24"><path d="M6 3h12l-1.4 16.2A2 2 0 0 1 14.6 21H9.4a2 2 0 0 1-2-1.8L6 3z"/><path d="M6.6 9h10.8"/></symbol>
   <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></symbol>
   <symbol id="i-droplet" viewBox="0 0 24 24"><path d="M12 3s6 6.1 6 10.2A6 6 0 0 1 6 13.2C6 9.1 12 3 12 3z"/></symbol>
+  <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M4 20c-1-9 5-15 16-15 1 10-5 15-16 15z"/><path d="M4 20c3-6 7-9 12-10.5"/></symbol>
   <symbol id="i-bookmark" viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4.5L5 21V4a1 1 0 0 1 1-1z"/></symbol>
   <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s6-5.4 6-10a6 6 0 1 0-12 0c0 4.6 6 10 6 10z"/><circle cx="12" cy="11" r="2.4"/></symbol>
   <symbol id="i-download" viewBox="0 0 24 24"><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/><path d="M8 10l4 4 4-4"/><path d="M12 14V3"/></symbol>
@@ -306,12 +316,13 @@
     </div>
     <p class="tagline">“Karena Kopi Nikmat Adalah Hak Setiap Umat”</p>
     <h1>RSPro <span>— Racik Kopi</span></h1>
-    <p class="sub">Panduan &amp; kalkulator seduh: Tygopresso (espresso/sanger)</p>
+    <p class="sub">Panduan &amp; kalkulator seduh: Tygopresso (espresso/sanger), V60 Cone, dan Teh Melati</p>
   </header>
 
   <div class="tabs" id="tabs">
     <button class="tab active" data-panel="tygo"><svg class="ic"><use href="#i-cup"/></svg> Tygopresso</button>
     <button class="tab" data-panel="v60"><svg class="ic"><use href="#i-droplet"/></svg> V60 Cone</button>
+    <button class="tab" data-panel="teh"><svg class="ic"><use href="#i-leaf"/></svg> Teh Melati</button>
   </div>
 
   <section id="panel-tygo" class="panel">
@@ -590,6 +601,80 @@
   <div class="card" id="v-savecard"></div>
   </section>
 
+  <section id="panel-teh" class="panel" style="display:none">
+    <details class="edu">
+      <summary><svg class="ic"><use href="#i-leaf"/></svg> Cara seduh teh melati <svg class="ic caret"><use href="#i-chevron"/></svg></summary>
+      <div class="body">
+        <p>Semua menu di sini berangkat dari <b>satu seduhan dasar</b>: teh cacah melati diseduh air panas, didiamkan <b>3&ndash;4 menit</b>, lalu <b>disaring</b>. Untuk menu bersusu, tehnya sengaja dibuat lebih pekat supaya rasanya tidak tenggelam di balik susu.</p>
+        <ol>
+          <li><b>Teh biasa</b> (tanpa susu) &mdash; 3,5 g daun untuk ±220 ml teh jadi.</li>
+          <li><b>Teh pekat</b> (untuk menu bersusu) &mdash; 4 g daun untuk ±140&ndash;150 ml teh jadi.</li>
+          <li><b>Waktu seduh</b> 3 menit (aroma lebih ringan) sampai 4 menit (lebih kuat). Lewat 5 menit rasanya mulai sepat.</li>
+          <li><b>Saring begitu waktunya habis.</b> Daun yang dibiarkan terendam terus akan terus mengeluarkan rasa pahit.</li>
+        </ol>
+        <p><b>Daun menyerap air.</b> Teh cacah menahan ±2,5 ml air per gram, jadi air yang dituang selalu lebih banyak daripada teh yang keluar. Angka <b>Air panas</b> di kartu Takaran sudah memperhitungkan ini &mdash; tinggal ikuti.</p>
+        <p><b>Suhu air:</b> teh melati paling enak di ±85&ndash;90 &deg;C, bukan air mendidih. Kalau pakai teko pemanas, tunggu 1&ndash;2 menit setelah mendidih sebelum dituang.</p>
+        <p><b>Gram atau ml?</b> Untuk teh dan air 1 g = 1 ml. Susu UHT, SKM, dan sirup lebih berat dari air, jadi tiap takaran di bawah ditulis dua-duanya &mdash; pakai yang alatnya ada.</p>
+      </div>
+    </details>
+
+    <details class="edu">
+      <summary><svg class="ic"><use href="#i-info"/></svg> Panduan eksperimen <svg class="ic caret"><use href="#i-chevron"/></svg></summary>
+      <div class="body">
+        <ol>
+          <li><b>Pertahankan jumlah teh</b> di setiap percobaan &mdash; itu jadi patokan tetapmu.</li>
+          <li><b>Ubah satu bahan saja</b> dalam satu kali percobaan. Kalau dua-duanya diubah, kamu tidak tahu mana yang berpengaruh.</li>
+          <li><b>Tambah sirup sedikit demi sedikit</b>, misalnya 5 ml sekali. Menambah manis gampang, menguranginya tidak bisa.</li>
+          <li>Untuk menu yang memakai <b>SKM atau sirup vanilla</b>, jangan langsung menambah sirup gula &mdash; keduanya sudah membawa manis sendiri. Cicipi dulu.</li>
+          <li>Kalau <b>rasa susu menutupi teh</b>, naikkan daun ke 4,5&ndash;5 g atau kurangi air seduhnya supaya lebih pekat &mdash; jangan mengurangi susunya, nanti jadi encer.</li>
+          <li><b>Catat takaran yang paling disukai</b> lewat kartu Simpan Catatan Rasa di bawah, biar besok tinggal diulang persis.</li>
+        </ol>
+        <p><b>Soal sirup gula.</b> Sirup yang sudah kamu buat itu rasio <b>1:1 berdasarkan berat</b> (100 g gula : 100 g air panas), jadi isinya 50% gula. Sirup ini dipakai untuk teh manis dan milk tea. Untuk menu yang sudah memakai sirup vanilla atau SKM, jumlahnya dikurangi &mdash; itu sebabnya beberapa menu di sini rentangnya mulai dari 0 ml.</p>
+      </div>
+    </details>
+
+    <div class="card">
+      <h2>Pilih Menu</h2>
+      <p class="hint">Delapan menu dari bahan yang ada. Semua takaran di bawah langsung menyesuaikan menu, jumlah gelas, dan level manis.</p>
+      <div class="g-drinks rsp-menu" id="th-menu"></div>
+    </div>
+
+    <div class="card">
+      <h2>Takaran</h2>
+      <p class="hint">Level manis menggeser bahan yang punya rentang (mis. sirup 15&ndash;20 ml). Bahan bertakaran tetap tidak ikut berubah.</p>
+      <div class="grid2">
+        <div class="field">
+          <label>Jumlah gelas</label>
+          <div class="inrow">
+            <input type="number" id="th-gelas" min="1" max="6" step="1" value="1" />
+            <span class="unit">gelas</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Level manis</label>
+          <div class="chips" id="th-level"></div>
+        </div>
+      </div>
+      <div id="th-out"></div>
+    </div>
+
+    <div class="card">
+      <h2>Timer Seduh</h2>
+      <p class="hint">Hitung mundur dari waktu seduh. Tekan <b>&#9654;</b> tepat setelah air dituang; saat bunyi, langsung saring daunnya.</p>
+      <div class="chips" id="th-target"></div>
+    </div>
+
+    <div class="timerfab" id="th-timerfab" aria-label="Timer Teh">
+      <span class="tf-label"><svg class="ic"><use href="#i-leaf"/></svg> <span id="th-timer-phase">Seduh</span></span>
+      <span class="tf-n" id="th-timer">03:30</span>
+      <button class="tf-btn" id="th-timer-start" title="Mulai / Lanjut"><svg class="ic"><use href="#i-play"/></svg></button>
+      <button class="tf-btn stop" id="th-timer-pause" title="Jeda"><svg class="ic"><use href="#i-pause"/></svg></button>
+      <button class="tf-btn" id="th-timer-reset" title="Reset"><svg class="ic"><use href="#i-reset"/></svg></button>
+    </div>
+
+    <div class="card" id="th-savecard"></div>
+  </section>
+
   <div class="card">
     <h2>Preset Racikan</h2>
     <p class="hint">Simpan setelan pemanis + rasio alat yang <b>sedang aktif</b> untuk dipakai ulang, mis. "Sanger 3:1" atau "V60 harian".</p>
@@ -671,6 +756,7 @@
 <nav class="botnav" id="botnav">
   <button class="navitem active" data-panel="tygo"><svg class="ic"><use href="#i-cup"/></svg> Tygopresso</button>
   <button class="navitem" data-panel="v60"><svg class="ic"><use href="#i-droplet"/></svg> V60 Cone</button>
+  <button class="navitem" data-panel="teh"><svg class="ic"><use href="#i-leaf"/></svg> Teh Melati</button>
 </nav>
 
 <!-- ===== MODAL PILIH CARA PAKAI ===== -->
@@ -688,6 +774,10 @@
       <button type="button" class="g-pickcard" data-tool="v60">
         <img src="img/vcon.png" alt="V60 Cone" class="g-pickimg"/>
         <span class="g-pickname"><svg class="ic"><use href="#i-droplet"/></svg> V60 Cone</span>
+      </button>
+      <button type="button" class="g-pickcard wide" data-tool="teh">
+        <span class="g-pickicon"><svg class="ic"><use href="#i-leaf"/></svg></span>
+        <span class="g-pickname"><svg class="ic"><use href="#i-leaf"/></svg> Teh Melati &mdash; tanpa alat kopi</span>
       </button>
     </div>
     <div id="g-pickhint" class="g-pickhint">Cek foto alatmu di atas.</div>
@@ -822,7 +912,8 @@
             mode:"manual", resep:null, level:1, pilih:{} },
     v60:  { pemanis:null, customG:null, pemanisType:"gula",
             mode:"manual", resep:null, level:1, pilih:{} },
-    verdict: { tygo:null, v60:null },
+    teh:  { resep:null, level:0, gelas:1 },
+    verdict: { tygo:null, v60:null, teh:null },
     filter: "all"
   };
 
@@ -866,11 +957,13 @@
              : "Tanpa pemanis";
       var row=el("div","logitem");
       row.style.borderLeftColor="var(--crema)";
-      var toolLabel = p.tool==="v60" ? "V60 Cone" : "Tygopresso";
+      var toolLabel = TOOLNAMA[p.tool] || "Tygopresso";
       row.innerHTML =
         '<div class="main">'+
           '<div class="t1">'+escapeHtml(p.name)+'<span class="badge">'+toolLabel+'</span></div>'+
-          '<div class="specs">'+(p.pmode==="resep"&&p.resep ? escapeHtml(resepById(p.tool==="v60"?"v60":"tygo", p.resep).nama) : PEM_LABEL(p.type)+' · '+escapeHtml(pm))+' · Rasio 1:'+p.ratio+'</div>'+
+          '<div class="specs">'+(p.tool==="teh"
+              ? escapeHtml(tMenuById(p.resep).nama)+' · '+p.gelas+' gelas · level '+TLEVEL[p.level||0].cat
+              : (p.pmode==="resep"&&p.resep ? escapeHtml(resepById(p.tool==="v60"?"v60":"tygo", p.resep).nama) : PEM_LABEL(p.type)+' · '+escapeHtml(pm))+' · Rasio 1:'+p.ratio)+'</div>'+
         '</div>'+
         '<button class="chip" data-pk="'+p.id+'" style="padding:7px 12px">Pakai</button>'+
         '<button class="del" data-pd="'+p.id+'" title="Hapus">'+ic('x')+'</button>';
@@ -881,6 +974,13 @@
     var name=$("p-name").value.trim();
     if(!name){ toast("Isi nama preset dulu"); return; }
     var tool = ACTIVE;
+    if(tool==="teh"){
+      var pt={id:Date.now(), name:name, tool:"teh",
+              resep:state.teh.resep, level:state.teh.level, gelas:tGelas()};
+      var at=loadPresets(); at.unshift(pt); savePresets(at);
+      $("p-name").value=""; renderPresets(); toast("Preset disimpan");
+      return;
+    }
     var st = state[tool] || state.tygo;
     var ratio = tool==="v60" ? (parseFloat($("v-rasio").value)||15) : (parseFloat($("t-ratio").value)||2);
     var p={
@@ -898,7 +998,15 @@
     toast("Preset disimpan");
   }
   function applyPreset(p){
-    switchPanel(p.tool==="v60" ? "v60" : "tygo");
+    switchPanel(p.tool==="teh" ? "teh" : p.tool==="v60" ? "v60" : "tygo");
+    if(p.tool==="teh"){
+      state.teh.resep = p.resep;
+      state.teh.level = p.level!=null ? p.level : 0;
+      $("th-gelas").value = p.gelas || 1;
+      renderTehMenu(); renderTeh(); renderThSaveCard();
+      toast('Preset "'+p.name+'" diterapkan');
+      return;
+    }
     if(p.tool==="v60"){
       state.v60.pemanis = p.mode==="choice" ? p.idx : null;
       state.v60.customG = p.mode==="manual" ? p.gram : null;
@@ -1135,7 +1243,7 @@
   }
   var VIC = {good:"smile", meh:"meh", bad:"frown"};
   var VLABEL = {good:"Enak", meh:"Biasa", bad:"Kurang"};
-  var DLABEL = {tygo:"Tygopresso", espresso:"Espresso", sanger:"Sanger Espresso", brew:"Seduh Manual"};
+  var DLABEL = {tygo:"Tygopresso", espresso:"Espresso", sanger:"Sanger Espresso", brew:"Seduh Manual", teh:"Teh Melati"};
 
   function renderLog(){
     var list=$("loglist"); list.innerHTML="";
@@ -1280,6 +1388,17 @@
       {t:"Timer & Seduh", ic:"i-play",
        d:"Timer di bawah layar: ▶ mulai → otomatis berhenti & bunyi di 45 detik → ▶ tuang ke 60% → ⏸ → ▶ tuang ke 100% → ⏸. Selesai!",
        el:"v-timerfab", ok:null}
+    ],
+    teh: [
+      {t:"Atur Porsi & Manis", ic:"i-droplet",
+       d:"Tentukan jumlah gelas dan level manis. Untuk percobaan pertama pakai level Ringan — menambah manis gampang, menguranginya tidak bisa.",
+       el:"th-gelas", ok:null},
+      {t:"Seduh Tehnya", ic:"i-leaf",
+       d:"Timbang daun dan tuang air panas sesuai angka di kartu Takaran. Air ideal ±85–90 °C, bukan mendidih.",
+       el:"th-out", ok:null},
+      {t:"Timer & Saring", ic:"i-play",
+       d:"Nyalakan timer di bawah layar begitu air dituang. Saat bunyi, langsung saring daunnya — jangan dibiarkan terendam.",
+       el:"th-timerfab", ok:null}
     ]
   };
   // ---------- resep: langkah dasar + langkah khas tiap minuman ----------
@@ -1289,9 +1408,12 @@
            el:"t-savecard", ok:null},
     v60:  {t:"Penilaian & Simpan", ic:"i-bookmark", opt:true,
            d:"Pilih penilaian (Enak/Biasa/Kurang) lalu klik Simpan agar tercatat di Catatan Rasa.",
-           el:"v-savecard", ok:null}
+           el:"v-savecard", ok:null},
+    teh:  {t:"Penilaian & Simpan", ic:"i-bookmark", opt:true,
+           d:"Pilih penilaian (Enak/Biasa/Kurang) lalu klik Simpan. Takaran yang kamu pakai ikut tercatat, jadi besok tinggal diulang persis.",
+           el:"th-savecard", ok:null}
   };
-  var SAJI = {tygo:"t-savecard", v60:"v-savecard"};
+  var SAJI = {tygo:"t-savecard", v60:"v-savecard", teh:"th-savecard"};
 
   var RESEP = {
    tygo: [
@@ -1439,9 +1561,10 @@
   // ---------- banner takaran pemanis mode resep ----------
   var RBOX = {tygo:"t-resep-box", v60:"v-resep-box"};
   var MBOX = {tygo:"t-manual-box", v60:"v-manual-box"};
-  function stOf(tool){ return tool==="v60" ? state.v60 : state.tygo; }
+  function stOf(tool){ return tool==="v60" ? state.v60 : tool==="teh" ? state.teh : state.tygo; }
 
   function setMode(tool, mode){
+    if(tool==="teh") return;   // panel teh tidak punya mode manual/resep
     var st=stOf(tool);
     st.mode = mode==="resep" ? "resep" : "manual";
     document.querySelectorAll("#"+(tool==="v60"?"v-mode":"t-mode")+" .chip").forEach(function(x){
@@ -1574,7 +1697,9 @@
     var steps=gState.steps;
     var s=steps[gState.i];
     $("g-tool").textContent = resepById(gState.tool, gState.drink).nama;
-    $("g-tool-img").src = gState.tool==="tygo" ? "img/Tygoespresso.png" : "img/vcon.png";
+    var timg=$("g-tool-img");
+    if(gState.tool==="teh"){ timg.style.display="none"; }
+    else { timg.style.display=""; timg.src = gState.tool==="tygo" ? "img/Tygoespresso.png" : "img/vcon.png"; }
     $("g-icon").setAttribute("href", "#"+s.ic);
     $("g-idx").textContent = "Langkah "+(gState.i+1)+" dari "+steps.length;
     $("g-title").textContent = s.t;
@@ -1589,7 +1714,7 @@
     gPick = tool;
     document.querySelectorAll(".g-pickcard").forEach(function(x){ x.classList.toggle("sel", x.getAttribute("data-tool")===tool); });
     $("g-start").disabled = false;
-    $("g-pickhint").textContent = tool==="tygo" ? "Tygopresso dipilih." : "V60 Cone dipilih.";
+    $("g-pickhint").textContent = (TOOLNAMA[tool]||"Alat")+" dipilih.";
     $("g-pickhint").classList.add("ok");
   }
   document.querySelectorAll(".g-pickcard").forEach(function(x){
@@ -1605,9 +1730,10 @@
     st.resep=r.id; st.pilih={};
     setMode(gState.tool, "resep");
     if(gState.tool==="v60") applyResepV60(r);
+    if(gState.tool==="teh"){ renderTehMenu(); renderTeh(); }
     $("guide-wiz").hidden=false;
     $("g-reopen").style.display="none";
-    ["t-timerfab","v-timerfab"].forEach(function(id){ var e=$(id); if(e) e.style.display="none"; });
+    ["t-timerfab","v-timerfab","th-timerfab"].forEach(function(id){ var e=$(id); if(e) e.style.display="none"; });
     gRender();
   }
   function closeGuide(){
@@ -1617,7 +1743,7 @@
     $("guide-w").hidden=true;
     $("guide-wiz").hidden=true;
     $("g-reopen").style.display="inline-flex";
-    ["t-timerfab","v-timerfab"].forEach(function(id){ var e=$(id); if(e) e.style.display=""; });
+    ["t-timerfab","v-timerfab","th-timerfab"].forEach(function(id){ var e=$(id); if(e) e.style.display=""; });
   }
   $("g-next").addEventListener("click", function(){
     var steps=gState.steps;
@@ -2117,7 +2243,312 @@
     });
   });
 
+  // ================= PANEL TEH MELATI =================
+  var TOOLNAMA = {tygo:"Tygopresso", v60:"V60 Cone", teh:"Teh Melati"};
+
+  // Massa jenis tiap bahan, dipakai untuk bolak-balik gram <-> ml.
+  // base = satuan yang paling masuk akal dipakai saat menakar bahan itu.
+  var TB = {
+    teh:    {label:"Teh melati (hasil seduh)", rho:1.00, base:"ml"},
+    uht:    {label:"Susu UHT original",        rho:1.03, base:"ml"},
+    skm:    {label:"Susu kental manis",        rho:1.29, base:"g"},
+    sirup:  {label:"Sirup gula 1:1",           rho:1.23, base:"ml"},
+    vanila: {label:"Sirup vanilla",            rho:1.32, base:"ml"}
+  };
+  var SERAP = 2.5;   // ml air yang ditahan tiap gram daun teh, tidak ikut keluar
+  var TLEVEL = [
+    {cat:"Ringan", sub:"batas bawah rentang — titik aman untuk percobaan pertama"},
+    {cat:"Sedang", sub:"tengah rentang"},
+    {cat:"Manis",  sub:"batas atas rentang"}
+  ];
+
+  // daun = gram teh cacah, teh = ml teh jadi setelah disaring.
+  // Air yang dituang dihitung sendiri: teh + (daun x SERAP).
+  var TMENU = [
+    {id:"teh_manis", nama:"Teh Melati Manis", ic:"i-leaf",
+     sub:"Paling sederhana — aroma melati tetap yang paling depan.",
+     daun:3.5, teh:220,
+     bahan:[{t:"sirup", min:15, max:20}],
+     saji:["Saring daunnya, lalu masukkan sirup gula selagi teh masih hangat dan aduk sampai rata."]},
+
+    {id:"teh_vanila", nama:"Vanilla Jasmine Tea", ic:"i-droplet",
+     sub:"Teh melati hangat beraroma vanilla, tanpa susu.",
+     daun:3.5, teh:220,
+     bahan:[{t:"vanila", min:15, max:20}],
+     catatan:["Sirup vanilla sudah mengandung gula, jadi jangan langsung menambah sirup gula. Cicipi dulu — tambahkan hanya kalau memang masih kurang manis."],
+     saji:["Saring daunnya, masukkan sirup vanilla selagi hangat, aduk rata.",
+           "Cicipi dulu sebelum memutuskan menambah sirup gula."]},
+
+    {id:"milk_tea", nama:"Jasmine Milk Tea", ic:"i-cup",
+     sub:"Milk tea sederhana — teh dibuat pekat supaya tidak tenggelam di susu.",
+     daun:4, teh:150,
+     bahan:[{t:"uht", min:80, max:80},{t:"sirup", min:10, max:15}],
+     saji:["Saring tehnya, lalu masukkan susu UHT dan sirup gula. Aduk rata, sajikan hangat."]},
+
+    {id:"vanilla_milk_tea", nama:"Vanilla Jasmine Milk Tea", ic:"i-cup",
+     sub:"Teh melati pekat, susu, dan vanilla dalam satu gelas.",
+     daun:4, teh:150,
+     bahan:[{t:"uht", min:75, max:75},{t:"vanila", min:15, max:20}],
+     catatan:["Percobaan pertama tidak perlu sirup gula — sirup vanilla sudah memberi rasa manis."],
+     saji:["Saring tehnya, masukkan susu UHT, lalu sirup vanilla. Aduk rata."]},
+
+    {id:"teh_skm", nama:"Teh Susu SKM", ic:"i-cup",
+     sub:"Lebih creamy dan lebih manis, memakai susu kental manis.",
+     daun:4, teh:170,
+     bahan:[{t:"skm", min:20, max:20},{t:"sirup", min:0, max:10}],
+     catatan:["SKM sudah cukup manis. Cicipi dulu sebelum menambah sirup gula — di level Ringan sirupnya memang 0."],
+     saji:["Saring tehnya, masukkan SKM selagi panas, aduk sampai benar-benar larut.",
+           "Cicipi. Tambahkan sirup gula sedikit demi sedikit hanya kalau masih kurang."]},
+
+    {id:"creamy_milk_tea", nama:"Creamy Jasmine Milk Tea", ic:"i-cup",
+     sub:"Gabungan susu UHT dan SKM — lebih bulat daripada salah satunya saja.",
+     daun:4, teh:140,
+     bahan:[{t:"uht", min:70, max:70},{t:"skm", min:15, max:15},{t:"sirup", min:0, max:5}],
+     saji:["Saring tehnya, masukkan SKM dulu dan aduk sampai larut selagi panas.",
+           "Baru masukkan susu UHT, aduk rata. Cicipi sebelum menambah sirup gula."]},
+
+    {id:"creamy_vanilla", nama:"Creamy Vanilla Jasmine Tea", ic:"i-leaf", top:true,
+     sub:"Kombinasi paling lengkap dari bahan yang ada: melati, vanilla, susu, dan sedikit SKM.",
+     daun:4, teh:130,
+     bahan:[{t:"uht", min:70, max:70},{t:"skm", min:10, max:10},{t:"vanila", min:10, max:15}],
+     catatan:["Mulai dari level Ringan (vanilla 10 ml). Kalau aromanya kurang menonjol, naikkan ke level Manis (15 ml) — bukan menambah SKM.",
+              "Jangan menambah sirup gula sebelum dicicipi. Kalau memang perlu, tambahkan 5 ml sekali."],
+     saji:["Saring tehnya, masukkan susu UHT, lalu SKM, aduk sampai SKM benar-benar larut.",
+           "Terakhir masukkan sirup vanilla, aduk rata, lalu cicipi."]},
+
+    {id:"susu_vanila", nama:"Susu Vanilla Hangat", ic:"i-droplet",
+     sub:"Pilihan tanpa teh sama sekali — untuk yang sedang tidak mau kafein.",
+     daun:0, teh:0,
+     bahan:[{t:"uht", min:220, max:220},{t:"vanila", min:10, max:15}],
+     saji:["Hangatkan susu pelan-pelan, jangan sampai mendidih — susu yang mendidih berubah rasanya dan berkulit.",
+           "Angkat, masukkan sirup vanilla, aduk rata."]}
+  ];
+  RESEP.teh = TMENU;
+
+  function tMenuById(id){
+    for(var i=0;i<TMENU.length;i++){ if(TMENU[i].id===id) return TMENU[i]; }
+    return TMENU[0];
+  }
+  function tGelas(){ var v=parseInt($("th-gelas").value,10); return (v>0&&v<=6) ? v : 1; }
+  function r5(v){ return Math.round(v/5)*5; }
+  // takaran satu bahan di level tertentu: 0 = batas bawah, 2 = batas atas
+  function tAmt(b, lv){
+    var f = lv===0 ? 0 : lv===1 ? 0.5 : 1;
+    return round(b.min + (b.max-b.min)*f);
+  }
+  // pasangan satuan: angka utama pakai satuan alami bahannya, sisanya jadi keterangan
+  function rnice(v){ return v>=10 ? Math.round(v) : round(v); }
+  function tPair(v, key){
+    var b=TB[key];
+    if(b.base==="ml") return {utama:rnice(v)+" ml", lain:b.rho===1 ? null : rnice(v*b.rho)+" g"};
+    return {utama:rnice(v)+" g", lain:b.rho===1 ? null : rnice(v/b.rho)+" ml"};
+  }
+
+  function renderTehMenu(){
+    var box=$("th-menu"); box.innerHTML="";
+    if(!state.teh.resep) state.teh.resep=TMENU[0].id;
+    TMENU.forEach(function(m){
+      var b=el("button","g-drinkitem"+(m.id===state.teh.resep?" sel":""),
+        '<span class="g-dname">'+ic(m.ic.replace(/^i-/,""))+m.nama+
+          (m.top?'<span class="th-star">rekomendasi</span>':'')+'</span>'+
+        '<span class="g-dsub">'+m.sub+'</span>');
+      b.type="button";
+      b.addEventListener("click", function(){
+        if(state.teh.resep===m.id) return;
+        state.teh.resep=m.id;
+        renderTehMenu(); renderTeh(); renderThSaveCard();
+      });
+      box.appendChild(b);
+    });
+  }
+
+  function renderTehLevel(){
+    var box=$("th-level"); box.innerHTML="";
+    TLEVEL.forEach(function(l,i){
+      var c=el("div","chip"+(i===state.teh.level?" active":""), l.cat);
+      c.setAttribute("data-lv", i);
+      c.addEventListener("click", function(){
+        state.teh.level=i; renderTehLevel(); renderTeh();
+      });
+      box.appendChild(c);
+    });
+  }
+
+  // ringkasan takaran satu menu, dipakai kartu Takaran maupun teks catatan
+  function tHitung(){
+    var m=tMenuById(state.teh.resep), gel=tGelas(), lv=state.teh.level;
+    var daun = round(m.daun*gel);
+    var air  = m.daun>0 ? r5((m.teh + m.daun*SERAP)*gel) : 0;
+    var comp = [];
+    if(m.teh>0) comp.push({t:"teh", per:m.teh, tot:round(m.teh*gel), tetap:true});
+    m.bahan.forEach(function(b){
+      var per=tAmt(b, lv);
+      comp.push({t:b.t, per:per, tot:round(per*gel), tetap:b.min===b.max, min:b.min, max:b.max});
+    });
+    return {menu:m, gelas:gel, level:lv, daun:daun, air:air, comp:comp};
+  }
+
+  function renderTeh(){
+    var h=tHitung(), m=h.menu, box=$("th-out");
+    var perlbl = h.gelas>1 ? " /gelas" : "";
+    var rows = h.comp.map(function(c){
+      var p=tPair(h.gelas>1 ? c.tot : c.per, c.t);
+      var ket = c.tetap
+        ? (c.t==="teh" ? "hasil seduh, sudah disaring" : "takaran tetap untuk menu ini")
+        : "rentang "+c.min+"–"+c.max+" "+TB[c.t].base+" · ikut level manis";
+      return '<tr><td><span class="rsp-b">'+TB[c.t].label+'</span>'+
+             '<span class="rsp-x">'+ket+'</span></td>'+
+             '<td><span class="rsp-n">'+p.utama+'</span>'+
+             (p.lain? '<span class="rsp-n" style="display:block;font-size:13px;margin-top:2px">≈ '+p.lain+'</span>' : '')+
+             (h.gelas>1 ? '<span class="rsp-x">'+tPair(c.per, c.t).utama+perlbl+'</span>' : '')+
+             '</td></tr>';
+    }).join("");
+
+    var seduh = "";
+    if(m.daun>0){
+      seduh = '<div class="th-sec">1 · Seduh dulu</div>'+
+        '<table class="rsp-tbl"><tbody>'+
+        '<tr><td><span class="rsp-b">Teh melati cacah</span><span class="rsp-x">timbang, jangan dikira-kira</span></td>'+
+          '<td><span class="rsp-n">'+h.daun+' g</span></td></tr>'+
+        '<tr><td><span class="rsp-b">Air panas</span><span class="rsp-x">±85–90 °C · sudah termasuk ±'+round(m.daun*SERAP*h.gelas)+' ml yang diserap daun</span></td>'+
+          '<td><span class="rsp-n">'+h.air+' ml</span></td></tr>'+
+        '<tr><td><span class="rsp-b">Waktu seduh</span><span class="rsp-x">saring begitu waktunya habis</span></td>'+
+          '<td><span class="rsp-n">3–4 menit</span></td></tr>'+
+        '</tbody></table>';
+    }
+
+    var judul = '<div class="rsp-head">'+ic(m.ic.replace(/^i-/,""))+m.nama+'</div>'+
+      '<p class="rsp-sub">'+h.gelas+' gelas · level <b>'+TLEVEL[h.level].cat+'</b> — '+TLEVEL[h.level].sub+'.</p>';
+
+    var tips = (m.catatan||[]).length
+      ? '<ul class="th-tips">'+m.catatan.map(function(x){ return '<li>'+x+'</li>'; }).join("")+'</ul>' : '';
+
+    box.innerHTML = '<div class="rsp-banner">'+judul+seduh+
+      '<div class="th-sec">'+(m.daun>0?'2 · Campur':'Campur')+'</div>'+
+      '<table class="rsp-tbl"><thead><tr><th>Bahan</th><th>'+(h.gelas>1?'Total '+h.gelas+' gelas':'Takaran')+'</th></tr></thead>'+
+      '<tbody>'+rows+'</tbody></table>'+
+      '<div class="rsp-tot">'+(m.daun<=0
+        ? 'Tanpa teh — hangatkan susunya saja, jangan sampai mendidih.'
+        : h.gelas>1
+          ? 'Seduh sekali untuk '+h.gelas+' gelas, saring, baru dibagi rata. Angka kecil di kanan adalah takaran per gelas.'
+          : 'Angka besar dalam satuan alami tiap bahan, angka di bawahnya padanannya kalau alat takarmu beda.')+'</div>'+
+      tips+'</div>';
+  }
+
+  // ---------- timer seduh teh (hitung mundur) ----------
+  var TTARGET = [{ms:180000, lbl:"3:00"},{ms:210000, lbl:"3:30"},{ms:240000, lbl:"4:00"}];
+  var THT = {running:false, left:210000, target:210000, last:null, tId:null};
+  function thFmt(ms){
+    if(ms<0) ms=0;
+    var s=Math.ceil(ms/1000), m=Math.floor(s/60), d=s%60;
+    return (m<10?"0":"")+m+":"+(d<10?"0":"")+d;
+  }
+  function thShow(){ $("th-timer").textContent = thFmt(THT.left); }
+  function thPhase(p){ $("th-timer-phase").textContent = p; }
+  function thStop(){ THT.running=false; clearInterval(THT.tId); $("th-timerfab").classList.remove("on"); }
+  function thTick(){
+    var now=Date.now();
+    THT.left -= now-THT.last; THT.last=now;
+    if(THT.left<=0){
+      THT.left=0; thStop(); thShow(); thPhase("Saring!");
+      beepV();
+      $("th-timerfab").classList.add("alarm");
+      setTimeout(function(){ $("th-timerfab").classList.remove("alarm"); }, 2400);
+      return;
+    }
+    thShow();
+  }
+  function renderThTarget(){
+    var box=$("th-target"); box.innerHTML="";
+    TTARGET.forEach(function(t){
+      var c=el("div","chip"+(t.ms===THT.target?" active":""), t.lbl+" menit");
+      c.addEventListener("click", function(){
+        if(THT.running) return;
+        THT.target=t.ms; THT.left=t.ms;
+        renderThTarget(); thShow(); thPhase("Seduh");
+      });
+      box.appendChild(c);
+    });
+  }
+
+  function renderThSaveCard(){
+    var card=$("th-savecard");
+    card.innerHTML =
+      '<h2>'+ic('bookmark')+' Simpan Catatan Rasa</h2>'+
+      '<p class="hint">Catat takaran yang kamu pakai barusan, biar besok tinggal diulang persis.</p>'+
+      '<div class="field"><label>Penilaian rasa</label>'+
+        '<div class="verdicts">'+
+          '<button class="verdict" data-v="good">'+ic('smile')+' Enak</button>'+
+          '<button class="verdict" data-v="meh">'+ic('meh')+' Biasa</button>'+
+          '<button class="verdict" data-v="bad">'+ic('frown')+' Kurang</button>'+
+        '</div></div>'+
+      '<div class="field"><label>Catatan (opsional)</label>'+
+        '<textarea id="th-note" rows="2" placeholder="mis. vanilla masih kurang, besok naikkan ke 15 ml..."></textarea></div>'+
+      '<button class="btn btn-primary" id="th-save">'+ic('bookmark')+' Simpan catatan ini</button>';
+    card.querySelectorAll(".verdict").forEach(function(b){
+      if(state.verdict.teh===b.getAttribute("data-v")) b.classList.add("active");
+      b.addEventListener("click", function(){
+        state.verdict.teh = this.getAttribute("data-v");
+        card.querySelectorAll(".verdict").forEach(function(x){ x.classList.remove("active"); });
+        this.classList.add("active");
+      });
+    });
+    $("th-save").addEventListener("click", doSaveTeh);
+  }
+
+  function doSaveTeh(){
+    if(!state.verdict.teh){ toast("Pilih penilaian dulu"); return; }
+    var h=tHitung(), m=h.menu;
+    var noteTxt = ($("th-note").value||"").trim();
+    var bahanTxt = h.comp.filter(function(c){ return c.t!=="teh"; }).map(function(c){
+      var p=tPair(c.per, c.t);
+      return TB[c.t].label+" "+p.utama+(p.lain? " ("+p.lain+")" : "");
+    }).join(" + ");
+    var specs = m.nama+" · "+h.gelas+" gelas · level "+TLEVEL[h.level].cat
+      + (m.daun>0 ? " · teh "+h.daun+" g / air "+h.air+" ml · seduh "+thFmt(THT.target)
+                    +" · hasil "+m.teh+" ml/gelas" : "")
+      + (bahanTxt ? " · "+bahanTxt : "");
+    var notes = loadNotes();
+    notes.unshift({
+      id: "n"+notes.length+"_"+ (notes[0]?(parseInt(notes[0].id.split("_")[1]||"0",10)+1):1),
+      drink: "teh",
+      verdict: state.verdict.teh,
+      dose: h.daun, ratio: null, yield: h.air,
+      pemanis: null,
+      specs: specs,
+      note: noteTxt,
+      date: nowStr()
+    });
+    saveNotes(notes);
+    renderLog();
+    state.verdict.teh=null;
+    renderThSaveCard();
+    toast("Catatan tersimpan");
+  }
+
+  function initTeh(){
+    renderTehMenu(); renderTehLevel(); renderThTarget(); renderTeh(); renderThSaveCard();
+    thShow();
+    $("th-gelas").addEventListener("input", renderTeh);
+    $("th-timer-start").addEventListener("click", function(){
+      if(THT.running || THT.left<=0) return;
+      THT.running=true; THT.last=Date.now();
+      thPhase("Seduh"); $("th-timerfab").classList.add("on");
+      THT.tId=setInterval(thTick, 200);
+    });
+    $("th-timer-pause").addEventListener("click", function(){
+      if(!THT.running) return;
+      THT.left -= Date.now()-THT.last;
+      thStop(); thShow(); thPhase("Jeda");
+    });
+    $("th-timer-reset").addEventListener("click", function(){
+      thStop(); THT.left=THT.target; thShow(); thPhase("Seduh");
+      $("th-timerfab").classList.remove("alarm");
+    });
+  }
+
   // ---------- init ----------
+  initTeh();
   loadCalib();
   calcTygo();
   calcV60();
