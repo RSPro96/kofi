@@ -284,7 +284,8 @@
         <li><b>Kopi tertampung di gelas</b> → timbang gelas+espresso. Berat kopi jadi dasar takaran <b>gula</b> (espresso polos) atau <b>SKM</b> (Sanger Espresso).</li>
       </ol>
       <p><b>Gram atau ml?</b> 1 g air ≈ 1 ml, jadi cukup pakai timbangan — lebih akurat daripada gelas ukur ml. Basket 9g = <b>1 shot espresso</b>; yield 1:2 (±18g) itu normal dan memang kecil. Mau lebih banyak? Press 2x berturut-turut (≈ double) atau geser rasio ke 1:2,5–1:3.</p>
-      <p><b>Sirup gula 1:1:</b> masak gula + air dengan <b>berat sama</b> (mis. 100 g gula + 100 g air) sampai gula larut, dinginkan. Karena separuhnya air, takarannya <b>2x gram gula pasir</b> untuk manis yang sama — 1 sdm sirup ≈ 15 g. Lebih cepat larut di espresso panas maupun es.</p>
+      <p><b>Sirup gula 1:1:</b> masak gula + air dengan <b>berat sama</b> (mis. 100 g gula + 100 g air) sampai gula larut, dinginkan. Karena separuhnya air, takarannya <b>2x gram gula pasir</b> untuk manis yang sama — 1 sdm sirup ≈ 15 g. Lebih cepat larut di espresso panas maupun es. Mau vanilla? Matikan api dulu, baru rendam ½ batang vanilla (atau 1 sdt ekstrak) 30 menit lalu saring — kalau dimasukkan saat mendidih aromanya menguap. Takarannya tetap ikut chip <b>Sirup Gula 1:1</b>.</p>
+      <p><b>Sirup vanilla botolan</b> (Monin, Torani, dll) lebih pekat: ±65% gula, jadi gramnya ±1,5x gula pasir — itu yang dipakai chip <b>Sirup Vanilla</b>. Untuk sanger, vanilla cuma aroma latar; kalau dipadu SKM, turunkan SKM ke level <b>Pahit / kuat</b> supaya tidak kemanisan.</p>
       <p><b>Takaran pemanis (referensi):</b> Sanger khas Aceh memakai <b>kopi : susu kental manis = 3:1</b> (susu hemat, kopi dominan). Buih dihasilkan dari kocokan kopi + SKM. Level manis tetap terserah lidahmu.</p>
     </div>
   </details>
@@ -367,10 +368,11 @@
 
   <div class="card">
     <h2>Takaran Pemanis</h2>
-    <p class="hint">Takaran mengikuti <b>berat kopi yang benar-benar ada di gelas</b> (timbangan − gelas kosong), bukan target yield. Pilih bahan: <b>Gula</b> pasir, <b>Sirup Gula 1:1</b> (buatan sendiri), atau <b>Susu (SKM)</b> untuk Sanger Espresso. Lalu pilih level.</p>
+    <p class="hint">Takaran mengikuti <b>berat kopi yang benar-benar ada di gelas</b> (timbangan − gelas kosong), bukan target yield. Pilih bahan: <b>Gula</b> pasir, <b>Sirup Gula 1:1</b> (buatan sendiri), <b>Sirup Vanilla</b> (botolan), atau <b>Susu (SKM)</b> untuk Sanger Espresso. Lalu pilih level.</p>
     <div class="chips" id="t-pemanis">
       <div class="chip active" data-type="gula"><svg class="ic"><use href="#i-droplet"/></svg> Gula</div>
       <div class="chip" data-type="sirup"><svg class="ic"><use href="#i-droplet"/></svg> Sirup Gula 1:1</div>
+      <div class="chip" data-type="vanila"><svg class="ic"><use href="#i-droplet"/></svg> Sirup Vanilla</div>
       <div class="chip" data-type="susu"><svg class="ic"><use href="#i-cup"/></svg> Susu (SKM) — Sanger</div>
     </div>
     <div class="sweet-title" id="t-sweet-title"></div>
@@ -485,6 +487,7 @@
       <div class="chips" id="v-pemanis-type">
         <div class="chip active" data-type="gula"><svg class="ic"><use href="#i-droplet"/></svg> Gula</div>
         <div class="chip" data-type="sirup"><svg class="ic"><use href="#i-droplet"/></svg> Sirup Gula 1:1</div>
+        <div class="chip" data-type="vanila"><svg class="ic"><use href="#i-droplet"/></svg> Sirup Vanilla</div>
         <div class="chip" data-type="susu"><svg class="ic"><use href="#i-cup"/></svg> Susu (SKM) — Sanger</div>
       </div>
       <div class="sweet-title" id="v-sweet-title"></div>
@@ -671,15 +674,33 @@
     {cat:"Sedikit manis", sub:"sanger standar", ratio:0.35, cls:"s1"},
     {cat:"Manis", sub:"sanger manis", ratio:0.55, cls:"s2"}
   ];
-  // sirup gula buatan sendiri, gula:air = 1:1 (berat) -> hanya 50% gula,
-  // jadi takarannya 2x gram gula kering untuk manis yang setara
-  var ESP_SYRUP = ESP_SUGAR.map(function(s){
-    return {cat:s.cat, sub:s.sub, ratio:s.ratio*2, cls:s.cls};
-  });
-  function PEM(t){ return t==="susu" ? SANGER_SKM : t==="sirup" ? ESP_SYRUP : ESP_SUGAR; }
-  function PEM_LABEL(t){ return t==="susu" ? "Susu (SKM)" : t==="sirup" ? "Sirup Gula 1:1" : "Gula"; }
-  function PEM_UNIT(t){ return t==="susu" ? "g SKM" : t==="sirup" ? "g sirup" : "g gula"; }
-  function PEM_SDM(t){ return t==="sirup" ? 15 : 12; } // sirup cair lebih berat per sendok makan
+  // sirup = gula encer, jadi butuh lebih banyak gram untuk manis yang sama.
+  // 1:1 buatan sendiri = 50% gula (x2). Botolan Monin/Torani ~65 Brix (x1.54).
+  var SIRUP_1_1 = 2, SIRUP_BOTOL = 1/0.65;
+  function skala(arr, f){
+    return arr.map(function(s){ return {cat:s.cat, sub:s.sub, ratio:s.ratio*f, cls:s.cls}; });
+  }
+  var ESP_SYRUP   = skala(ESP_SUGAR, SIRUP_1_1);
+  var ESP_VANILLA = skala(ESP_SUGAR, SIRUP_BOTOL);
+
+  var BAHAN = {
+    gula:   {label:"Gula",           unit:"g gula",  sdm:12},
+    sirup:  {label:"Sirup Gula 1:1", unit:"g sirup", sdm:15},
+    vanila: {label:"Sirup Vanilla",  unit:"g sirup", sdm:15},
+    susu:   {label:"Susu (SKM)",     unit:"g SKM",   sdm:12} // sdm sirup 15 g: cairan lebih berat
+  };
+  var CATATAN = {
+    sirup:  "1:1 = separuh gula, jadi 2x gula pasir",
+    vanila: "botolan ±65% gula · bareng SKM, turunkan SKM ke Pahit"
+  };
+  function B(t){ return BAHAN[t] || BAHAN.gula; }
+  function PEM(t){ return t==="susu" ? SANGER_SKM : t==="vanila" ? ESP_VANILLA : t==="sirup" ? ESP_SYRUP : ESP_SUGAR; }
+  function PEM_LABEL(t){ return B(t).label; }
+  function PEM_UNIT(t){ return B(t).unit; }
+  function PEM_SDM(t){ return B(t).sdm; }
+  function PEM_NOTE(t){
+    return CATATAN[t] ? ' <small style="font-weight:400;color:var(--muted)">('+CATATAN[t]+')</small>' : '';
+  }
 
   // ---------- state ----------
   var state = {
@@ -792,7 +813,7 @@
     var S = PEM(t);
     var st = state.tygo;
     $("t-sweet-title").innerHTML = (t==="susu" ? ic('cup') : ic('droplet'))+' Rekomendasi '+PEM_LABEL(t)+' — pilih level manis'
-      + (t==="sirup" ? ' <small style="font-weight:400;color:var(--muted)">(sirup 1:1 = separuh gula, jadi gramnya 2x gula pasir)</small>' : '')
+      + PEM_NOTE(t)
       + (base>0 ? ' <small style="font-weight:400;color:var(--muted)">(dari '+base+' g kopi di gelas)</small>'
                 : ' <small style="font-weight:400;color:var(--meh)">(timbang gelas + hasil press dulu)</small>');
     S.forEach(function(s, i){
@@ -1358,8 +1379,10 @@
     {cat:"Sedikit manis", sub:"sanger standar", ratio:0.075, cls:"s1"},
     {cat:"Manis", sub:"sanger manis", ratio:0.12, cls:"s2"}
   ];
-  var V_SYRUP = V_SUGAR.map(function(s){ return {cat:s.cat, sub:s.sub, ratio:s.ratio*2, cls:s.cls}; });
-  function VARR(){ var t=state.v60.pemanisType; return t==="susu" ? V_SKM : t==="sirup" ? V_SYRUP : V_SUGAR; }
+  var V_SYRUP   = skala(V_SUGAR, SIRUP_1_1);
+  var V_VANILLA = skala(V_SUGAR, SIRUP_BOTOL);
+  function VARR(){ var t=state.v60.pemanisType;
+    return t==="susu" ? V_SKM : t==="vanila" ? V_VANILLA : t==="sirup" ? V_SYRUP : V_SUGAR; }
   function VUNIT(){ return PEM_UNIT(state.v60.pemanisType); }
   function vBase(){
     var porsi = num(g("v-porsi"))||1;
@@ -1397,7 +1420,7 @@
     var per = num(g("v-perporsi"))||80;
     var vt = state.v60.pemanisType;
     $("v-sweet-title").innerHTML = (vt==="susu" ? ic('cup') : ic('droplet'))+' Rekomendasi '+PEM_LABEL(vt)+' — ikut total air (ubah ukuran/jumlah gelas langsung kena)'
-      + (vt==="sirup" ? ' <small style="font-weight:400;color:var(--muted)">(sirup 1:1 = separuh gula, jadi gramnya 2x gula pasir)</small>' : '');
+      + PEM_NOTE(vt);
     arr.forEach(function(s,i){
       var sel = state.v60.pemanis===i;
       var pg = round(per*s.ratio);
