@@ -456,6 +456,25 @@
     <div id="t-resep-box" style="display:none"></div>
   </div>
 
+  <div class="card" id="t-milkcard">
+    <h2>Susu UHT (opsional)</h2>
+    <p class="hint">Susu <b>bukan pemanis</b>, jadi takarannya tidak ikut level manis di atas &mdash; yang diatur di sini perbandingan susu terhadap espresso. Boleh dipakai bersama pemanis mana pun, atau sendirian saja.</p>
+    <div class="chips" id="t-milk"></div>
+    <div class="field" style="margin-top:12px">
+      <label>Atau isi sendiri</label>
+      <div class="inrow">
+        <input type="number" id="t-milk-ml" min="0" max="600" step="10" placeholder="ml susu" />
+        <span class="unit">ml</span>
+      </div>
+    </div>
+    <div class="result">
+      <div class="kpis">
+        <div class="kpi"><div class="n" id="t-milk-out">–</div><div class="l">Susu UHT</div></div>
+      </div>
+      <div class="note-line" id="t-milk-note">Pilih perbandingan di atas, atau biarkan Tanpa Susu.</div>
+    </div>
+  </div>
+
   <div class="card">
     <h2>Timer Press</h2>
     <p class="hint">Timer kecil di bawah layar — mulai pas mulai press. <span id="t-timer-target">Target 30–40 detik</span>; tetap terlihat walau halaman di-scroll.</p>
@@ -582,6 +601,25 @@
           <div class="kpi"><div class="n" id="v-sweet-total">–</div><div class="l">Total Takaran</div></div>
         </div>
         <div class="note-line" id="v-sweet-note">Pilih level atau isi takaran manual di bawah.</div>
+      </div>
+    </div>
+
+    <div class="card" id="v-milkcard">
+      <h2>Susu UHT (opsional)</h2>
+      <p class="hint">Perbandingannya dihitung dari <b>konsentrat</b>, bukan dari kopi V60 biasa. Kopi 1:15 sudah encer &mdash; ditambah susu jadi makin tipis. Geser rasio ke <b>di bawah 1:10</b> dulu (Konsentrat V60 memakai 1:5).</p>
+      <div class="chips" id="v-milk"></div>
+      <div class="field" style="margin-top:12px">
+        <label>Atau isi sendiri</label>
+        <div class="inrow">
+          <input type="number" id="v-milk-ml" min="0" max="600" step="10" placeholder="ml susu" />
+          <span class="unit">ml</span>
+        </div>
+      </div>
+      <div class="result">
+        <div class="kpis">
+          <div class="kpi"><div class="n" id="v-milk-out">–</div><div class="l">Susu UHT</div></div>
+        </div>
+        <div class="note-line" id="v-milk-note">Pilih perbandingan di atas, atau biarkan Tanpa Susu.</div>
       </div>
     </div>
 
@@ -954,12 +992,23 @@
     return CATATAN[t] ? ' <small style="font-weight:400;color:var(--muted)">('+CATATAN[t]+')</small>' : '';
   }
 
+  // ---------- susu UHT ----------
+  // Susu bukan pemanis: yang menentukan rasanya perbandingan susu terhadap
+  // espresso, bukan kadar gulanya. Jadi jalurnya terpisah dari BAHAN/PEM.
+  var UHT_RHO = 1.03;
+  var MILK = [
+    {cat:"Cortado",    sub:"susu 1× espresso — kopi paling menonjol", ratio:1},
+    {cat:"Piccolo",    sub:"susu 2× espresso — masih jelas kopinya",  ratio:2},
+    {cat:"Flat white", sub:"susu 3× espresso — seimbang",             ratio:3},
+    {cat:"Latte",      sub:"susu 4× espresso — paling lembut",        ratio:4}
+  ];
+
   // ---------- state ----------
   var state = {
     tygo: { pemanis:null, customG:null, pemanisType:"gula", biji:"arabica",
-            mode:"manual", resep:null, level:1, pilih:{} },
+            mode:"manual", resep:null, level:1, pilih:{}, susu:null, susuMl:null },
     v60:  { pemanis:null, customG:null, pemanisType:"gula",
-            mode:"manual", resep:null, level:1, pilih:{} },
+            mode:"manual", resep:null, level:1, pilih:{}, susu:null, susuMl:null },
     teh:  { resep:null, level:0, gelas:1 },
     verdict: { tygo:null, v60:null, teh:null },
     filter: "all"
@@ -1162,6 +1211,93 @@
     return c;
   }
 
+  // ---------- kartu susu UHT ----------
+  // Dasar perbandingan = kopi setara espresso. Untuk V60 itu konsentrat yang
+  // sudah dikonversi ke setara espresso, supaya angkanya sebanding antar alat.
+  function milkBase(tool){
+    if(tool==="v60"){
+      var r = resepById("v60", stOf("v60").resep);
+      var pekat = (stOf("v60").mode==="resep" && r && r.pekat)
+               || (parseFloat($("v-rasio").value)||15) < 10;
+      return pekat ? Math.max(0, round(hasilPekat()*0.6)) : 0;
+    }
+    return Math.max(0, round(g("t-gelas1")-g("t-gelas0")));
+  }
+  function milkResep(tool){
+    var st=stOf(tool);
+    if(st.mode!=="resep") return null;
+    var r=resepById(tool, st.resep);
+    return r && r.susu ? r.susu : null;
+  }
+  // ml susu yang sedang berlaku: ikut resep, pilihan level, atau isian sendiri
+  function milkMl(tool){
+    var st=stOf(tool), base=milkBase(tool);
+    var rr=milkResep(tool);
+    if(rr!=null) return base>0 ? rnice(base*rr) : null;
+    if(st.susuMl!=null) return rnice(st.susuMl);
+    if(st.susu!=null && base>0) return rnice(base*MILK[st.susu].ratio);
+    return null;
+  }
+  function renderMilk(tool){
+    var pre = tool==="v60" ? "v" : "t";
+    var box=$(pre+"-milk"); if(!box) return;
+    var st=stOf(tool), base=milkBase(tool), rr=milkResep(tool);
+    box.innerHTML="";
+    var kunci = rr!=null;   // mode resep menetapkan perbandingannya sendiri
+    var none=el("div","chip"+(!kunci && st.susu==null && st.susuMl==null ? " active":""), "Tanpa susu");
+    none.setAttribute("data-milk","x");
+    box.appendChild(none);
+    MILK.forEach(function(m,i){
+      var aktif = !kunci && st.susuMl==null && st.susu===i;
+      var c=el("div","chip"+(aktif?" active":""), m.cat+" "+m.ratio+"×");
+      c.setAttribute("data-milk", i);
+      box.appendChild(c);
+    });
+    box.querySelectorAll("[data-milk]").forEach(function(c){
+      c.addEventListener("click", function(){
+        if(kunci){ toast("Mode Ikut Resep menetapkan susunya. Pindah ke Manual untuk mengubah."); return; }
+        var v=c.getAttribute("data-milk");
+        st.susu = v==="x" ? null : parseInt(v,10);
+        st.susuMl = null;
+        $(pre+"-milk-ml").value="";
+        renderMilk(tool);
+        if(tool==="v60") renderVSaveCard(); else renderSaveCard();
+      });
+    });
+
+    var ml = milkMl(tool);
+    $(pre+"-milk-out").textContent = ml!=null && ml>0 ? ml+" ml" : "–";
+    var note;
+    if(base<=0 && rr!=null){
+      note = tool==="v60" ? "Atur dulu porsi dan rasio konsentratnya di atas."
+                          : "Timbang dulu gelas + hasil press di kartu Hasil Seduhan.";
+    } else if(ml==null || ml<=0){
+      note = tool==="v60" && base<=0
+        ? "Rasio sekarang masih kopi seduh biasa. Geser ke bawah 1:10 dulu supaya jadi konsentrat, baru susunya masuk akal."
+        : "Pilih perbandingan di atas, atau biarkan Tanpa Susu.";
+    } else {
+      var sumber = rr!=null ? "ditetapkan resep ("+rr+"× kopi)"
+                 : st.susuMl!=null ? "isian sendiri"
+                 : MILK[st.susu].sub;
+      note = sumber+" · "+ml+" ml ≈ "+rnice(ml*UHT_RHO)+" g · "+tAlat(ml, ml*UHT_RHO)
+           + (base>0 ? " · dari "+base+" g kopi setara espresso" : "");
+    }
+    $(pre+"-milk-note").textContent = note;
+  }
+  function bindMilk(tool){
+    var pre = tool==="v60" ? "v" : "t";
+    var inp=$(pre+"-milk-ml"); if(!inp) return;
+    inp.addEventListener("input", function(){
+      var st=stOf(tool);
+      if(milkResep(tool)!=null){ return; }
+      var v=parseFloat(inp.value);
+      st.susuMl = v>0 ? v : null;
+      if(st.susuMl!=null) st.susu=null;
+      renderMilk(tool);
+      if(tool==="v60") renderVSaveCard(); else renderSaveCard();
+    });
+  }
+
   // ---------- perhitungan inti ----------
   function calcTygo(){
     var w0=g("t-wadah0"), s1=g("t-sendok1");
@@ -1194,6 +1330,7 @@
       ring.textContent = "Isi berat wadah + bubuk untuk mulai.";
     }
     if(state.tygo.mode==="resep") renderResep("tygo"); else renderTygoSweets();
+    renderMilk("tygo");
   }
 
   // ---------- kartu simpan ----------
@@ -1252,9 +1389,13 @@
           ? {label:"Kustom", val:round(st.customG), unit:unit, mode:"manual", type:PEM_LABEL(t), bahan:t}
           : null));
 
+    var smlT = milkMl("tygo");
     var specs = "Dose "+dose+"g · Yield "+yieldG+"g (1:"+ratio+") · press 8 bar"
-      + (pemanis? " · "+pemanis.type+" ("+pemanis.label+" · "+valTxt(pemanis.val, pemanis.bahan, pemanis.unit)
-          + (pemanis.plus? " + "+pemanis.plus : "") + " · "+pemanis.mode+")" : "");
+      + (pemanis? " · "+pemanis.type+" ("+pemanis.label
+          + (pemanis.unit ? " · "+valTxt(pemanis.val, pemanis.bahan, pemanis.unit)
+                            + (pemanis.plus? " + "+pemanis.plus : "") : "")
+          + " · "+pemanis.mode+")" : "")
+      + (smlT>0 ? " · Susu UHT "+smlT+" ml (≈ "+rnice(smlT*UHT_RHO)+" g)" : "");
 
     var notes = loadNotes();
     notes.unshift({
@@ -1503,7 +1644,26 @@
      pd:"Mode Sanger + Sirup sudah dipilihkan, sirupnya Sirup Vanilla. Slider Porsi manis dari sirup mengatur pembagian: makin ke kanan makin harum vanilla, makin ke kiri makin tebal susunya.",
      saji:["Masukkan SKM sesuai angka di atas ke espresso panas, kocok dulu dengan pengocok listrik sampai berbuih.",
            "Baru masukkan sirup vanilla. Kalau keduanya masuk bersamaan, buihnya lebih susah naik karena sirup memberatkan.",
-           "Tambahkan air panas 100-120 ml. Cicipi: kalau vanilla-nya kurang terasa, naikkan slider porsi sirup - jangan menambah SKM, nanti kemanisan."]}
+           "Tambahkan air panas 100-120 ml. Cicipi: kalau vanilla-nya kurang terasa, naikkan slider porsi sirup - jangan menambah SKM, nanti kemanisan."]},
+
+    {id:"cortado", nama:"Cortado", ic:"i-cup", pm:null, susu:1,
+     sub:"Espresso + susu UHT sebanyak espressonya. Susu meredam asamnya tanpa menutupi kopi.",
+     saji:["Hangatkan susu sampai hangat kuku saja - jangan sampai mendidih, susu mendidih berubah rasa dan berkulit.",
+           "Tuang susu pelan lewat pinggir gelas ke espresso yang masih panas. Tidak perlu dikocok; cortado memang tidak berbuih tebal.",
+           "Porsinya kecil dan memang untuk diminum cepat, bukan diseruput lama-lama."]},
+
+    {id:"latte", nama:"Latte Hangat", ic:"i-cup", pm:null, susu:4,
+     sub:"Espresso + susu UHT 4x. Paling lembut, kopinya jadi latar.",
+     saji:["Hangatkan susu, lalu kocok dengan pengocok listrik sampai berbuih halus. Tahan kepalanya tepat di bawah permukaan, bukan di dasar gelas.",
+           "Tuang espresso ke gelas dulu, baru susunya pelan-pelan. Buihnya naik sendiri ke atas.",
+           "Tanpa mesin uap, buihnya akan lebih besar dan cepat hilang daripada latte kafe. Minum selagi buihnya masih ada."]},
+
+    {id:"vanilla_latte", nama:"Vanilla Latte", ic:"i-droplet", susu:3,
+     pm:{lv:"gula", slots:[{opsi:["vanila","sirup"], porsi:1}]},
+     sub:"Espresso + susu UHT + sirup vanilla. Susunya 3x, di antara cortado dan latte.",
+     pd:"Sirup vanilla sudah dipilihkan. Angkanya ikut berat espresso di gelas, sama seperti menu lain - susunya diatur terpisah di kartu Susu UHT.",
+     saji:["Masukkan sirup vanilla ke espresso yang masih panas, aduk sampai larut. Vanilla lebih menyatu kalau masuk sebelum susu.",
+           "Hangatkan susu, kocok sampai berbuih, lalu tuang."]}
    ],
    v60: [
     {id:"v60_polos", nama:"V60 Polos", ic:"i-droplet", pm:null,
@@ -1537,7 +1697,13 @@
      sub:"V60 + susu kental manis, versi ringan dari kopi susu.",
      pd:"Mulai dari level paling kiri dulu. Kopi V60 jauh lebih ringan daripada espresso, jadi SKM gampang mendominasi.",
      saji:["Masukkan SKM selagi kopi masih panas, aduk rata.",
-           "Cicipi sebelum menambah. Beda dengan sanger yang kopinya pekat, di sini susu gampang menutupi kopinya."]}
+           "Cicipi sebelum menambah. Beda dengan sanger yang kopinya pekat, di sini susu gampang menutupi kopinya."]},
+
+    {id:"v60_latte", nama:"Latte V60", ic:"i-cup", pm:null, pekat:true, setara:0.6, susu:4,
+     sub:"Latte tanpa Tygopresso: konsentrat V60 1:5 sebagai pengganti espresso + susu UHT.",
+     saji:["Seduh konsentratnya dulu sesuai angka di atas, hasilnya sekitar 45 ml.",
+           "Hangatkan susu, kocok dengan pengocok listrik sampai berbuih, lalu tuang ke konsentrat.",
+           "Rasanya lebih bersih dan kurang tebal daripada latte espresso - konsentrat V60 tidak punya crema, dan itu memang yang hilang."]}
    ]
   };
   // ---------- mesin resep: hitung tiap bahan pemanis dalam satu banner ----------
@@ -1605,6 +1771,11 @@
                 d:r.pd || "Pilih level manis sesuai selera.",
                 el: RBOX[tool], ok:null});
     }
+    if(r.susu){
+      out.push({t:"Takaran Susu", ic:"i-cup", opt:true,
+                d:"Resep ini memakai susu UHT sebanyak "+r.susu+"× berat kopi — angkanya sudah dihitungkan di kartu Susu UHT. Hangatkan sampai hangat kuku saja, jangan mendidih.",
+                el: tool==="v60" ? "v-milkcard" : "t-milkcard", ok:null});
+    }
     (r.saji||[]).forEach(function(txt, i){
       out.push({t:"Penyajian"+((r.saji.length>1)?" "+(i+1):""), ic:"i-coffee",
                 d:txt, el:SAJI[tool], ok:null});
@@ -1628,12 +1799,24 @@
     $(MBOX[tool]).style.display = st.mode==="manual" ? "" : "none";
     $(RBOX[tool]).style.display = st.mode==="resep" ? "" : "none";
     if(st.mode==="resep") renderResep(tool); else if(tool==="tygo") renderTygoSweets(); else renderVSweets();
+    renderMilk(tool);
     saveCalib();
   }
   function restoreResep(tool, p){
     var st=stOf(tool);
     if(p.resep){ st.resep=p.resep; st.level=p.level!=null?p.level:1; st.pilih=p.pilih||{}; }
     setMode(tool, p.pmode==="resep" ? "resep" : "manual");
+  }
+
+  function milkRowHtml(tool, r){
+    if(!r || !r.susu) return "";
+    var base=milkBase(tool), ml = base>0 ? round(base*r.susu) : null;
+    return '<tr><td><span class="rsp-b">Susu UHT original</span>'+
+      '<span class="rsp-x">'+r.susu+'× berat kopi · bukan pemanis</span>'+
+      (ml!=null ? '<span class="rsp-x">'+tAlat(ml, ml*UHT_RHO)+'</span>' : '')+'</td>'+
+      '<td><span class="rsp-n">'+(ml!=null?ml:"–")+' ml</span>'+
+      (ml!=null ? '<span class="rsp-n" style="display:block;font-size:13px;margin-top:2px">≈ '+rnice(ml*UHT_RHO)+' g</span>' : '')+
+      '</td></tr>';
   }
 
   function renderResep(tool){
@@ -1650,9 +1833,21 @@
       '<div class="g-drinks rsp-menu">'+menu+'</div></div>';
 
     if(!r.pm){
-      html += '<div class="rsp-banner"><div class="rsp-head">'+ic('info')+'Tanpa pemanis</div>'+
-        '<p class="rsp-sub" style="margin:0">'+r.nama+' disajikan polos. Kalau tetap mau manis, '+
-        'pindah ke mode Manual dan pilih bahannya sendiri.</p></div>';
+      if(r.susu){
+        html += '<div class="rsp-banner"><div class="rsp-head">'+ic('cup')+'Takaran susu '+r.nama+'</div>'+
+          '<p class="rsp-sub">Menu ini tanpa pemanis — susunya yang membentuk rasa. '+
+          'Perbandingannya sudah ditetapkan resep; kalau mau mengubah, pindah ke mode Manual.</p>'+
+          '<table class="rsp-tbl"><thead><tr><th>Bahan</th><th>Takaran</th></tr></thead><tbody>'+
+          milkRowHtml(tool, r)+'</tbody></table>'+
+          '<div class="rsp-tot">'+(milkBase(tool)>0
+            ? 'Dihitung dari '+milkBase(tool)+' g kopi setara espresso.'
+            : (tool==="v60" ? 'Atur dulu porsi dan rasio konsentratnya di atas.'
+                            : 'Timbang dulu gelas + hasil press di kartu Hasil Seduhan.'))+'</div></div>';
+      }else{
+        html += '<div class="rsp-banner"><div class="rsp-head">'+ic('info')+'Tanpa pemanis</div>'+
+          '<p class="rsp-sub" style="margin:0">'+r.nama+' disajikan polos. Kalau tetap mau manis, '+
+          'pindah ke mode Manual dan pilih bahannya sendiri.</p></div>';
+      }
       box.innerHTML=html; bindResep(tool); return;
     }
 
@@ -1688,7 +1883,7 @@
       '<p class="rsp-sub">'+(comp.length>1
         ? 'Semua bahan di bawah dipakai <b>bersamaan</b>. Porsinya sudah dibagi supaya total manisnya tetap seukuran level '+LV[st.level].cat.toLowerCase()+'.'
         : 'Satu bahan untuk menu ini, di level '+LV[st.level].cat.toLowerCase()+'.')+'</p>'+
-      '<table class="rsp-tbl"><thead><tr><th>Bahan</th><th>Takaran</th></tr></thead><tbody>'+rows+'</tbody></table>'+
+      '<table class="rsp-tbl"><thead><tr><th>Bahan</th><th>Takaran</th></tr></thead><tbody>'+rows+milkRowHtml(tool, r)+'</tbody></table>'+
       '<div class="rsp-tot">'+(base>0
         ? (tool!=="v60" ? 'Dihitung dari '+base+' g kopi di gelas.'
            : r.pekat ? 'Dihitung dari ±'+hasilPekat()+' ml konsentrat, setara ±'+base+' g espresso.'
@@ -1707,6 +1902,7 @@
         st.resep=b.getAttribute("data-resep"); st.pilih={};
         saveCalib();
         if(tool==="v60") applyResepV60(resepById("v60", st.resep)); else renderResep(tool);
+        renderMilk(tool);
         saveCardOf(tool);
       });
     });
@@ -1923,6 +2119,7 @@
       ? "Alur: 1) rendam awal "+bloom+" g → diem 30–45 detik · 2) tuang pelan sampai 60% ("+t1+" g) · 3) lanjut sampai 100% ("+t2+" g). Total waktu dari mulai sampai air habis = 2,5–3 menit."
       : "Atur jumlah porsi & ukuran per gelas untuk mulai.";
     if(state.v60.mode==="resep") renderResep("v60"); else renderVSweets();
+    renderMilk("v60");
     updVSweet();
   }
 
@@ -2151,9 +2348,13 @@
         : (state.v60.customG!=null
           ? {label:"Kustom", val:round(state.v60.customG), unit:unit, mode:"manual", type:PEM_LABEL(t), bahan:t}
           : null));
+    var smlV = milkMl("v60");
     var specs = "Dose "+bubuk+"g · Air "+total+"g / "+total+" ml (1:"+rasio+")"
-      + (pemanis? " · "+pemanis.type+" ("+pemanis.label+" · "+valTxt(pemanis.val, pemanis.bahan, pemanis.unit)
-          + (pemanis.plus? " + "+pemanis.plus : "") + " · "+pemanis.mode+")" : "");
+      + (pemanis? " · "+pemanis.type+" ("+pemanis.label
+          + (pemanis.unit ? " · "+valTxt(pemanis.val, pemanis.bahan, pemanis.unit)
+                            + (pemanis.plus? " + "+pemanis.plus : "") : "")
+          + " · "+pemanis.mode+")" : "")
+      + (smlV>0 ? " · Susu UHT "+smlV+" ml (≈ "+rnice(smlV*UHT_RHO)+" g)" : "");
     var notes = loadNotes();
     notes.unshift({
       id: "n"+notes.length+"_"+ (notes[0]?(parseInt(notes[0].id.split("_")[1]||"0",10)+1):1),
@@ -2702,6 +2903,7 @@
   }
 
   // ---------- init ----------
+  bindMilk("tygo"); bindMilk("v60");
   initTeh();
   loadCalib();
   calcTygo();
