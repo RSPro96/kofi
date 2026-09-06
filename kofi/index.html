@@ -638,7 +638,9 @@
           <li><b>Tekan tombolnya begitu waktunya habis.</b> Daun yang dibiarkan terendam terus akan terus mengeluarkan rasa pahit &mdash; teko ini justru dibuat untuk menghentikannya.</li>
         </ol>
         <p><b>Daun menyerap air.</b> Teh cacah menahan ±2,5 ml air per gram, jadi air yang dituang selalu lebih banyak daripada teh yang keluar. Angka <b>Air panas</b> di kartu Takaran sudah memperhitungkan ini &mdash; tinggal ikuti.</p>
-        <p><b>Suhu air:</b> teh melati paling enak di ±85&ndash;90 &deg;C, bukan air mendidih. Kalau pakai teko pemanas, tunggu 1&ndash;2 menit setelah mendidih sebelum dituang.</p>
+        <p><b>Suhu air beda per jenis teh.</b> <b>Teh melati</b> itu bunga: air mendidih merusak aromanya, jadi tunggu 1&ndash;2 menit setelah mendidih (±85&ndash;90 &deg;C). <b>Teh hitam cacah (Mawar)</b> justru butuh air paling panas, ±95&ndash;100 &deg;C langsung dari teko &mdash; kalau airnya kurang panas, warnanya keluar tapi rasanya tipis.</p>
+        <p><b>Cara gagalnya juga beda.</b> Melati kelewat lama jadi <b>sepat</b>; teh hitam kelewat lama jadi <b>pahit dan kelat</b> karena taninnya ikut keluar. Makanya teh hitam polos cukup <b>3 menit</b>. Untuk menu bersusu, teh memang harus kuat &mdash; tapi kuatkan dengan <b>menambah daun</b>, bukan menambah waktu. Menu susu di sini sudah dibuat begitu: 4&ndash;5 g daun untuk 120&ndash;150 ml, diseduh 4 menit.</p>
+        <p><b>Teh hitam lebih cocok untuk susu.</b> Melati itu aroma halus yang gampang tenggelam di balik susu; teh hitam punya badan dan tanin yang justru terangkat oleh lemak susu. Kalau milk tea melatimu terasa hambar, coba menu yang sama versi teh hitam sebelum menambah daun melatinya.</p>
         <p><b>Pakai V60 cone untuk menyaring.</b> Kalau seduhannya kebanyakan untuk ruang seduh teko, seduh saja di wadah lain lalu tuang lewat V60 &mdash; fungsinya cuma jadi penyaring, bukan diseduh gaya pour over. Rendam daunnya di wadah terpisah selama 3&ndash;4 menit seperti biasa, baru dituang. Dua catatan: <b>kertas filter menyerap ±10&ndash;15 ml</b> (tambahkan segitu ke air seduhnya) dan sedikit meredam aroma melati, jadi kalau ada saringan logam atau kain, itu lebih baik untuk teh. Basahi dulu kertasnya dengan air panas dan buang airnya, sama seperti waktu bikin kopi.</p>
         <p><b>Jangan diseduh gaya pour over.</b> Menuang air pelan-pelan menembus daun teh menghasilkan rasa yang jauh lebih tipis daripada direndam &mdash; daun teh butuh waktu kontak, bukan aliran. V60 di sini murni pengganti saringan.</p>
         <p><b>Gram atau ml?</b> Untuk teh dan air 1 g = 1 ml. Susu UHT, SKM, dan sirup lebih berat dari air, jadi tiap takaran di bawah ditulis dua-duanya &mdash; pakai yang alatnya ada.</p>
@@ -2309,6 +2311,13 @@
     vanila: {label:"Sirup vanilla",            rho:1.32, base:"ml"}
   };
   var SERAP = 2.5;   // ml air yang ditahan tiap gram daun teh, tidak ikut keluar
+  // Teh melati itu bunga: air terlalu panas merusak aromanya, kelewat lama jadi sepat.
+  // Teh hitam cacah punya tanin: butuh air lebih panas, tapi kelewat lama jadi pahit
+  // dan kelat. Untuk menu bersusu, tehnya dikuatkan dengan menambah daun — bukan waktu.
+  var TJENIS = {
+    melati: {label:"Teh melati cacah", pendek:"Teh melati",      suhu:"±85–90 °C"},
+    hitam:  {label:"Teh hitam cacah (Mawar)", pendek:"Teh hitam", suhu:"±95–100 °C, air baru mendidih"}
+  };
   var TLEVEL = [
     {cat:"Ringan", sub:"batas bawah rentang — titik aman untuk percobaan pertama"},
     {cat:"Sedang", sub:"tengah rentang"},
@@ -2318,13 +2327,15 @@
   // daun = gram teh cacah, teh = ml teh jadi setelah disaring.
   // Air yang dituang dihitung sendiri: teh + (daun x SERAP).
   var TMENU = [
-    {id:"teh_manis", nama:"Teh Melati Manis", ic:"i-leaf",
+    {id:"teh_manis", nama:"Teh Melati Manis", ic:"i-leaf", jenis:"melati",
+     waktu:210000, waktuTxt:"3–4 menit",
      sub:"Paling sederhana — aroma melati tetap yang paling depan.",
      daun:3.5, teh:220,
      bahan:[{t:"sirup", min:15, max:20}],
      saji:["Tuang teh dari teko ke gelas, masukkan sirup gula selagi masih hangat, aduk sampai rata."]},
 
-    {id:"teh_vanila", nama:"Vanilla Jasmine Tea", ic:"i-droplet",
+    {id:"teh_vanila", nama:"Vanilla Jasmine Tea", ic:"i-droplet", jenis:"melati",
+     waktu:210000, waktuTxt:"3–4 menit",
      sub:"Teh melati hangat beraroma vanilla, tanpa susu.",
      daun:3.5, teh:220,
      bahan:[{t:"vanila", min:15, max:20}],
@@ -2332,20 +2343,23 @@
      saji:["Tuang teh dari teko ke gelas, masukkan sirup vanilla selagi hangat, aduk rata.",
            "Cicipi dulu sebelum memutuskan menambah sirup gula."]},
 
-    {id:"milk_tea", nama:"Jasmine Milk Tea", ic:"i-cup",
+    {id:"milk_tea", nama:"Jasmine Milk Tea", ic:"i-cup", jenis:"melati",
+     waktu:210000, waktuTxt:"3–4 menit",
      sub:"Milk tea sederhana — teh dibuat pekat supaya tidak tenggelam di susu.",
      daun:4, teh:150,
      bahan:[{t:"uht", min:80, max:80},{t:"sirup", min:10, max:15}],
      saji:["Tuang teh dari teko ke gelas, masukkan susu UHT dan sirup gula. Aduk rata, sajikan hangat."]},
 
-    {id:"vanilla_milk_tea", nama:"Vanilla Jasmine Milk Tea", ic:"i-cup",
+    {id:"vanilla_milk_tea", nama:"Vanilla Jasmine Milk Tea", ic:"i-cup", jenis:"melati",
+     waktu:210000, waktuTxt:"3–4 menit",
      sub:"Teh melati pekat, susu, dan vanilla dalam satu gelas.",
      daun:4, teh:150,
      bahan:[{t:"uht", min:75, max:75},{t:"vanila", min:15, max:20}],
      catatan:["Percobaan pertama tidak perlu sirup gula — sirup vanilla sudah memberi rasa manis."],
      saji:["Tuang teh dari teko ke gelas, masukkan susu UHT, lalu sirup vanilla. Aduk rata."]},
 
-    {id:"teh_skm", nama:"Teh Susu SKM", ic:"i-cup",
+    {id:"teh_skm", nama:"Teh Susu SKM", ic:"i-cup", jenis:"melati",
+     waktu:210000, waktuTxt:"3–4 menit",
      sub:"Lebih creamy dan lebih manis, memakai susu kental manis.",
      daun:4, teh:170,
      bahan:[{t:"skm", min:20, max:20},{t:"sirup", min:0, max:10}],
@@ -2353,14 +2367,16 @@
      saji:["Tuang teh dari teko ke gelas, masukkan SKM selagi masih panas, aduk sampai benar-benar larut.",
            "Cicipi. Tambahkan sirup gula sedikit demi sedikit hanya kalau masih kurang."]},
 
-    {id:"creamy_milk_tea", nama:"Creamy Jasmine Milk Tea", ic:"i-cup",
+    {id:"creamy_milk_tea", nama:"Creamy Jasmine Milk Tea", ic:"i-cup", jenis:"melati",
+     waktu:210000, waktuTxt:"3–4 menit",
      sub:"Gabungan susu UHT dan SKM — lebih bulat daripada salah satunya saja.",
      daun:4, teh:140,
      bahan:[{t:"uht", min:70, max:70},{t:"skm", min:15, max:15},{t:"sirup", min:0, max:5}],
      saji:["Tuang teh dari teko ke gelas, masukkan SKM dulu dan aduk sampai larut selagi panas.",
            "Baru masukkan susu UHT, aduk rata. Cicipi sebelum menambah sirup gula."]},
 
-    {id:"creamy_vanilla", nama:"Creamy Vanilla Jasmine Tea", ic:"i-leaf", top:true,
+    {id:"creamy_vanilla", nama:"Creamy Vanilla Jasmine Tea", ic:"i-leaf", jenis:"melati", top:true,
+     waktu:210000, waktuTxt:"3–4 menit",
      sub:"Kombinasi paling lengkap dari bahan yang ada: melati, vanilla, susu, dan sedikit SKM.",
      daun:4, teh:130,
      bahan:[{t:"uht", min:70, max:70},{t:"skm", min:10, max:10},{t:"vanila", min:10, max:15}],
@@ -2368,6 +2384,43 @@
               "Jangan menambah sirup gula sebelum dicicipi. Kalau memang perlu, tambahkan 5 ml sekali."],
      saji:["Tuang teh dari teko ke gelas, masukkan susu UHT, lalu SKM, aduk sampai SKM benar-benar larut.",
            "Terakhir masukkan sirup vanilla, aduk rata, lalu cicipi."]},
+
+    {id:"hitam_manis", nama:"Teh Manis", ic:"i-leaf", jenis:"hitam",
+     sub:"Teh tubruk manis yang biasa — pekat, wangi, tanpa susu.",
+     daun:3, teh:220, waktu:180000, waktuTxt:"3 menit",
+     bahan:[{t:"sirup", min:15, max:20}],
+     catatan:["Teh hitam beda dari melati: kelewat lama bukan cuma sepat, tapi pahit dan kelat di lidah. Tiga menit sudah cukup — kalau kurang kuat, tambah daunnya, bukan waktunya."],
+     saji:["Tuang teh dari teko ke gelas, masukkan sirup gula selagi panas, aduk rata."]},
+
+    {id:"hitam_susu", nama:"Teh Susu (Milk Tea)", ic:"i-cup", jenis:"hitam",
+     sub:"Milk tea klasik. Teh hitam jauh lebih tahan susu daripada melati.",
+     daun:4, teh:150, waktu:240000, waktuTxt:"4 menit",
+     bahan:[{t:"uht", min:80, max:80},{t:"sirup", min:10, max:15}],
+     saji:["Tuang teh dari teko ke gelas, masukkan susu UHT dan sirup gula. Aduk rata, sajikan hangat."]},
+
+    {id:"teh_tarik", nama:"Teh Tarik", ic:"i-cup", jenis:"hitam", top:true,
+     sub:"Teh hitam sangat pekat + SKM, dikocok sampai berbuih tebal.",
+     daun:5, teh:120, waktu:240000, waktuTxt:"4 menit",
+     bahan:[{t:"skm", min:25, max:25},{t:"sirup", min:0, max:5}],
+     catatan:["Tehnya sengaja dibuat paling pekat di antara semua menu — SKM sebanyak ini akan menelan teh yang biasa-biasa saja.",
+              "Aslinya dituang bolak-balik antara dua gelas untuk menghasilkan buih. Pengocok listrik yang kamu punya hasilnya sama berbuihnya dan tidak berisiko tumpah panas."],
+     saji:["Tuang teh dari teko ke gelas, masukkan SKM selagi masih panas, aduk sampai benar-benar larut.",
+           "Kocok dengan pengocok listrik sampai berbuih tebal. Celupkan kepalanya dulu baru dinyalakan, dan tahan tepat di bawah permukaan — bukan di dasar gelas.",
+           "Cicipi sebelum menambah sirup gula. SKM sebanyak ini biasanya sudah cukup."]},
+
+    {id:"hitam_creamy", nama:"Creamy Milk Tea", ic:"i-cup", jenis:"hitam",
+     sub:"Susu UHT untuk badan, SKM untuk manis dan kental.",
+     daun:4, teh:140, waktu:240000, waktuTxt:"4 menit",
+     bahan:[{t:"uht", min:70, max:70},{t:"skm", min:15, max:15},{t:"sirup", min:0, max:5}],
+     saji:["Tuang teh dari teko ke gelas, masukkan SKM dulu dan aduk sampai larut selagi panas.",
+           "Baru masukkan susu UHT, aduk rata. Cicipi sebelum menambah sirup gula."]},
+
+    {id:"hitam_vanila", nama:"Vanilla Milk Tea", ic:"i-droplet", jenis:"hitam",
+     sub:"Milk tea teh hitam dengan aroma vanilla.",
+     daun:4, teh:150, waktu:240000, waktuTxt:"4 menit",
+     bahan:[{t:"uht", min:75, max:75},{t:"vanila", min:15, max:20}],
+     catatan:["Tidak perlu sirup gula di percobaan pertama — sirup vanilla sudah membawa manis."],
+     saji:["Tuang teh dari teko ke gelas, masukkan susu UHT, lalu sirup vanilla. Aduk rata."]},
 
     {id:"susu_vanila", nama:"Susu Vanilla Hangat", ic:"i-droplet",
      sub:"Pilihan tanpa teh sama sekali — untuk yang sedang tidak mau kafein.",
@@ -2417,10 +2470,14 @@
     return {utama:rnice(v)+" g", lain:b.rho===1 ? null : rnice(v/b.rho)+" ml"};
   }
 
+  var TGRUP = {melati:"Teh Melati", hitam:"Teh Hitam — merek Mawar", "":"Tanpa teh"};
   function renderTehMenu(){
     var box=$("th-menu"); box.innerHTML="";
     if(!state.teh.resep) state.teh.resep=TMENU[0].id;
+    var grupTerakhir=null;
     TMENU.forEach(function(m){
+      var g=m.jenis||"";
+      if(g!==grupTerakhir){ box.appendChild(el("div","th-sec", TGRUP[g])); grupTerakhir=g; }
       var b=el("button","g-drinkitem"+(m.id===state.teh.resep?" sel":""),
         '<span class="g-dname">'+ic(m.ic.replace(/^i-/,""))+m.nama+
           (m.top?'<span class="th-star">rekomendasi</span>':'')+'</span>'+
@@ -2429,6 +2486,7 @@
       b.addEventListener("click", function(){
         if(state.teh.resep===m.id) return;
         state.teh.resep=m.id;
+        if(m.waktu && !THT.running){ THT.target=m.waktu; THT.left=m.waktu; renderThTarget(); thShow(); thPhase("Seduh"); }
         renderTehMenu(); renderTeh(); renderThSaveCard();
       });
       box.appendChild(b);
@@ -2485,7 +2543,10 @@
       var ket = c.tetap
         ? (c.t==="teh" ? "hasil seduh, sudah disaring" : "takaran tetap untuk menu ini")
         : "rentang "+c.min+"–"+c.max+" "+b.base+" · ikut level manis";
-      return '<tr><td><span class="rsp-b">'+TB[c.t].label+'</span>'+
+      var nama = c.t==="teh"
+        ? ((TJENIS[m.jenis]||TJENIS.melati).pendek+" (hasil seduh)")
+        : TB[c.t].label;
+      return '<tr><td><span class="rsp-b">'+nama+'</span>'+
              '<span class="rsp-x">'+ket+'</span>'+
              '<span class="rsp-x">'+tAlat(vml, vgr)+'</span></td>'+
              '<td><span class="rsp-n">'+p.utama+'</span>'+
@@ -2496,15 +2557,16 @@
 
     var seduh = "";
     if(m.daun>0){
+      var j = TJENIS[m.jenis] || TJENIS.melati;
       seduh = '<div class="th-sec">1 · Seduh dulu</div>'+
         '<table class="rsp-tbl"><tbody>'+
-        '<tr><td><span class="rsp-b">Teh melati cacah</span><span class="rsp-x">timbang, jangan dikira-kira</span></td>'+
+        '<tr><td><span class="rsp-b">'+j.label+'</span><span class="rsp-x">timbang, jangan dikira-kira</span></td>'+
           '<td><span class="rsp-n">'+h.daun+' g</span></td></tr>'+
-        '<tr><td><span class="rsp-b">Air panas</span><span class="rsp-x">±85–90 °C · sudah termasuk ±'+round(m.daun*SERAP*h.gelas)+' ml yang diserap daun</span>'+
+        '<tr><td><span class="rsp-b">Air panas</span><span class="rsp-x">'+j.suhu+' · sudah termasuk ±'+round(m.daun*SERAP*h.gelas)+' ml yang diserap daun</span>'+
           '<span class="rsp-x">'+tAlat(h.air, h.air)+'</span></td>'+
           '<td><span class="rsp-n">'+h.air+' ml</span></td></tr>'+
         '<tr><td><span class="rsp-b">Waktu seduh</span><span class="rsp-x">tekan tombol begitu waktunya habis</span></td>'+
-          '<td><span class="rsp-n">3–4 menit</span></td></tr>'+
+          '<td><span class="rsp-n">'+(m.waktuTxt||"3–4 menit")+'</span></td></tr>'+
         '</tbody></table>';
     }
 
@@ -2527,7 +2589,7 @@
   }
 
   // ---------- timer seduh teh (hitung mundur) ----------
-  var TTARGET = [{ms:180000, lbl:"3:00"},{ms:210000, lbl:"3:30"},{ms:240000, lbl:"4:00"}];
+  var TTARGET = [{ms:150000, lbl:"2:30"},{ms:180000, lbl:"3:00"},{ms:210000, lbl:"3:30"},{ms:240000, lbl:"4:00"}];
   var THT = {running:false, left:210000, target:210000, last:null, tId:null};
   function thFmt(ms){
     if(ms<0) ms=0;
@@ -2591,12 +2653,12 @@
     if(!state.verdict.teh){ toast("Pilih penilaian dulu"); return; }
     var h=tHitung(), m=h.menu;
     var noteTxt = ($("th-note").value||"").trim();
-    var bahanTxt = h.comp.filter(function(c){ return c.t!=="teh"; }).map(function(c){
+    var bahanTxt = h.comp.filter(function(c){ return c.t!=="teh" && c.per>0; }).map(function(c){
       var p=tPair(c.per, c.t);
       return TB[c.t].label+" "+p.utama+(p.lain? " ("+p.lain+")" : "");
     }).join(" + ");
     var specs = m.nama+" · "+h.gelas+" gelas · level "+TLEVEL[h.level].cat
-      + (m.daun>0 ? " · teh "+h.daun+" g / air "+h.air+" ml · seduh "+thFmt(THT.target)
+      + (m.daun>0 ? " · "+(TJENIS[m.jenis]||TJENIS.melati).pendek+" "+h.daun+" g / air "+h.air+" ml · seduh "+thFmt(THT.target)
                     +" · hasil "+m.teh+" ml/gelas" : "")
       + (bahanTxt ? " · "+bahanTxt : "");
     var notes = loadNotes();
