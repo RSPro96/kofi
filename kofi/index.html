@@ -334,7 +334,7 @@
         <li><b>Masukkan wadah bubuk</b> ke alat + air panas → <b>press maksimal 8 bar</b> sampai air habis jadi kopi.</li>
         <li><b>Kopi tertampung di gelas</b> → timbang gelas+espresso. Berat kopi jadi dasar takaran <b>gula</b> (espresso polos) atau <b>SKM</b> (Sanger Espresso).</li>
       </ol>
-      <p><b>Gram atau ml?</b> Untuk <b>air</b> keduanya sama: 1 g ≈ 1 ml. Untuk <b>cairan manis tidak sama</b> — sirup dan SKM lebih berat dari air, jadi 100 g <b>bukan</b> 100 ml. Semua takaran cairan di aplikasi ini sudah ditulis dua-duanya: angka besar dalam gram, di bawahnya <b>≈ ml</b> untuk gelas takar. Timbangan tetap yang paling akurat; gelas takar dipakai kalau lagi tidak mau menimbang. Basket 9g = <b>1 shot espresso</b>; yield 1:2 (±18g) itu normal dan memang kecil. Mau lebih banyak? Press 2x berturut-turut (≈ double) atau geser rasio ke 1:2,5–1:3.</p>
+      <p><b>Gram atau ml?</b> Untuk <b>air</b> keduanya sama: 1 g ≈ 1 ml. Untuk <b>cairan manis tidak sama</b> — sirup dan SKM lebih berat dari air, jadi 100 g <b>bukan</b> 100 ml. Semua takaran cairan di aplikasi ini sudah ditulis dua-duanya: angka besar dalam gram, di bawahnya <b>≈ ml</b> untuk gelas takar. Timbangan tetap yang paling akurat; gelas takar dipakai kalau lagi tidak mau menimbang. Basket 9g = <b>1 shot espresso</b>; yield 1:2 (±18g) itu normal dan memang kecil. Mau lebih banyak? <b>Press 2x dengan bubuk baru</b> — dua puck, ±18 g bubuk, hasilnya ±36 g = double shot. Jangan menyiram puck yang sama dua kali: puck itu sudah habis, air kedua cuma menarik pahit dan kelatnya. Kalau tidak mau boros bubuk, geser rasio ke 1:2,5–1:3 — satu puck jadi 23–27 g, masih ekstraksi sehat.</p>
       <p><b>Sirup gula 1:1 — tanpa kompor, cukup teko pemanas air.</b> Gula larut sampai ±67% dalam air; sirup 1:1 cuma 50%, jadi air panas saja sudah cukup, tidak perlu dimasak. Bilas toples dengan air mendidih dulu (ganti sterilisasi), timbang <b>100 g gula</b> di dalamnya, tuang <b>100 g air panas</b>, tutup dan kocok ±1 menit sampai bening total. Dinginkan, simpan di kulkas, tahan ±2 minggu. Kalau masih ada butiran di dasar, rendam toples di air panas lalu kocok lagi. <b>Pakai gelas takar?</b> 100 g air panas = <b>100 ml</b>, dan 100 g gula pasir ≈ <b>120 ml</b> (sendokkan peres, jangan dipadatkan). Hasil jadinya ≈ <b>160 ml sirup</b> dari 200 g bahan — menyusut karena gulanya larut masuk ke sela air.</p>
       <p>Karena separuhnya air, takarannya <b>2x gram gula pasir</b> untuk manis yang sama — 1 sdm sirup = 15 ml ≈ <b>18,5 g</b>. Di gelas takar sirup ini <b>1 ml ≈ 1,23 g</b>, jadi 100 g sirup cuma setinggi ≈ 81 ml — jangan tertukar. Lebih cepat larut di espresso panas maupun es. <b>Mau vanilla?</b> Tunggu sirup turun ke hangat kuku (±5 menit), baru masukkan 1 sdt ekstrak vanilla atau ½ batang vanilla yang dibelah — kalau dimasukkan saat masih mendidih aromanya menguap. Rendam sampai dingin lalu saring. Takarannya tetap ikut chip <b>Sirup Gula 1:1</b>.</p>
       <p><b>Sirup vanilla botolan</b> (Monin, Torani, dll) lebih pekat: ±65% gula, jadi gramnya ±1,5x gula pasir — itu yang dipakai chip <b>Sirup Vanilla</b>. Lebih pekat berarti lebih berat juga: <b>1 ml ≈ 1,32 g</b>. Untuk sanger, vanilla cuma aroma latar; kalau dipadu SKM, turunkan SKM ke level <b>Pahit / kuat</b> supaya tidak kemanisan.</p>
@@ -400,6 +400,14 @@
       <p class="hint" id="t-biji-note" style="margin:8px 0 0;font-size:12.5px"></p>
     </div>
     <div class="field">
+      <label>Jumlah press</label>
+      <div class="chips" id="t-press">
+        <div class="chip active" data-press="1"><svg class="ic"><use href="#i-cup"/></svg> 1&times; press</div>
+        <div class="chip" data-press="2"><svg class="ic"><use href="#i-cup"/></svg> 2&times; press &mdash; double</div>
+      </div>
+      <p class="hint" style="margin:8px 0 0;font-size:12.5px"><b>2&times; press berarti bubuknya diganti</b> &mdash; dua puck baru, masing-masing sesuai berat yang kamu timbang di atas, dituang ke gelas yang sama. Bukan puck yang sama disiram dua kali: setelah press pertama puck itu sudah habis, air kedua cuma menarik sisa yang pahit dan kelat. Basket cuma muat ±9 g, jadi menu bersusu (cortado, latte, vanilla latte) dan americano butuh 2&times; press supaya porsinya wajar. Espresso polos, espresso manis, dan sanger cukup 1&times;.</p>
+    </div>
+    <div class="field">
       <label>Target rasio (1:X)</label>
       <div class="inrow">
         <input type="range" id="t-ratio" min="1" max="3" step="0.1" value="2" />
@@ -409,10 +417,10 @@
     <div class="result">
       <div class="warn" id="t-warn"></div>
       <div class="kpis">
-        <div class="kpi"><div class="n" id="t-bersih">–</div><div class="l">Kopi Bersih</div></div>
+        <div class="kpi"><div class="n" id="t-bersih">–</div><div class="l" id="t-bersih-l">Kopi Bersih</div></div>
         <div class="kpi"><div class="n" id="t-target">–</div><div class="l">Target Yield</div></div>
       </div>
-      <div class="note-line">Kopi bersih = (wadah+bubuk) − wadah kosong · Target = kopi bersih × rasio · <b>1 g ≈ 1 ml</b></div>
+      <div class="note-line" id="t-bersih-note">Kopi bersih = (wadah+bubuk) − wadah kosong · Target = kopi bersih × rasio · <b>1 g ≈ 1 ml</b></div>
     </div>
   </div>
 
@@ -511,7 +519,7 @@
 
     <div class="card">
       <h2>Target Porsi</h2>
-      <p class="hint">Conemu ukuran 01 — 1 gelas paling pas, 2 gelas masih bisa tapi tuang bertahap biar cone gak penuh.</p>
+      <p class="hint">Conemu ukuran 01 — 1 gelas paling pas, 2 gelas masih bisa tapi tuang bertahap biar cone gak penuh. <b>Ukuran per gelas itu air yang dituang, bukan kopi yang jadi</b>: ampas menahan ±2× berat bubuk, jadi 220 g air menghasilkan ±190 ml di gelas. Di rasio 1:15 itu sudah 14,7 g bubuk — nyaris batas cone 01, jadi 220 g air praktis jadi batas sekali seduh.</p>
       <div class="grid2">
         <div class="field">
           <label>Jumlah porsi / gelas</label>
@@ -523,7 +531,7 @@
         <div class="field">
           <label>Ukuran per gelas</label>
           <div class="inrow">
-            <input type="number" id="v-perporsi" min="40" max="400" step="10" value="80" />
+            <input type="number" id="v-perporsi" min="40" max="400" step="10" value="220" />
             <span class="unit">g air</span>
           </div>
         </div>
@@ -1006,7 +1014,7 @@
 
   // ---------- state ----------
   var state = {
-    tygo: { pemanis:null, customG:null, pemanisType:"gula", biji:"arabica",
+    tygo: { pemanis:null, customG:null, pemanisType:"gula", biji:"arabica", press:1,
             mode:"manual", resep:null, level:1, pilih:{}, susu:null, susuMl:null },
     v60:  { pemanis:null, customG:null, pemanisType:"gula",
             mode:"manual", resep:null, level:1, pilih:{}, susu:null, susuMl:null },
@@ -1023,6 +1031,7 @@
     if(c.sendok!=null) $("t-sendok0").value = c.sendok;
     if(c.gelas!=null)  $("t-gelas0").value  = c.gelas;
     setBiji(c.biji || "arabica");
+    setPress(c.press);
     if(c.resep){ state.tygo.resep=c.resep; state.tygo.level=c.level!=null?c.level:1;
                  state.tygo.pilih=c.pilih||{}; }
     setMode("tygo", c.mode==="resep" ? "resep" : "manual");
@@ -1031,7 +1040,7 @@
   function saveCalib(){
     try{ localStorage.setItem(CAL_KEY, JSON.stringify({
       wadah:g("t-wadah0"), sendok:g("t-sendok0"), gelas:g("t-gelas0"),
-      biji:state.tygo.biji, mode:state.tygo.mode, resep:state.tygo.resep,
+      biji:state.tygo.biji, press:state.tygo.press, mode:state.tygo.mode, resep:state.tygo.resep,
       level:state.tygo.level, pilih:state.tygo.pilih
     })); }catch(e){}
   }
@@ -1134,6 +1143,19 @@
     });
     $("t-biji-note").textContent = BIJI[b].note;
     $("t-timer-target").textContent = "Target "+BIJI[b].press;
+    saveCalib();
+  }
+
+  // ---------- jumlah press ----------
+  // Basket cuma muat ±9 g, jadi satu press = single shot. Double shot didapat
+  // dari DUA puck baru, bukan dari menyiram puck yang sama dua kali — puck
+  // bekas cuma menyumbang rasa pahit dan kelat, bukan kekuatan.
+  function setPress(n){
+    n = (parseInt(n,10)===2) ? 2 : 1;
+    state.tygo.press = n;
+    document.querySelectorAll("#t-press .chip").forEach(function(x){
+      x.classList.toggle("active", parseInt(x.getAttribute("data-press"),10)===n);
+    });
     saveCalib();
   }
 
@@ -1304,13 +1326,21 @@
     var w0=g("t-wadah0"), s1=g("t-sendok1");
     var g0=g("t-gelas0"), g1=g("t-gelas1");
     var ratio = parseFloat($("t-ratio").value)||2;
-    var bersih = s1-w0;
+    // mode Ikut Resep menetapkan jumlah press-nya sendiri, sama seperti kartu susu
+    if(state.tygo.mode==="resep") setPress(resepById("tygo", state.tygo.resep).press);
+    var press = state.tygo.press===2 ? 2 : 1;
+    var perPuck = s1-w0;
+    var bersih = perPuck*press;   // dua press = dua puck, jadi bubuknya dua kali
     var target = bersih*ratio;
     var aktual = g1-g0;
     var ratioNow = bersih>0 ? aktual/bersih : 0;
 
     $("t-ratio-out").textContent = "1:"+ratio.toFixed(1);
     $("t-bersih").textContent = s1>0 ? round(bersih)+" g" : "–";
+    $("t-bersih-l").textContent = press===2 ? "Kopi Bersih (2 puck)" : "Kopi Bersih";
+    $("t-bersih-note").innerHTML = press===2
+      ? "Kopi bersih = ((wadah+bubuk) − wadah kosong) × 2 puck = "+round(perPuck)+" g × 2 · Target = kopi bersih × rasio · <b>1 g ≈ 1 ml</b>"
+      : "Kopi bersih = (wadah+bubuk) − wadah kosong · Target = kopi bersih × rasio · <b>1 g ≈ 1 ml</b>";
     $("t-target").textContent = bersih>0 ? round(target)+" g" : "–";
     $("t-aktual").textContent = g1>0 ? round(aktual)+" g" : "–";
     $("t-rasio-now").textContent = bersih>0&&aktual>0 ? "1:"+round(ratioNow) : "–";
@@ -1324,7 +1354,7 @@
       var ev = Math.abs(diff)<0.15
         ? "Tekanan pas — pertahankan resep ini."
         : (diff<0 ? "Press kurang — lebih lama / tekan lebih stabil." : "Press berlebih — hentikan lebih awal / kurangi tekanan.");
-      ring.innerHTML = "<b>Rasio aktual Anda: 1 : "+round(ratioNow)+"</b> (target 1:"+ratio.toFixed(1)+"). "+ev;
+      ring.innerHTML = "<b>Rasio aktual Anda: 1 : "+round(ratioNow)+"</b> (target 1:"+ratio.toFixed(1)+", "+press+"× press). "+ev;
     } else if(s1>0){
       ring.textContent = "Isi bagian hasil seduhan untuk membandingkan rasio aktual.";
     } else {
@@ -1624,9 +1654,10 @@
      saji:["Masukkan gula atau sirup selagi espresso masih panas, aduk sampai benar-benar larut.",
            "Gula pasir butuh diaduk lebih lama dan bisa mengendap di dasar. Sirup 1:1 langsung menyatu - itu keunggulannya."]},
 
-    {id:"americano", nama:"Americano", ic:"i-droplet", pm:null,
+    {id:"americano", nama:"Americano", ic:"i-droplet", pm:null, press:2,
      sub:"Espresso diencerkan air panas. Lebih ringan, cocok diminum lama-lama.",
-     saji:["Siapkan gelas berisi air panas 100-120 ml dari teko. Diamkan 30 detik dulu supaya tidak terlalu mendidih.",
+     saji:["Press 2x dengan bubuk baru tiap kali, dua-duanya ke gelas yang sama - jadi ±36 g espresso. Satu shot 18 g kalau diencerkan 150 ml air jadi terlalu tipis.",
+           "Siapkan gelas berisi air panas 150-170 ml dari teko. Diamkan 30 detik dulu supaya tidak terlalu mendidih.",
            "Tuang espresso ke dalam air panas, bukan sebaliknya. Kalau air yang dituang ke espresso, crema-nya pecah.",
            "Cicipi dulu sebelum menambah apa pun. Americano dari arabica sering sudah terasa manis alami."]},
 
@@ -1637,7 +1668,8 @@
      saji:["Masukkan SKM sesuai angka di atas ke espresso yang masih panas.",
            "Celupkan pengocok listrik sampai kepalanya tenggelam, <b>baru</b> nyalakan - kalau dinyalakan di udara isinya muncrat. Jalankan 20-30 detik sampai buih naik. Buih inilah ciri khas sanger, datangnya dari kocokan, bukan dari mesin uap.",
            "Miringkan gelas dan jaga kepala pengocok tepat di bawah permukaan, jangan di dasar. Yang membuat buih itu udara yang tertarik masuk, bukan putaran di dalam cairan.",
-           "Tambahkan air panas 100-120 ml, aduk sebentar, sajikan selagi hangat."]},
+           "Tambahkan air panas 130-150 ml, aduk sebentar, sajikan selagi hangat. Segelasnya jadi ±160-180 ml.",
+           "Cukup 1x press. Sanger memang kopi pekat porsi sedang - kalau mau segelas penuh ±230 ml, press 2x dengan bubuk baru dan naikkan airnya ke 180 ml."]},
 
     {id:"sanger_vanila", nama:"Sanger Espresso Vanilla", ic:"i-cup",
      pm:{lv:"sanger", slots:[{opsi:["susu"], porsi:0.6},{opsi:["vanila","sirup"], porsi:0.4}]},
@@ -1645,25 +1677,28 @@
      pd:"Mode Sanger + Sirup sudah dipilihkan, sirupnya Sirup Vanilla. Slider Porsi manis dari sirup mengatur pembagian: makin ke kanan makin harum vanilla, makin ke kiri makin tebal susunya.",
      saji:["Masukkan SKM sesuai angka di atas ke espresso panas, kocok dulu dengan pengocok listrik sampai berbuih.",
            "Baru masukkan sirup vanilla. Kalau keduanya masuk bersamaan, buihnya lebih susah naik karena sirup memberatkan.",
-           "Tambahkan air panas 100-120 ml. Cicipi: kalau vanilla-nya kurang terasa, naikkan slider porsi sirup - jangan menambah SKM, nanti kemanisan."]},
+           "Tambahkan air panas 130-150 ml. Cicipi: kalau vanilla-nya kurang terasa, naikkan slider porsi sirup - jangan menambah SKM, nanti kemanisan."]},
 
-    {id:"cortado", nama:"Cortado", ic:"i-cup", pm:null, susu:1,
+    {id:"cortado", nama:"Cortado", ic:"i-cup", pm:null, susu:1, press:2,
      sub:"Espresso + susu UHT sebanyak espressonya. Susu meredam asamnya tanpa menutupi kopi.",
-     saji:["Hangatkan susu sampai hangat kuku saja - jangan sampai mendidih, susu mendidih berubah rasa dan berkulit.",
+     saji:["Press 2x dengan bubuk baru tiap kali ke gelas yang sama - ±36 g espresso. Cortado dari satu shot cuma 36 ml, terlalu kecil bahkan untuk cortado.",
+           "Hangatkan susu sampai hangat kuku saja - jangan sampai mendidih, susu mendidih berubah rasa dan berkulit.",
            "Tuang susu pelan lewat pinggir gelas ke espresso yang masih panas. Tidak perlu dikocok; cortado memang tidak berbuih tebal.",
            "Porsinya kecil dan memang untuk diminum cepat, bukan diseruput lama-lama."]},
 
-    {id:"latte", nama:"Latte Hangat", ic:"i-cup", pm:null, susu:4,
+    {id:"latte", nama:"Latte Hangat", ic:"i-cup", pm:null, susu:4, press:2,
      sub:"Espresso + susu UHT 4x. Paling lembut, kopinya jadi latar.",
-     saji:["Hangatkan susu, lalu kocok dengan pengocok listrik sampai berbuih halus. Tahan kepalanya tepat di bawah permukaan, bukan di dasar gelas.",
+     saji:["Press 2x dengan bubuk baru tiap kali ke gelas yang sama - ±36 g espresso. Ini yang paling wajib: latte dari satu shot cuma 90 ml, kurang dari setengah gelas.",
+           "Hangatkan susu, lalu kocok dengan pengocok listrik sampai berbuih halus. Tahan kepalanya tepat di bawah permukaan, bukan di dasar gelas.",
            "Tuang espresso ke gelas dulu, baru susunya pelan-pelan. Buihnya naik sendiri ke atas.",
            "Tanpa mesin uap, buihnya akan lebih besar dan cepat hilang daripada latte kafe. Minum selagi buihnya masih ada."]},
 
-    {id:"vanilla_latte", nama:"Vanilla Latte", ic:"i-droplet", susu:3,
+    {id:"vanilla_latte", nama:"Vanilla Latte", ic:"i-droplet", susu:3, press:2,
      pm:{lv:"gula", slots:[{opsi:["vanila","sirup"], porsi:1}]},
      sub:"Espresso + susu UHT + sirup vanilla. Susunya 3x, di antara cortado dan latte.",
      pd:"Sirup vanilla sudah dipilihkan. Angkanya ikut berat espresso di gelas, sama seperti menu lain - susunya diatur terpisah di kartu Susu UHT.",
-     saji:["Masukkan sirup vanilla ke espresso yang masih panas, aduk sampai larut. Vanilla lebih menyatu kalau masuk sebelum susu.",
+     saji:["Press 2x dengan bubuk baru tiap kali ke gelas yang sama - ±36 g espresso.",
+           "Masukkan sirup vanilla ke espresso yang masih panas, aduk sampai larut. Vanilla lebih menyatu kalau masuk sebelum susu.",
            "Hangatkan susu, kocok sampai berbuih, lalu tuang."]}
    ],
    v60: [
@@ -1691,7 +1726,7 @@
      pd:"Takarannya dihitung dari kekuatan konsentrat, bukan dari total air seperti menu V60 lain — jadi angkanya sebanding dengan sanger espresso, tidak melonjak.",
      saji:["Masukkan SKM sesuai angka di atas ke konsentrat yang masih panas, aduk sampai larut.",
            "Kocok dengan pengocok listrik sampai berbuih. Buihnya akan lebih tipis daripada sanger espresso — konsentrat V60 tidak punya crema, dan sebagian buih sanger memang datang dari situ.",
-           "Tambahkan air panas 80–90 ml. Konsentratnya sudah 45 ml, jadi airnya lebih sedikit daripada versi espresso."]},
+           "Tambahkan air panas 110–130 ml. Konsentratnya sudah 45 ml, jadi segelasnya jadi ±165–185 ml — sebanding dengan sanger espresso."]},
 
     {id:"v60_susu", nama:"V60 Susu (SKM)", ic:"i-cup",
      pm:{lv:"sanger", slots:[{opsi:["susu"], porsi:1}]},
@@ -1733,7 +1768,7 @@
     if(r.pekat){
       $("v-porsi").value = 1; $("v-perporsi").value = 75; $("v-rasio").value = 5;
     }else if((parseFloat($("v-rasio").value)||15) < 10){
-      $("v-perporsi").value = 80; $("v-rasio").value = 15;
+      $("v-perporsi").value = 220; $("v-rasio").value = 15;
     }
     calcV60();
   }
@@ -1902,7 +1937,7 @@
         if(st.resep===b.getAttribute("data-resep")) return;
         st.resep=b.getAttribute("data-resep"); st.pilih={};
         saveCalib();
-        if(tool==="v60") applyResepV60(resepById("v60", st.resep)); else renderResep(tool);
+        if(tool==="v60") applyResepV60(resepById("v60", st.resep)); else calcTygo();
         renderMilk(tool);
         saveCardOf(tool);
       });
@@ -1982,6 +2017,7 @@
     st.resep=r.id; st.pilih={};
     setMode(gState.tool, "resep");
     if(gState.tool==="v60") applyResepV60(r);
+    if(gState.tool==="tygo") calcTygo();
     if(gState.tool==="teh"){ renderTehMenu(); renderTeh(); }
     $("guide-wiz").hidden=false;
     $("g-reopen").style.display="none";
@@ -2404,6 +2440,15 @@
   $("t-biji").addEventListener("click", function(e){
     var c=e.target.closest(".chip"); if(!c) return;
     setBiji(c.getAttribute("data-biji"));
+  });
+  $("t-press").addEventListener("click", function(e){
+    var c=e.target.closest(".chip"); if(!c) return;
+    if(state.tygo.mode==="resep"){
+      toast("Mode Ikut Resep menetapkan jumlah press-nya. Pindah ke Manual untuk mengubah.");
+      return;
+    }
+    setPress(c.getAttribute("data-press"));
+    calcTygo();
   });
 
   $("p-save").addEventListener("click", savePreset);
