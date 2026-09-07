@@ -1365,18 +1365,27 @@
   }
 
   // ---------- kartu simpan ----------
+  // Mode Ikut Resep sudah menetapkan levelnya sendiri, jadi jangan menyuruh
+  // memilih level yang tidak ada pickernya — sebut saja apa yang akan tercatat.
+  function saveHint(tool){
+    var st=stOf(tool);
+    if(st.mode==="resep"){
+      var r=resepById(tool, st.resep);
+      if(!r || !r.pm) return "";   // menu tanpa pemanis, tidak ada yang perlu dipilih
+      var arr=levelArr(tool, r), lv=arr[st.level] || arr[0];
+      return '<p class="hint">Tercatat sebagai <b>'+escapeHtml(r.nama)+'</b>, level <b>'+lv.cat+'</b>.</p>';
+    }
+    var S = tool==="v60" ? VARR() : PEM(st.pemanisType);
+    var nama = st.pemanis!=null ? S[st.pemanis].cat : (st.customG!=null ? "Kustom" : null);
+    return nama ? '' : '<p class="hint" style="color:var(--meh)">Pilih dulu satu level pemanis di atas untuk mencatatnya (opsional).</p>';
+  }
+
   function renderSaveCard(){
     var card=$("t-savecard");
-    var st=state.tygo;
-    var S = PEM(st.pemanisType);
-    var picked = st.pemanis;
-    var customG = st.customG;
-    var pickedName = picked!=null ? S[picked].cat : (customG!=null ? "Kustom" : null);
-
     card.innerHTML =
       '<h2>'+ic('bookmark')+' Simpan Catatan Rasa</h2>'+
       '<p class="hint">Tandai apakah minuman ini <b>enak</b> atau tidak, biar lain kali tinggal ikuti.</p>'+
-      (pickedName? '' : '<p class="hint" style="color:var(--meh)">Pilih dulu satu level pemanis di atas untuk mencatatnya (opsional).</p>')+
+      saveHint("tygo")+
       '<div class="field"><label>Penilaian rasa</label>'+
         '<div class="verdicts">'+
           '<button class="verdict" data-v="good">'+ic('smile')+' Enak</button>'+
@@ -2156,7 +2165,7 @@
   function vDash(n){ return n>0 ? n : "–"; }
   function calcV60(){
     var porsi = num(g("v-porsi"))||1;
-    var per   = num(g("v-perporsi"))||80;
+    var per   = num(g("v-perporsi"))||220;
     var rasio = parseFloat($("v-rasio").value)||15;
     var kap   = num(g("v-kap"));
     var total = round(porsi*per);
@@ -2276,7 +2285,7 @@
   function VUNIT(){ return PEM_UNIT(state.v60.pemanisType); }
   function vBase(){
     var porsi = num(g("v-porsi"))||1;
-    var per   = num(g("v-perporsi"))||80;
+    var per   = num(g("v-perporsi"))||220;
     return round(porsi*per);
   }
   function setPemanisV(t){
@@ -2315,7 +2324,7 @@
   function renderVSweets(){
     var box=$("v-sweets"); box.innerHTML="";
     var arr=VARR();
-    var per = num(g("v-perporsi"))||80;
+    var per = num(g("v-perporsi"))||220;
     var vt = state.v60.pemanisType;
     $("v-sweet-title").innerHTML = (vt==="susu" ? ic('cup') : ic('droplet'))+' Rekomendasi '+PEM_LABEL(vt)+' — ikut total air (ubah ukuran/jumlah gelas langsung kena)'
       + PEM_NOTE(vt);
@@ -2366,14 +2375,10 @@
   // ---------- kartu simpan V60 ----------
   function renderVSaveCard(){
     var card=$("v-savecard");
-    var st=state.v60;
-    var S=VARR();
-    var picked=st.pemanis;
-    var pickedName = picked!=null ? S[picked].cat : (st.customG!=null ? "Kustom" : null);
     card.innerHTML =
       '<h2>'+ic('bookmark')+' Simpan Catatan Rasa</h2>'+
       '<p class="hint">Tandai apakah seduhan ini <b>enak</b> atau tidak, biar lain kali tinggal ikuti.</p>'+
-      (pickedName? '' : '<p class="hint" style="color:var(--meh)">Pilih dulu satu level pemanis di atas untuk mencatatnya (opsional).</p>')+
+      saveHint("v60")+
       '<div class="field"><label>Penilaian rasa</label>'+
         '<div class="verdicts">'+
           '<button class="verdict" data-v="good">'+ic('smile')+' Enak</button>'+
@@ -2396,7 +2401,7 @@
   function doSaveV(){
     if(!state.verdict.v60){ toast("Pilih penilaian dulu"); return; }
     var porsi = num(g("v-porsi"))||1;
-    var per   = num(g("v-perporsi"))||80;
+    var per   = num(g("v-perporsi"))||220;
     var rasio = parseFloat($("v-rasio").value)||15;
     var total = round(porsi*per);
     var bubuk = total>0 ? round(total/rasio) : 0;
