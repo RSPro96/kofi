@@ -1154,6 +1154,7 @@
       if(p.porsi)    $("v-porsi").value = p.porsi;
       if(p.perporsi) $("v-perporsi").value = p.perporsi;
       setPemanisV(p.type);
+      restoreResep("v60", p);   // porsi diisi lebih dulu: renderResep membacanya
       calcV60();
       renderVSaveCard();
     }else{
@@ -1161,8 +1162,8 @@
       state.tygo.customG = p.mode==="manual" ? p.gram : null;
       state.tygo.pemanisType = p.type;
       setPress(p.press);   // mode Ikut Resep menimpanya lagi lewat calcTygo
-      restoreResep("tygo", p);
       $("t-ratio").value = p.ratio;
+      restoreResep("tygo", p);
       setPemanisType(p.type);
       calcTygo();
     }
@@ -1508,7 +1509,10 @@
   }
   var VIC = {good:"smile", meh:"meh", bad:"frown"};
   var VLABEL = {good:"Enak", meh:"Biasa", bad:"Kurang"};
-  var DLABEL = {tygo:"Tygopresso", espresso:"Espresso", sanger:"Sanger Espresso", brew:"Seduh Manual", teh:"Teh"};
+  // label di daftar Catatan Rasa; kuncinya ikut field "drink" tiap catatan.
+  // Namanya harus sama dengan nama panelnya — catatan V60 sempat terbaca
+  // "Seduh Manual" padahal panelnya "V60 Cone".
+  var DLABEL = {tygo:"Tygopresso", brew:"V60 Cone", teh:"Teh"};
 
   function renderLog(){
     var list=$("loglist"); list.innerHTML="";
