@@ -1027,12 +1027,24 @@
   function loadCalib(){
     var c={};
     try{ c=JSON.parse(localStorage.getItem(CAL_KEY))||{}; }catch(e){}
-    if(c.teh){   // dipulihkan lebih dulu supaya saveCalib berikutnya tidak menimpanya
-      if(c.teh.resep)      state.teh.resep = c.teh.resep;
+    // dipulihkan lebih dulu: setMode di bawah memanggil saveCalib, dan itu
+    // membaca kembali semua isian ini — kalau belum diisi, nilainya ikut terhapus
+    if(c.teh){
+      if(c.teh.resep)       state.teh.resep = c.teh.resep;
       if(c.teh.level!=null) state.teh.level = c.teh.level;
-      if(c.teh.gelas>0)    $("th-gelas").value = c.teh.gelas;
-      if(c.teh.kap>0)      $("th-kap").value   = c.teh.kap;
+      if(c.teh.gelas>0)     $("th-gelas").value = c.teh.gelas;
+      if(c.teh.kap>0)       $("th-kap").value   = c.teh.kap;
     }
+    if(c.v60){
+      if(c.v60.resep)       state.v60.resep = c.v60.resep;
+      if(c.v60.level!=null) state.v60.level = c.v60.level;
+      if(c.v60.pilih)       state.v60.pilih = c.v60.pilih;
+      if(c.v60.porsi>0)     $("v-porsi").value    = c.v60.porsi;
+      if(c.v60.perporsi>0)  $("v-perporsi").value = c.v60.perporsi;
+      if(c.v60.rasio>0)     $("v-rasio").value    = c.v60.rasio;
+      if(c.v60.kap>0)       $("v-kap").value      = c.v60.kap;
+    }
+    if(c.ratio>0) $("t-ratio").value = c.ratio;
     if(c.wadah!=null)  $("t-wadah0").value  = c.wadah;
     if(c.sendok!=null) $("t-sendok0").value = c.sendok;
     if(c.gelas!=null)  $("t-gelas0").value  = c.gelas;
@@ -1041,13 +1053,17 @@
     if(c.resep){ state.tygo.resep=c.resep; state.tygo.level=c.level!=null?c.level:1;
                  state.tygo.pilih=c.pilih||{}; }
     setMode("tygo", c.mode==="resep" ? "resep" : "manual");
+    setMode("v60", (c.v60 && c.v60.mode==="resep") ? "resep" : "manual");
     calibStatus();
   }
   function saveCalib(){
     try{ localStorage.setItem(CAL_KEY, JSON.stringify({
       wadah:g("t-wadah0"), sendok:g("t-sendok0"), gelas:g("t-gelas0"),
       biji:state.tygo.biji, press:state.tygo.press, mode:state.tygo.mode, resep:state.tygo.resep,
-      level:state.tygo.level, pilih:state.tygo.pilih,
+      level:state.tygo.level, pilih:state.tygo.pilih, ratio:g("t-ratio"),
+      v60:{mode:state.v60.mode, resep:state.v60.resep, level:state.v60.level,
+           pilih:state.v60.pilih, porsi:g("v-porsi"), perporsi:g("v-perporsi"),
+           rasio:g("v-rasio"), kap:g("v-kap")},
       teh:{resep:state.teh.resep, level:state.teh.level, gelas:tGelas(), kap:g("th-kap")}
     })); }catch(e){}
   }
@@ -1077,7 +1093,8 @@
           '<div class="t1">'+escapeHtml(p.name)+'<span class="badge">'+toolLabel+'</span></div>'+
           '<div class="specs">'+(p.tool==="teh"
               ? escapeHtml(tMenuById(p.resep).nama)+' · '+p.gelas+' gelas · level '+TLEVEL[p.level||0].cat
-              : (p.pmode==="resep"&&p.resep ? escapeHtml(resepById(p.tool==="v60"?"v60":"tygo", p.resep).nama) : PEM_LABEL(p.type)+' · '+escapeHtml(pm))+' · Rasio 1:'+p.ratio
+              : (p.pmode==="resep"&&p.resep ? escapeHtml(resepById(p.tool==="v60"?"v60":"tygo", p.resep).nama)
+                 : (p.mode ? PEM_LABEL(p.type)+' · '+escapeHtml(pm) : escapeHtml(pm)))+' · Rasio 1:'+p.ratio
                  + (p.tool==="v60" && p.perporsi ? ' · '+p.perporsi+' ml/gelas' : '')
                  + (p.tool!=="v60" && p.press===2 ? ' · 2× press' : ''))+'</div>'+
         '</div>'+
@@ -2502,7 +2519,7 @@
   });
   $("t-sendok1").addEventListener("input", calcTygo);
   $("t-gelas1").addEventListener("input", function(){ calcTygo(); renderSaveCard(); });
-  $("t-ratio").addEventListener("input", calcTygo);
+  $("t-ratio").addEventListener("input", function(){ saveCalib(); calcTygo(); });
 
   $("t-pemanis").addEventListener("click", function(e){
     var c=e.target.closest(".chip"); if(!c) return;
@@ -2557,9 +2574,9 @@
 
   // V60 inputs
   ["v-porsi","v-perporsi","v-kap"].forEach(function(id){
-    $(id).addEventListener("input", calcV60);
+    $(id).addEventListener("input", function(){ saveCalib(); calcV60(); });
   });
-  $("v-rasio").addEventListener("input", calcV60);
+  $("v-rasio").addEventListener("input", function(){ saveCalib(); calcV60(); });
 
   $("filterbar").addEventListener("click", function(e){
     var b=e.target.closest(".fbtn"); if(!b) return;
