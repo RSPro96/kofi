@@ -316,13 +316,13 @@
     </div>
     <p class="tagline">“Karena Kopi Nikmat Adalah Hak Setiap Umat”</p>
     <h1>RSPro <span>— Racik Kopi</span></h1>
-    <p class="sub">Panduan &amp; kalkulator seduh: Tygopresso (espresso/sanger), V60 Cone, dan Teh Melati</p>
+    <p class="sub">Panduan &amp; kalkulator seduh: Tygopresso (espresso/sanger), V60 Cone, dan Teh</p>
   </header>
 
   <div class="tabs" id="tabs">
     <button class="tab active" data-panel="tygo"><svg class="ic"><use href="#i-cup"/></svg> Tygopresso</button>
     <button class="tab" data-panel="v60"><svg class="ic"><use href="#i-droplet"/></svg> V60 Cone</button>
-    <button class="tab" data-panel="teh"><svg class="ic"><use href="#i-leaf"/></svg> Teh Melati</button>
+    <button class="tab" data-panel="teh"><svg class="ic"><use href="#i-leaf"/></svg> Teh</button>
   </div>
 
   <section id="panel-tygo" class="panel">
@@ -673,9 +673,9 @@
     </details>
 
     <details class="edu">
-      <summary><svg class="ic"><use href="#i-leaf"/></svg> Cara seduh teh melati <svg class="ic caret"><use href="#i-chevron"/></svg></summary>
+      <summary><svg class="ic"><use href="#i-leaf"/></svg> Cara seduh teh <svg class="ic caret"><use href="#i-chevron"/></svg></summary>
       <div class="body">
-        <p>Semua menu di sini berangkat dari <b>satu seduhan dasar</b>: teh cacah melati diseduh air panas, didiamkan <b>3&ndash;4 menit</b>, lalu <b>disaring</b>. Untuk menu bersusu, tehnya sengaja dibuat lebih pekat supaya rasanya tidak tenggelam di balik susu. Semua takaran di sini dihitung untuk <b>satu gelas penuh, sekitar 270&ndash;300 ml jadi</b> &mdash; bukan gelas kecil.</p>
+        <p>Panel ini memuat tiga golongan: <b>teh melati</b>, <b>teh hitam cacah (merek Mawar)</b>, dan satu menu tanpa teh sama sekali. Semuanya berangkat dari <b>satu seduhan dasar</b>: daun diseduh air panas, didiamkan <b>3&ndash;5 menit</b>, lalu <b>disaring</b>. Untuk menu bersusu, tehnya sengaja dibuat lebih pekat supaya rasanya tidak tenggelam di balik susu. Semua takaran di sini dihitung untuk <b>satu gelas penuh, sekitar 270&ndash;300 ml jadi</b> &mdash; bukan gelas kecil.</p>
         <ol>
           <li><b>Teh biasa</b> (tanpa susu) &mdash; 3,5&ndash;4 g daun untuk ±260 ml teh jadi, lalu tinggal ditambah sirup sampai segelas penuh.</li>
           <li><b>Teh pekat</b> (untuk menu bersusu) &mdash; 5 g daun untuk ±160&ndash;180 ml teh jadi; sisanya diisi susu.</li>
@@ -848,7 +848,7 @@
 <nav class="botnav" id="botnav">
   <button class="navitem active" data-panel="tygo"><svg class="ic"><use href="#i-cup"/></svg> Tygopresso</button>
   <button class="navitem" data-panel="v60"><svg class="ic"><use href="#i-droplet"/></svg> V60 Cone</button>
-  <button class="navitem" data-panel="teh"><svg class="ic"><use href="#i-leaf"/></svg> Teh Melati</button>
+  <button class="navitem" data-panel="teh"><svg class="ic"><use href="#i-leaf"/></svg> Teh</button>
 </nav>
 
 <!-- ===== MODAL PILIH CARA PAKAI ===== -->
@@ -869,7 +869,7 @@
       </button>
       <button type="button" class="g-pickcard wide" data-tool="teh">
         <span class="g-pickicon"><svg class="ic"><use href="#i-leaf"/></svg></span>
-        <span class="g-pickname"><svg class="ic"><use href="#i-leaf"/></svg> Teh Melati &mdash; tanpa alat kopi</span>
+        <span class="g-pickname"><svg class="ic"><use href="#i-leaf"/></svg> Teh &mdash; tanpa alat kopi</span>
       </button>
     </div>
     <div id="g-pickhint" class="g-pickhint">Cek foto alatmu di atas.</div>
@@ -1027,6 +1027,12 @@
   function loadCalib(){
     var c={};
     try{ c=JSON.parse(localStorage.getItem(CAL_KEY))||{}; }catch(e){}
+    if(c.teh){   // dipulihkan lebih dulu supaya saveCalib berikutnya tidak menimpanya
+      if(c.teh.resep)      state.teh.resep = c.teh.resep;
+      if(c.teh.level!=null) state.teh.level = c.teh.level;
+      if(c.teh.gelas>0)    $("th-gelas").value = c.teh.gelas;
+      if(c.teh.kap>0)      $("th-kap").value   = c.teh.kap;
+    }
     if(c.wadah!=null)  $("t-wadah0").value  = c.wadah;
     if(c.sendok!=null) $("t-sendok0").value = c.sendok;
     if(c.gelas!=null)  $("t-gelas0").value  = c.gelas;
@@ -1041,7 +1047,8 @@
     try{ localStorage.setItem(CAL_KEY, JSON.stringify({
       wadah:g("t-wadah0"), sendok:g("t-sendok0"), gelas:g("t-gelas0"),
       biji:state.tygo.biji, press:state.tygo.press, mode:state.tygo.mode, resep:state.tygo.resep,
-      level:state.tygo.level, pilih:state.tygo.pilih
+      level:state.tygo.level, pilih:state.tygo.pilih,
+      teh:{resep:state.teh.resep, level:state.teh.level, gelas:tGelas(), kap:g("th-kap")}
     })); }catch(e){}
   }
   function calibStatus(){
@@ -1117,7 +1124,8 @@
       state.teh.resep = p.resep;
       state.teh.level = p.level!=null ? p.level : 0;
       $("th-gelas").value = p.gelas || 1;
-      renderTehMenu(); renderTeh(); renderThSaveCard();
+      thTargetDari(tMenuById(state.teh.resep));
+      renderTehMenu(); renderTehLevel(); renderTeh(); renderThSaveCard(); saveCalib();
       toast('Preset "'+p.name+'" diterapkan');
       return;
     }
@@ -1483,7 +1491,7 @@
   }
   var VIC = {good:"smile", meh:"meh", bad:"frown"};
   var VLABEL = {good:"Enak", meh:"Biasa", bad:"Kurang"};
-  var DLABEL = {tygo:"Tygopresso", espresso:"Espresso", sanger:"Sanger Espresso", brew:"Seduh Manual", teh:"Teh Melati"};
+  var DLABEL = {tygo:"Tygopresso", espresso:"Espresso", sanger:"Sanger Espresso", brew:"Seduh Manual", teh:"Teh"};
 
   function renderLog(){
     var list=$("loglist"); list.innerHTML="";
@@ -1845,6 +1853,15 @@
     var r = resepById(tool, id);
     var out = GUIDE[tool].slice();
     if(tool==="teh" && !r.daun) out = out.filter(function(x){ return !x.tehOnly; });
+    // suhunya beda per jenis teh — melati rusak kalau kena air mendidih, teh
+    // hitam justru butuh air paling panas. Langkahnya ikut menu, bukan hardcode.
+    if(tool==="teh" && r.daun) out = out.map(function(st){
+      if(st.t!=="Isi Daun & Air") return st;
+      var j = TJENIS[r.jenis] || TJENIS.melati;
+      return {t:st.t, ic:st.ic, el:st.el, ok:st.ok, msg:st.msg, tehOnly:st.tehOnly,
+        d:"Masukkan daun ke ruang seduh — bukan ke badan kaca — lalu tuang air panas "+j.suhu
+          +" sesuai angka di kartu Takaran. Jangan sampai melewati batas atas ruang seduh."};
+    });
     // langkah press-nya beda per menu, dan harus disebut SEBELUM ditimbang —
     // percuma diberitahu butuh dua puck setelah gelasnya terlanjur ditimbang
     if(tool==="tygo") out = out.map(function(st){
@@ -2607,7 +2624,7 @@
   });
 
   // ================= PANEL TEH MELATI =================
-  var TOOLNAMA = {tygo:"Tygopresso", v60:"V60 Cone", teh:"Teh Melati"};
+  var TOOLNAMA = {tygo:"Tygopresso", v60:"V60 Cone", teh:"Teh"};
 
   // Massa jenis tiap bahan, dipakai untuk bolak-balik gram <-> ml.
   // base = satuan yang paling masuk akal dipakai saat menakar bahan itu.
@@ -2628,9 +2645,9 @@
     hitam:  {label:"Teh hitam cacah (Mawar)", pendek:"Teh hitam", suhu:"±95–100 °C, air baru mendidih"}
   };
   var TLEVEL = [
-    {cat:"Ringan", sub:"batas bawah rentang — titik aman untuk percobaan pertama"},
-    {cat:"Sedang", sub:"tengah rentang"},
-    {cat:"Manis",  sub:"batas atas rentang"}
+    {cat:"Ringan", sub:"batas bawah rentang, rasa tehnya paling depan"},
+    {cat:"Sedang", sub:"tengah rentang, seimbang"},
+    {cat:"Manis",  sub:"batas atas rentang, manis mantap"}
   ];
 
   // daun = gram teh cacah, teh = ml teh jadi setelah disaring.
@@ -2799,7 +2816,8 @@
       b.addEventListener("click", function(){
         if(state.teh.resep===m.id) return;
         state.teh.resep=m.id;
-        if(m.waktu && !THT.running){ THT.target=m.waktu; THT.left=m.waktu; renderThTarget(); thShow(); thPhase("Seduh"); }
+        thTargetDari(m);
+        saveCalib();
         renderTehMenu(); renderTeh(); renderThSaveCard();
       });
       box.appendChild(b);
@@ -2812,7 +2830,7 @@
       var c=el("div","chip"+(i===state.teh.level?" active":""), l.cat);
       c.setAttribute("data-lv", i);
       c.addEventListener("click", function(){
-        state.teh.level=i; renderTehLevel(); renderTeh();
+        state.teh.level=i; saveCalib(); renderTehLevel(); renderTeh();
       });
       box.appendChild(c);
     });
@@ -2902,12 +2920,18 @@
   }
 
   // ---------- timer seduh teh (hitung mundur) ----------
-  var TTARGET = [{ms:150000, lbl:"2:30"},{ms:180000, lbl:"3:00"},{ms:210000, lbl:"3:30"},{ms:240000, lbl:"4:00"}];
+  var TTARGET = [{ms:150000, lbl:"2:30"},{ms:180000, lbl:"3:00"},{ms:210000, lbl:"3:30"},{ms:240000, lbl:"4:00"},{ms:300000, lbl:"5:00"}];
   var THT = {running:false, left:210000, target:210000, last:null, tId:null};
   function thFmt(ms){
     if(ms<0) ms=0;
     var s=Math.ceil(ms/1000), m=Math.floor(s/60), d=s%60;
     return (m<10?"0":"")+m+":"+(d<10?"0":"")+d;
+  }
+  // tiap menu punya waktu seduhnya sendiri; timer ikut begitu menunya berganti
+  function thTargetDari(m){
+    if(!m || !m.waktu || THT.running) return;
+    THT.target=m.waktu; THT.left=m.waktu;
+    renderThTarget(); thShow(); thPhase("Seduh");
   }
   function thShow(){ $("th-timer").textContent = thFmt(THT.left); }
   function thPhase(p){ $("th-timer-phase").textContent = p; }
@@ -2994,10 +3018,11 @@
   }
 
   function initTeh(){
-    renderTehMenu(); renderTehLevel(); renderThTarget(); renderTeh(); renderThSaveCard();
+    renderTehMenu(); renderTehLevel(); renderThTarget(); thTargetDari(tMenuById(state.teh.resep));
+    renderTeh(); renderThSaveCard();
     thShow();
-    $("th-gelas").addEventListener("input", renderTeh);
-    $("th-kap").addEventListener("input", renderTeh);
+    $("th-gelas").addEventListener("input", function(){ saveCalib(); renderTeh(); });
+    $("th-kap").addEventListener("input", function(){ saveCalib(); renderTeh(); });
     $("th-timer-start").addEventListener("click", function(){
       if(THT.running || THT.left<=0) return;
       THT.running=true; THT.last=Date.now();
@@ -3017,8 +3042,8 @@
 
   // ---------- init ----------
   bindMilk("tygo"); bindMilk("v60");
-  initTeh();
   loadCalib();
+  initTeh();
   calcTygo();
   calcV60();
   renderVSaveCard();
