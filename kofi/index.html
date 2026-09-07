@@ -810,7 +810,7 @@
         <button class="fbtn" data-f="bad"><svg class="ic v-bad"><use href="#i-frown"/></svg> Kurang</button>
       </div>
     </div>
-    <p class="hint" style="margin-top:-4px">Tersimpan permanen di browser ini (localStorage) — tetap ada walau web ditutup.</p>
+    <p class="hint" style="margin-top:-4px">Tersimpan permanen di browser ini (localStorage) — tetap ada walau web ditutup, tapi hilang kalau ganti browser atau data situsnya dibersihkan. Tombol <b>Export</b> mengunduh satu file cadangan berisi <b>catatan rasa, preset, dan kalibrasi alat</b> (berat wadah &amp; gelas, kapasitas cone, kapasitas teko) — itu yang dipakai untuk pindah ke perangkat lain.</p>
     <div class="iorow">
       <button class="btn btn-ghost io" id="btn-export"><svg class="ic"><use href="#i-download"/></svg> Export (unduh cadangan)</button>
       <button class="btn btn-ghost io" id="btn-import"><svg class="ic"><use href="#i-upload"/></svg> Import (muat cadangan)</button>
@@ -1550,7 +1550,13 @@
 
   function updateIoCount(){
     var n = loadNotes().length;
-    $("io-count").textContent = n>0 ? ("Total "+n+" catatan tersimpan.") : "Belum ada catatan untuk di-export.";
+    var pr = loadPresets().length;
+    // kunci kalibrasi selalu ada sejak halaman dibuka, jadi yang dicek isinya:
+    // berat tare inilah yang benar-benar perlu dicadangkan
+    var cal = g("t-wadah0")>0 || g("t-sendok0")>0 || g("t-gelas0")>0;
+    $("io-count").textContent =
+      "Cadangan berisi " + n + " catatan, " + pr + " preset, dan kalibrasi alat"
+      + (cal ? "." : " (berat tare belum diisi).");
   }
 
   // ---------- export / import ----------
@@ -1558,48 +1564,89 @@
     var d=new Date(), p=function(x){return (x<10?"0":"")+x;};
     return d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+"-"+p(d.getHours())+p(d.getMinutes());
   }
+  function loadCalibRaw(){
+    try{ return JSON.parse(localStorage.getItem(CAL_KEY)) || null; }catch(e){ return null; }
+  }
   function exportNotes(){
     var notes = loadNotes();
-    if(notes.length===0){ toast("Belum ada catatan untuk di-export"); return; }
-    var payload = { app:"RacikKopi", version:1, exportedAt:new Date().toISOString(), count:notes.length, notes:notes };
+    if(notes.length===0 && loadPresets().length===0 && !loadCalibRaw()){
+      toast("Belum ada yang bisa di-export"); return;
+    }
+    var payload = { app:"RacikKopi", version:2, exportedAt:new Date().toISOString(),
+                    count:notes.length, notes:notes,
+                    presets:loadPresets(), calib:loadCalibRaw() };
     var blob = new Blob([JSON.stringify(payload,null,2)], {type:"application/json"});
     var url = URL.createObjectURL(blob);
     var a = document.createElement("a");
-    a.href = url; a.download = "racik-kopi-catatan-"+fileStamp()+".json";
+    a.href = url; a.download = "racik-kopi-cadangan-"+fileStamp()+".json";
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
     setTimeout(function(){ URL.revokeObjectURL(url); }, 1500);
     toast("File cadangan terunduh");
   }
+  // cadangan lama (version 1) cuma berisi catatan, dan file berupa array
+  // telanjang juga masih diterima — keduanya tetap bisa dimuat
   function importNotes(file){
     var reader = new FileReader();
     reader.onload = function(){
-      var incoming;
+      var data, incoming, presetsIn, calibIn;
       try{
-        var data = JSON.parse(reader.result);
-        incoming = Array.isArray(data) ? data : (data && Array.isArray(data.notes) ? data.notes : null);
+        data = JSON.parse(reader.result);
+        incoming  = Array.isArray(data) ? data : (data && Array.isArray(data.notes) ? data.notes : null);
+        presetsIn = (data && Array.isArray(data.presets)) ? data.presets : [];
+        calibIn   = (data && data.calib && typeof data.calib==="object") ? data.calib : null;
       }catch(e){ incoming = null; }
       if(!incoming){ alert("File tidak valid. Pilih file cadangan Racik Kopi (.json)."); return; }
-      incoming = incoming.filter(function(n){ return n && n.drink && n.verdict; });
-      if(incoming.length===0){ alert("Tidak ada catatan yang bisa dimuat dari file ini."); return; }
+      incoming  = incoming.filter(function(n){ return n && n.drink && n.verdict; });
+      presetsIn = presetsIn.filter(function(x){ return x && x.id && x.name; });
+      if(incoming.length===0 && presetsIn.length===0 && !calibIn){
+        alert("Tidak ada catatan, preset, maupun kalibrasi yang bisa dimuat dari file ini."); return;
+      }
 
-      var existing = loadNotes();
-      var mode = existing.length===0 ? "replace"
-        : (confirm("Ada "+existing.length+" catatan saat ini.\n\nOK = GABUNG (tambahkan "+incoming.length+" catatan dari file)\nCancel = GANTI (hapus yang ada, pakai isi file)") ? "merge" : "replace");
+      var existing = loadNotes(), presets = loadPresets();
+      var kosong = existing.length===0 && presets.length===0;
+      var mode = kosong ? "replace"
+        : (confirm("Saat ini ada "+existing.length+" catatan dan "+presets.length+" preset.\n\n"
+                 + "OK = GABUNG (tambahkan "+incoming.length+" catatan dan "+presetsIn.length+" preset dari file; kalibrasi alat dibiarkan)\n"
+                 + "Cancel = GANTI (hapus yang ada, pakai seluruh isi file termasuk kalibrasi alatnya)") ? "merge" : "replace");
 
+      var pesan = [];
       if(mode==="merge"){
         var seen = {};
         existing.forEach(function(n){ seen[dupKey(n)] = true; });
         var added = 0;
         incoming.forEach(function(n){ var k=dupKey(n); if(!seen[k]){ seen[k]=true; existing.unshift(n); added++; } });
-        saveNotes(existing); renderLog(); updateIoCount();
-        toast(added+" catatan baru ditambahkan");
+        saveNotes(existing);
+        var ada = {}, addedP = 0;
+        presets.forEach(function(x){ ada[x.id] = true; });
+        presetsIn.forEach(function(x){ if(!ada[x.id]){ ada[x.id]=true; presets.unshift(x); addedP++; } });
+        savePresets(presets);
+        pesan.push(added+" catatan", addedP+" preset");
+        // kalibrasi itu berat wadah dan alat milikmu sendiri — memungut punya
+        // file lain justru merusak hitungan, jadi hanya ikut saat GANTI
       }else{
-        saveNotes(incoming); renderLog(); updateIoCount();
-        toast(incoming.length+" catatan dimuat (mengganti data lama)");
+        saveNotes(incoming);
+        savePresets(presetsIn);
+        pesan.push(incoming.length+" catatan", presetsIn.length+" preset");
+        if(calibIn){
+          try{ localStorage.setItem(CAL_KEY, JSON.stringify(calibIn)); }catch(e){}
+          pesan.push("kalibrasi alat");
+        }
       }
+      muatUlangTampilan();
+      toast(pesan.join(" + ")+" dimuat");
     };
     reader.onerror = function(){ alert("Gagal membaca file."); };
     reader.readAsText(file);
+  }
+  // gambar ulang ketiga panel dari localStorage, tanpa memasang listener lagi
+  function muatUlangTampilan(){
+    loadCalib();
+    renderTehMenu(); renderTehLevel(); renderThTarget();
+    thTargetDari(tMenuById(state.teh.resep));
+    renderTeh(); renderThSaveCard();
+    calcTygo(); calcV60();
+    renderSaveCard(); renderVSaveCard();
+    renderPresets(); renderLog(); updateIoCount(); calibStatus();
   }
   function dupKey(n){ return [n.drink,n.verdict,n.dose,n.yield,n.ice,n.serve,(n.pemanis&&n.pemanis.label)||"",n.note||"",n.date||""].join("|"); }
 
