@@ -338,7 +338,7 @@
       <p><b>Sirup gula 1:1 — tanpa kompor, cukup teko pemanas air.</b> Gula larut sampai ±67% dalam air; sirup 1:1 cuma 50%, jadi air panas saja sudah cukup, tidak perlu dimasak. Bilas toples dengan air mendidih dulu (ganti sterilisasi), timbang <b>100 g gula</b> di dalamnya, tuang <b>100 g air panas</b>, tutup dan kocok ±1 menit sampai bening total. Dinginkan, simpan di kulkas, tahan ±2 minggu. Kalau masih ada butiran di dasar, rendam toples di air panas lalu kocok lagi. <b>Pakai gelas takar?</b> 100 g air panas = <b>100 ml</b>, dan 100 g gula pasir ≈ <b>120 ml</b> (sendokkan peres, jangan dipadatkan). Hasil jadinya ≈ <b>160 ml sirup</b> dari 200 g bahan — menyusut karena gulanya larut masuk ke sela air.</p>
       <p>Karena separuhnya air, takarannya <b>2x gram gula pasir</b> untuk manis yang sama — 1 sdm sirup = 15 ml ≈ <b>18,5 g</b>. Di gelas takar sirup ini <b>1 ml ≈ 1,23 g</b>, jadi 100 g sirup cuma setinggi ≈ 81 ml — jangan tertukar. Lebih cepat larut di espresso panas maupun es. <b>Mau vanilla?</b> Tunggu sirup turun ke hangat kuku (±5 menit), baru masukkan 1 sdt ekstrak vanilla atau ½ batang vanilla yang dibelah — kalau dimasukkan saat masih mendidih aromanya menguap. Rendam sampai dingin lalu saring. Takarannya tetap ikut chip <b>Sirup Gula 1:1</b>.</p>
       <p><b>Sirup vanilla botolan</b> (Monin, Torani, dll) lebih pekat: ±65% gula, jadi gramnya ±1,5x gula pasir — itu yang dipakai chip <b>Sirup Vanilla</b>. Lebih pekat berarti lebih berat juga: <b>1 ml ≈ 1,32 g</b>. Untuk sanger, vanilla cuma aroma latar; kalau dipadu SKM, turunkan SKM ke level <b>Pahit / kuat</b> supaya tidak kemanisan.</p>
-      <p><b>Takaran pemanis (referensi):</b> Sanger khas Aceh memakai <b>kopi : susu kental manis = 3:1</b> (susu hemat, kopi dominan). Buih dihasilkan dari kocokan kopi + SKM. Level manis tetap terserah lidahmu. SKM juga kental: <b>1 ml ≈ 1,29 g</b>.</p>
+      <p><b>Takaran pemanis (referensi):</b> Sanger khas Aceh memakai <b>kopi : susu kental manis = 3:1</b> (susu hemat, kopi dominan). Buih dihasilkan dari kocokan kopi + SKM. Level manis tetap terserah lidahmu. SKM juga kental: <b>1 ml ≈ 1,29 g</b>.</p><p><b>Manisnya dihitung dari isi gelas, bukan dari espressonya.</b> Untuk espresso polos dan espresso manis keduanya sama saja — tidak ada yang ditambahkan lagi. Tapi begitu gelasnya diisi air panas (sanger, americano) atau susu (vanilla latte), espresso cuma seperempat isi gelas: 3:1 yang dihitung terhadap 18 g espresso cuma menghasilkan 6 g SKM untuk minuman 170 ml, dan itu nyaris tidak terasa. Menu-menu itu memakai takaran per ml minuman jadi, sama seperti menu V60 dan menu teh.</p>
       <p><b>Konversi gelas takar — patokan cepat.</b> Kalau mau menakar tanpa timbangan, ini isi 100 ml gelas takar untuk tiap bahan, berapa ml untuk 100 g, dan berat 1 sendok makan peres. <b>1 sdm = 15 ml</b> — sesuai sloki espresso bertanda sendok yang bertanda 2 TBSP = 1 oz = 30 ml.</p>
       <ul>
         <li><b>Air / kopi seduh</b> — 100 ml = 100 g · 100 g = 100 ml</li>
@@ -1400,7 +1400,8 @@
 
   function doSave(){
     if(!state.verdict.tygo){ toast("Pilih penilaian dulu"); return; }
-    var dose = round(g("t-sendok1")-g("t-wadah0"));
+    var press = state.tygo.press===2 ? 2 : 1;
+    var dose = round((g("t-sendok1")-g("t-wadah0"))*press);
     if(dose<=0){ toast("Isi berat wadah + bubuk dulu"); return; }
     var yieldG = round(g("t-gelas1")-g("t-gelas0"));
     if(yieldG<=0){ toast("Isi berat gelas + hasil press dulu"); return; }
@@ -1413,7 +1414,7 @@
     var st = state.tygo;
     var ti = st.pemanis;
     var pemanis = st.mode==="resep"
-      ? resepPemanis("tygo", yieldG)
+      ? resepPemanis("tygo", resepBase("tygo"))
       : (ti!=null
         ? {label:S[ti].cat, val:round(yieldG*S[ti].ratio), unit:unit, mode:"by choice", type:PEM_LABEL(t), bahan:t}
         : (st.customG!=null
@@ -1421,7 +1422,7 @@
           : null));
 
     var smlT = milkMl("tygo");
-    var specs = "Dose "+dose+"g · Yield "+yieldG+"g (1:"+ratio+") · press 8 bar"
+    var specs = "Dose "+dose+"g"+(press===2?" (2 puck)":"")+" · Yield "+yieldG+"g (1:"+ratio+") · "+press+"× press 8 bar"
       + (pemanis? " · "+pemanis.type+" ("+pemanis.label
           + (pemanis.unit ? " · "+valTxt(pemanis.val, pemanis.bahan, pemanis.unit)
                             + (pemanis.plus? " + "+pemanis.plus : "") : "")
@@ -1661,7 +1662,7 @@
            "Tuang espresso ke dalam air panas, bukan sebaliknya. Kalau air yang dituang ke espresso, crema-nya pecah.",
            "Cicipi dulu sebelum menambah apa pun. Americano dari arabica sering sudah terasa manis alami."]},
 
-    {id:"sanger", nama:"Sanger Espresso", ic:"i-cup",
+    {id:"sanger", nama:"Sanger Espresso", ic:"i-cup", air:140,
      pm:{lv:"sanger", slots:[{opsi:["susu"], porsi:1}]},
      sub:"Espresso + SKM, dikocok sampai berbuih. Versi espresso dari sanger khas Aceh.",
      pd:"Chip Susu (SKM) sudah dipilihkan. Level Sanger standar itu titik awal yang aman; kalau bubukmu arabica, tetap di level ini karena manisnya membulatkan rasa asam.",
@@ -1671,7 +1672,7 @@
            "Tambahkan air panas 130-150 ml, aduk sebentar, sajikan selagi hangat. Segelasnya jadi ±160-180 ml.",
            "Cukup 1x press. Sanger memang kopi pekat porsi sedang - kalau mau segelas penuh ±230 ml, press 2x dengan bubuk baru dan naikkan airnya ke 180 ml."]},
 
-    {id:"sanger_vanila", nama:"Sanger Espresso Vanilla", ic:"i-cup",
+    {id:"sanger_vanila", nama:"Sanger Espresso Vanilla", ic:"i-cup", air:140,
      pm:{lv:"sanger", slots:[{opsi:["susu"], porsi:0.6},{opsi:["vanila","sirup"], porsi:0.4}]},
      sub:"SKM + sirup vanilla, total manisnya dijaga tetap seimbang.",
      pd:"Mode Sanger + Sirup sudah dipilihkan, sirupnya Sirup Vanilla. Slider Porsi manis dari sirup mengatur pembagian: makin ke kanan makin harum vanilla, makin ke kiri makin tebal susunya.",
@@ -1720,7 +1721,7 @@
            "Untuk minuman susu, pakai <b>1,5x</b> dari jumlah espresso yang tertulis di resep. Resep minta 20 g espresso, tuang 30 g konsentrat.",
            "Tahan 2 hari di kulkas dalam wadah tertutup, tapi aromanya paling bagus di jam pertama."]},
 
-    {id:"v60_sanger", nama:"Sanger V60", ic:"i-cup", pekat:true, setara:0.6,
+    {id:"v60_sanger", nama:"Sanger V60", ic:"i-cup", pekat:true, setara:0.6, air:120,
      pm:{lv:"sanger", slots:[{opsi:["susu"], porsi:1}]},
      sub:"Sanger tanpa Tygopresso, memakai konsentrat V60 1:5 sebagai ganti espresso.",
      pd:"Takarannya dihitung dari kekuatan konsentrat, bukan dari total air seperti menu V60 lain — jadi angkanya sebanding dengan sanger espresso, tidak melonjak.",
@@ -1744,10 +1745,23 @@
    ]
   };
   // ---------- mesin resep: hitung tiap bahan pemanis dalam satu banner ----------
+  // Ada dua keluarga takaran pemanis: ESP_* dihitung per gram espresso (untuk
+  // minuman yang tidak ditambah apa-apa lagi), V_* dihitung per ml minuman jadi.
+  // Begitu gelasnya diisi air panas atau susu setelah kopinya, yang benar V_*:
+  // kalau tetap memakai ESP_*, manisnya ikut kopi yang cuma seperempat isi gelas.
+  function perVolume(tool, r){
+    if(r && (r.air || r.susu) && r.pm) return true;
+    return tool==="v60" && !(r && r.pekat);
+  }
   function levelArr(tool, r){
     var lv = r && r.pm ? r.pm.lv : "gula";
-    if(tool==="v60" && !(r && r.pekat)) return lv==="sanger" ? V_SKM : V_SUGAR;
+    if(perVolume(tool, r)) return lv==="sanger" ? V_SKM : V_SUGAR;
     return lv==="sanger" ? SANGER_SKM : ESP_SUGAR;
+  }
+  // isi gelas di luar kopinya: air panas yang dituang + susu UHT
+  function tambahanMl(tool, r){
+    if(!r) return 0;
+    return (r.air||0) + (r.susu ? (milkMl(tool)||0) : 0);
   }
   // hasil konsentrat = air total - air yang tertahan ampas (~2x berat bubuk)
   function hasilPekat(){
@@ -1757,11 +1771,20 @@
     return Math.max(0, round(total - bubuk*2));
   }
   function resepBase(tool){
-    if(tool!=="v60") return Math.max(0, round(g("t-gelas1")-g("t-gelas0")));
+    if(tool!=="v60"){
+      var rt = resepById("tygo", stOf("tygo").resep);
+      var kopi = Math.max(0, round(g("t-gelas1")-g("t-gelas0")));
+      // menu yang diencerkan: yang jadi patokan isi gelasnya, bukan espressonya
+      return kopi>0 && perVolume("tygo", rt) ? round(kopi + tambahanMl("tygo", rt)) : kopi;
+    }
     var r = resepById("v60", stOf("v60").resep);
-    // konsentrat lebih encer daripada espresso, jadi volumenya dikonversi dulu
-    // ke "setara espresso" supaya takaran pemanisnya sebanding
-    if(r && r.pekat) return round(hasilPekat() * (r.setara||0.6));
+    if(r && r.pekat){
+      var pekat = hasilPekat();
+      if(perVolume("v60", r)) return round(pekat + tambahanMl("v60", r));
+      // konsentrat lebih encer daripada espresso, jadi volumenya dikonversi dulu
+      // ke "setara espresso" supaya takaran pemanisnya sebanding
+      return round(pekat * (r.setara||0.6));
+    }
     return round(num(g("v-perporsi"))||0);
   }
   // resep konsentrat menetapkan parameter seduhnya sendiri
@@ -1922,9 +1945,13 @@
         : 'Satu bahan untuk menu ini, di level '+LV[st.level].cat.toLowerCase()+'.')+'</p>'+
       '<table class="rsp-tbl"><thead><tr><th>Bahan</th><th>Takaran</th></tr></thead><tbody>'+rows+milkRowHtml(tool, r)+'</tbody></table>'+
       '<div class="rsp-tot">'+(base>0
-        ? (tool!=="v60" ? 'Dihitung dari '+base+' g kopi di gelas.'
-           : r.pekat ? 'Dihitung dari ±'+hasilPekat()+' ml konsentrat, setara ±'+base+' g espresso.'
-           : 'Dihitung dari '+base+' ml air per gelas.')
+        ? (perVolume(tool, r)
+             ? 'Dihitung dari ±'+Math.round(base)+' ml isi gelas'+(tambahanMl(tool, r)>0
+                 ? ' — kopi ±'+Math.round(base-tambahanMl(tool, r))+' ml + air/susu ±'+Math.round(tambahanMl(tool, r))+' ml.'
+                 : ' (air per gelas).')
+                 +(tambahanMl(tool, r)>0 ? ' Manisnya mengikuti isi gelas, bukan cuma kopinya.' : '')
+           : tool!=="v60" ? 'Dihitung dari '+base+' g kopi di gelas.'
+           : 'Dihitung dari ±'+hasilPekat()+' ml konsentrat, setara ±'+base+' g espresso.')
         : (tool==="v60" ? 'Isi dulu ukuran per gelas di atas.' : 'Timbang dulu gelas + hasil press di kartu Hasil Seduhan.'))+'</div></div>';
 
     box.innerHTML=html;
