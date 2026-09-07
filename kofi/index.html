@@ -841,7 +841,7 @@
   <footer>
     <svg class="ic"><use href="#i-coffee"/></svg> <b style="color:var(--cream)">RSPro</b> — “Karena Kopi Nikmat Adalah Hak Setiap Umat”<br/>
     Racik Kopi — takaran adalah titik awal, lidahmu penentu akhir.<br/>
-    Data catatan &amp; preset disimpan lokal di browser. Menghapus data browser akan menghapus semuanya.
+    Catatan rasa, preset, dan kalibrasi alat disimpan lokal di browser. Menghapus data browser akan menghapus semuanya &mdash; pakai tombol <b>Export</b> di kartu Catatan Rasa untuk mencadangkan ketiganya.
   </footer>
 </div>
 
@@ -1648,7 +1648,7 @@
     renderSaveCard(); renderVSaveCard();
     renderPresets(); renderLog(); updateIoCount(); calibStatus();
   }
-  function dupKey(n){ return [n.drink,n.verdict,n.dose,n.yield,n.ice,n.serve,(n.pemanis&&n.pemanis.label)||"",n.note||"",n.date||""].join("|"); }
+  function dupKey(n){ return [n.drink,n.verdict,n.dose,n.yield,(n.pemanis&&n.pemanis.label)||"",n.note||"",n.date||""].join("|"); }
 
   // ---------- tabs / nav bawah ----------
   var ACTIVE = "tygo";
@@ -2691,7 +2691,7 @@
     });
   });
 
-  // ================= PANEL TEH MELATI =================
+  // ================= PANEL TEH =================
   var TOOLNAMA = {tygo:"Tygopresso", v60:"V60 Cone", teh:"Teh"};
 
   // Massa jenis tiap bahan, dipakai untuk bolak-balik gram <-> ml.
