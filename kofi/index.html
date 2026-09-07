@@ -2709,6 +2709,7 @@
     vanila: {label:"Sirup vanilla",            rho:1.32, base:"ml"}
   };
   var SERAP = 2.5;   // ml air yang ditahan tiap gram daun teh, tidak ikut keluar
+  var KANTONG_G = 1.85;   // isi satu kantong teh celup, dipakai untuk padanan takaran
   // Teh melati itu bunga: air terlalu panas merusak aromanya, kelewat lama jadi sepat.
   // Teh hitam cacah punya tanin: butuh air lebih panas, tapi kelewat lama jadi pahit
   // dan kelat. Untuk menu bersusu, tehnya dikuatkan dengan menambah daun — bukan waktu.
@@ -2801,7 +2802,7 @@
      daun:7, teh:220, waktu:240000, waktuTxt:"3–5 menit",
      bahan:[{t:"skm", min:45, max:58},{t:"evap", min:15, max:15}],
      catatan:["<b>Jenis tehnya berpengaruh, bukan cuma banyaknya.</b> Teh tarik aslinya memakai teh serbuk halus olahan <b>CTC</b> — daunnya diremuk sebelum dioksidasi, sehingga seduhannya berbadan tebal dan tahan dilawan susu. Teh cacah biasa dibuat untuk teh manis: aromanya halus dan gampang tenggelam di balik susu. Warnanya bisa sama gelapnya, tapi badannya beda — kalau terasa seperti susu manis yang kebetulan coklat, ini penyebabnya, bukan takarannya.",
-              "<b>Jalan pintasnya teh celup.</b> Isi kantong teh itu <i>fannings</i>, segolongan butir dengan teh tarik — jadi 4 kantong teh hitam untuk 240 ml lebih dekat ke aslinya daripada teh cacah. Tekan-tekan kantongnya sebelum diangkat. Kalau mau beli yang benar, cari tulisan CTC, teh serbuk, dust, fannings, atau BOPF di kemasannya; \"daun utuh premium\" justru yang paling tidak cocok. Menggiling teh cacah sendiri tidak menolong — CTC itu tahap pengolahan daun basah, bukan penggilingan daun kering, jadi yang bertambah cuma kecepatan ekstraksi, bukan badannya.",
+              "<b>Jalan pintasnya teh celup.</b> Isi kantong teh itu <i>fannings</i>, segolongan butir dengan teh tarik — jadi teh celup hitam biasa lebih dekat ke aslinya daripada teh cacah. Jumlah kantongnya sudah dihitungkan di kartu Takaran, ikut jumlah gelas. Tekan-tekan kantongnya sebelum diangkat. Kalau mau beli yang benar, cari tulisan CTC, teh serbuk, dust, fannings, atau BOPF di kemasannya; \"daun utuh premium\" justru yang paling tidak cocok. Menggiling teh cacah sendiri tidak menolong — CTC itu tahap pengolahan daun basah, bukan penggilingan daun kering, jadi yang bertambah cuma kecepatan ekstraksi, bukan badannya.",
               "<b>Warnanya patokan paling jujur.</b> Teh tarik yang benar berwarna coklat karamel. Kalau di gelasmu jadi putih, hampir selalu susunya yang kebanyakan — bukan tehnya yang kurang. Cek dulu warna teh sebelum disusui: kalau sudah coklat gelap, tehnya aman.",
               "Takaran susu di sini sudah diturunkan dari resep aslinya. Resep aslinya menyebut 3–4 sdm SKM + 2 sdm susu evaporasi, tapi di gelas jadi 26% isinya susu dan warnanya pucat. Sekarang ±18%, sesuai kedai mamak.",
               "<b>Susu evaporasi yang paling memutihkan</b> — dia putih pekat tanpa warna, sementara SKM masih punya rona krem. Sifatnya opsional: kalau warnanya masih terlalu muda, buang saja bagian ini dulu sebelum mengurangi SKM. Bisa juga diganti susu UHT dengan takaran sama.",
@@ -2965,9 +2966,11 @@
     var seduh = "";
     if(m.daun>0){
       var j = TJENIS[m.jenis] || TJENIS.melati;
+      var kantong = Math.round(h.daun/KANTONG_G);
       seduh = '<div class="th-sec">1 · Seduh dulu</div>'+
         '<table class="rsp-tbl"><tbody>'+
-        '<tr><td><span class="rsp-b">'+j.label+'</span><span class="rsp-x">timbang, jangan dikira-kira</span></td>'+
+        '<tr><td><span class="rsp-b">'+j.label+'</span><span class="rsp-x">timbang, jangan dikira-kira</span>'+
+          (kantong>0 ? '<span class="rsp-x">atau ≈ '+kantong+' kantong teh celup (±1,85 g/kantong)</span>' : '')+'</td>'+
           '<td><span class="rsp-n">'+h.daun+' g</span></td></tr>'+
         '<tr><td><span class="rsp-b">Air panas</span><span class="rsp-x">'+j.suhu+' · sudah termasuk ±'+round(m.daun*SERAP*h.gelas)+' ml yang diserap daun</span>'+
           '<span class="rsp-x">'+tAlat(h.air, h.air)+'</span></td>'+
