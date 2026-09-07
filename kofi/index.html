@@ -2052,13 +2052,17 @@
     var comp = hitungResep(tool, r, st, base);
     var per = tool==="v60" ? " /gelas" : "";
     var rows = comp.map(function(c){
+      // saran alat takar ikut kolom kiri, sebaris dengan nama bahannya — sama
+      // seperti baris susu dan panel teh. Di kolom kanan yang rata kanan,
+      // kalimat sepanjang itu patah jadi dua di layar ponsel.
       return '<tr><td><span class="rsp-b">'+c.label+'</span>'+
              (c.slot.opsi.length>1 ? '<span class="rsp-x">bisa diganti di atas</span>'
-                                   : '<span class="rsp-x">wajib untuk menu ini</span>')+'</td>'+
+                                   : '<span class="rsp-x">wajib untuk menu ini</span>')+
+             '<span class="rsp-x">'+takarSaran(c)+'</span></td>'+
              '<td><span class="rsp-n">'+(c.gram!=null?c.gram:"–")+' '+c.unit.replace(/^g /,"g ")+per+'</span>'+
              (c.gram!=null && toMl(c.gram, c.bahan)!=null
                 ? '<span class="rsp-n" style="display:block;font-size:13px;margin-top:2px">≈ '+toMl(c.gram, c.bahan)+' ml'+per+'</span>' : '')+
-             '<span class="rsp-x">'+takarSaran(c)+'</span></td></tr>';
+             '</td></tr>';
     }).join("");
 
     html += '<div class="rsp-banner"><div class="rsp-head">'+ic('cup')+'Takaran pemanis '+r.nama+'</div>'+
