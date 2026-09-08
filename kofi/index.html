@@ -2144,7 +2144,9 @@
     $("g-icon").setAttribute("href", "#"+s.ic);
     $("g-idx").textContent = "Langkah "+(gState.i+1)+" dari "+steps.length;
     $("g-title").textContent = s.t;
-    $("g-desc").textContent = s.d;
+    // teks langkah ditulis sendiri di berkas ini (GUIDE/RESEP/SIMPAN), bukan
+    // masukan pengguna — jadi <b> di dalamnya memang untuk ditampilkan
+    $("g-desc").innerHTML = s.d;
     $("g-bar").style.width = Math.round((gState.i+1)/steps.length*100)+"%";
     $("g-back").disabled = gState.i===0;
     $("g-next").textContent = gState.i===steps.length-1 ? "Selesai" : "Lanjut";
@@ -2799,18 +2801,20 @@
 
     {id:"teh_tarik", nama:"Teh Tarik Malaysia", ic:"i-cup", jenis:"hitam", top:true,
      sub:"Teh hitam pekat + susu kental manis, ditarik bolak-balik antara dua gelas sampai berbuih — cara kedai mamak.",
-     daun:7, teh:220, waktu:240000, waktuTxt:"3–5 menit",
+     daun:7.4, teh:220, waktu:240000, waktuTxt:"3–5 menit",
      bahan:[{t:"skm", min:45, max:58},{t:"evap", min:15, max:15}],
      catatan:["<b>Jenis tehnya berpengaruh, bukan cuma banyaknya.</b> Teh tarik aslinya memakai teh serbuk halus olahan <b>CTC</b> — daunnya diremuk sebelum dioksidasi, sehingga seduhannya berbadan tebal dan tahan dilawan susu. Teh cacah biasa dibuat untuk teh manis: aromanya halus dan gampang tenggelam di balik susu. Warnanya bisa sama gelapnya, tapi badannya beda — kalau terasa seperti susu manis yang kebetulan coklat, ini penyebabnya, bukan takarannya.",
-              "<b>Jalan pintasnya teh celup.</b> Isi kantong teh itu <i>fannings</i>, segolongan butir dengan teh tarik — jadi teh celup hitam biasa lebih dekat ke aslinya daripada teh cacah. Jumlah kantongnya sudah dihitungkan di kartu Takaran, ikut jumlah gelas. Tekan-tekan kantongnya sebelum diangkat. Kalau mau beli yang benar, cari tulisan CTC, teh serbuk, dust, fannings, atau BOPF di kemasannya; \"daun utuh premium\" justru yang paling tidak cocok. Menggiling teh cacah sendiri tidak menolong — CTC itu tahap pengolahan daun basah, bukan penggilingan daun kering, jadi yang bertambah cuma kecepatan ekstraksi, bukan badannya.",
+              "<b>Resep ini ditulis untuk teh celup.</b> Empat kantong (±7,4 g) untuk satu gelas — angkanya ada di kartu Takaran dan ikut naik sendiri kalau kamu menambah gelas. Kalau masih terasa tipis di balik susu, naikkan ke 5 kantong; jangan menambah waktu, karena teh hitam kelewat lama jadi pahit bukan lebih tebal.",
+              "<b>Fannings bukan berarti CTC.</b> Isi kantong teh memang halus seperti teh tarik, tapi itu soal <i>ukuran butir</i>, bukan cara olahnya. Teh celup Indonesia umumnya ortodoks, jadi badannya masih kalah dari CTC asli yang dipakai kedai mamak. Kalau suatu saat ketemu teh serbuk CTC — cari tulisan CTC, dust, fannings, atau BOPF di kemasan — itu yang paling mendekati, dan waktunya dipotong ±1 menit karena jauh lebih cepat terekstrak. Menggiling teh cacah sendiri tidak menolong: CTC itu tahap pengolahan daun basah, bukan penggilingan daun kering.",
               "<b>Warnanya patokan paling jujur.</b> Teh tarik yang benar berwarna coklat karamel. Kalau di gelasmu jadi putih, hampir selalu susunya yang kebanyakan — bukan tehnya yang kurang. Cek dulu warna teh sebelum disusui: kalau sudah coklat gelap, tehnya aman.",
               "Takaran susu di sini sudah diturunkan dari resep aslinya. Resep aslinya menyebut 3–4 sdm SKM + 2 sdm susu evaporasi, tapi di gelas jadi 26% isinya susu dan warnanya pucat. Sekarang ±18%, sesuai kedai mamak.",
               "<b>Susu evaporasi yang paling memutihkan</b> — dia putih pekat tanpa warna, sementara SKM masih punya rona krem. Sifatnya opsional: kalau warnanya masih terlalu muda, buang saja bagian ini dulu sebelum mengurangi SKM. Bisa juga diganti susu UHT dengan takaran sama.",
               "Airnya harus benar-benar mendidih dan tehnya diseduh sampai pekat dan gelap. Teh yang tanggung akan tenggelam di balik SKM.",
               "<b>Menarik itu sendiri memucatkan warnanya</b> — udara yang masuk bikin cairannya lebih terang dan buih di atasnya memang krem muda. Itu normal; yang dinilai warna badan tehnya, bukan buihnya.",
               "Mulai menarik dari jarak dekat dulu, baru dinaikkan setelah kamu hafal alirannya — isinya panas. Kalau tidak mau menuang bolak-balik, pengocok listrik menghasilkan buih yang mirip tanpa risiko tumpah."],
-     saji:["Seduh teh hitam dengan air mendidih 3–5 menit sampai airnya pekat dan warnanya gelap.",
-           "Saring ampasnya ke gelas. Masukkan SKM dan susu evaporasi selagi teh masih panas, aduk rata sampai benar-benar larut.",
+     saji:["Seduh <b>4 kantong teh celup hitam</b> dengan air mendidih 3–5 menit, sampai airnya pekat dan warnanya gelap.",
+           "Tekan-tekan kantongnya ke dinding gelas sebelum diangkat — bagian itu yang paling banyak menyumbang badan rasa, dan biasanya justru terbuang. Kalau memakai teh curah, saring ampasnya seperti biasa.",
+           "Masukkan SKM dan susu evaporasi selagi teh masih panas, aduk rata sampai benar-benar larut.",
            "Siapkan dua gelas bersih. Tuang campuran teh dari satu gelas ke gelas lainnya dari ketinggian, bergantian.",
            "Ulangi tarikannya 5–10 kali sampai permukaannya berbuih lembut dan suhunya sedikit turun.",
            "Tuang ke gelas saji bersama buihnya. Minum selagi hangat, atau tambahkan es batu untuk versi dingin."]},
