@@ -1005,6 +1005,13 @@
   // Susu bukan pemanis: yang menentukan rasanya perbandingan susu terhadap
   // espresso, bukan kadar gulanya. Jadi jalurnya terpisah dari BAHAN/PEM.
   var UHT_RHO = 1.03;
+
+  // ---------- es batu ----------
+  // Es bukan cuma pengisi gelas: sebagian mencair dan menambah air ke minuman.
+  // ±25% dari beratnya masuk jadi cairan selama diracik sampai habis diminum.
+  // Tanpa dihitung, menu dingin akan terasa encer walau takarannya "benar".
+  var ES_CAIR = 0.25;
+  function esCairMl(r){ return (r && r.es) ? round(r.es*ES_CAIR) : 0; }
   var MILK = [
     {cat:"Cortado",    sub:"susu 1× espresso — kopi paling menonjol", ratio:1},
     {cat:"Piccolo",    sub:"susu 2× espresso — masih jelas kopinya",  ratio:2},
@@ -1789,6 +1796,22 @@
            "Tuang espresso ke gelas dulu, baru susunya pelan-pelan. Buihnya naik sendiri ke atas.",
            "Tanpa mesin uap, buihnya akan lebih besar dan cepat hilang daripada latte kafe. Minum selagi buihnya masih ada."]},
 
+    {id:"es_latte", nama:"Es Latte", ic:"i-cup", pm:null, susu:5, press:2, es:120,
+     sub:"Espresso dituang ke susu dingin berisi es. Paling boros susu, dan paling cepat dibikin.",
+     saji:["Press 2x dengan bubuk baru tiap kali ke wadah yang sama — ±36 g espresso. Es mencairkan, jadi kopinya harus lebih pekat daripada versi panas.",
+           "Isi gelas dengan es sesuai angka di atas, lalu tuang susu UHT <b>dingin langsung dari kulkas</b>. Tidak perlu dihangatkan dan tidak perlu dikocok — buih tidak bertahan di minuman dingin.",
+           "Tuang espresso pelan-pelan lewat punggung sendok supaya berlapis di atas susunya. Aduk sebelum diminum, atau biarkan berlapis dulu kalau mau dilihat.",
+           "Kalau kesiangan diminum dan jadi encer, bukan takarannya yang salah — esnya kelamaan mencair. Minum dalam 10 menit pertama."]},
+
+    {id:"es_kopi_susu", nama:"Es Kopi Susu", ic:"i-cup", susu:4, press:2, es:120,
+     pm:{lv:"gula", slots:[{opsi:["sirup","vanila","gula"], porsi:1}]},
+     sub:"Versi kedai kekinian: espresso, susu, sirup gula, dan es. Manisnya ikut isi gelas, bukan espressonya.",
+     pd:"Sirup Gula 1:1 sudah dipilihkan karena paling cepat larut di minuman dingin. Gula pasir bisa dipakai tapi harus dilarutkan dulu ke espresso panas, jangan langsung ke es.",
+     saji:["Press 2x dengan bubuk baru tiap kali — ±36 g espresso.",
+           "Masukkan sirup ke espresso yang <b>masih panas</b>, aduk sampai larut. Kalau menunggu dingin dulu, sirupnya mengendap di dasar gelas.",
+           "Isi gelas dengan es, tuang susu UHT dingin, lalu tuang campuran espresso-sirup di atasnya.",
+           "Aduk sebentar sebelum diminum. Cicipi dulu sebelum menambah sirup — dingin menumpulkan rasa manis, jadi yang terasa kurang manis saat masih hangat biasanya sudah pas setelah dingin."]},
+
     {id:"vanilla_latte", nama:"Vanilla Latte", ic:"i-droplet", susu:4, press:2,
      pm:{lv:"gula", slots:[{opsi:["vanila","sirup"], porsi:1}]},
      sub:"Espresso + susu UHT + sirup vanilla. Susunya 4x, seporsi dengan latte biasa.",
@@ -1831,6 +1854,15 @@
      saji:["Masukkan SKM selagi kopi masih panas, aduk rata.",
            "Cicipi sebelum menambah. Beda dengan sanger yang kopinya pekat, di sini susu gampang menutupi kopinya."]},
 
+    {id:"es_kopi_susu_v60", nama:"Es Kopi Susu V60", ic:"i-cup", pekat:true, setara:0.6, susu:5.5, es:120,
+     pm:{lv:"gula", slots:[{opsi:["sirup","vanila"], porsi:1}]},
+     sub:"Es kopi susu tanpa Tygopresso — konsentrat 1:5 sebagai ganti espresso, jadi tidak perlu press dua kali.",
+     pd:"Takarannya dihitung dari isi gelas, sudah termasuk susu dan lelehan esnya. Sirup Gula 1:1 paling cepat larut di minuman dingin.",
+     saji:["Seduh konsentratnya dulu sesuai angka di atas, hasilnya sekitar 45 ml. Jangan pakai rasio 1:15 yang biasa — es akan mengencerkannya jadi air kopi.",
+           "Masukkan sirup ke konsentrat yang masih panas, aduk sampai larut.",
+           "Isi gelas dengan es, tuang susu UHT dingin, lalu tuang konsentratnya di atasnya.",
+           "Konsentrat V60 tidak punya crema, jadi lapisannya tidak setegas versi espresso — rasanya justru lebih bersih."]},
+
     {id:"v60_latte", nama:"Latte V60", ic:"i-cup", pm:null, pekat:true, setara:0.6, susu:5,
      sub:"Latte tanpa Tygopresso: konsentrat V60 1:5 sebagai pengganti espresso + susu UHT.",
      saji:["Seduh konsentratnya dulu sesuai angka di atas, hasilnya sekitar 45 ml.",
@@ -1845,7 +1877,7 @@
   // Begitu gelasnya diisi air panas atau susu setelah kopinya, yang benar V_*:
   // kalau tetap memakai ESP_*, manisnya ikut kopi yang cuma seperempat isi gelas.
   function perVolume(tool, r){
-    if(r && (r.air || r.susu) && r.pm) return true;
+    if(r && (r.air || r.susu || r.es) && r.pm) return true;
     return tool==="v60" && !(r && r.pekat);
   }
   function levelArr(tool, r){
@@ -1856,7 +1888,7 @@
   // isi gelas di luar kopinya: air panas yang dituang + susu UHT
   function tambahanMl(tool, r){
     if(!r) return 0;
-    return (r.air||0) + (r.susu ? (milkMl(tool)||0) : 0);
+    return (r.air||0) + (r.susu ? (milkMl(tool)||0) : 0) + esCairMl(r);
   }
   // hasil konsentrat = air total - air yang tertahan ampas (~2x berat bubuk)
   function hasilPekat(){
@@ -1990,6 +2022,14 @@
     return ml!=null ? tAlat(ml, c.gram) : "± "+c.sdm+" sdm · lebih akurat ditimbang";
   }
 
+  function esRowHtml(r){
+    if(!r || !r.es) return "";
+    return '<tr><td><span class="rsp-b">Es batu</span>'+
+      '<span class="rsp-x">pengisi gelas · ±'+esCairMl(r)+' ml di antaranya mencair jadi air</span>'+
+      '<span class="rsp-x">ditimbang, atau isi gelas sampai ¾ penuh</span></td>'+
+      '<td><span class="rsp-n">'+r.es+' g</span></td></tr>';
+  }
+
   function milkRowHtml(tool, r){
     if(!r || !r.susu) return "";
     var base=milkBase(tool), ml = base>0 ? round(base*r.susu) : null;
@@ -2020,7 +2060,7 @@
           '<p class="rsp-sub">Menu ini tanpa pemanis — susunya yang membentuk rasa. '+
           'Perbandingannya sudah ditetapkan resep; kalau mau mengubah, pindah ke mode Manual.</p>'+
           '<table class="rsp-tbl"><thead><tr><th>Bahan</th><th>Takaran</th></tr></thead><tbody>'+
-          milkRowHtml(tool, r)+'</tbody></table>'+
+          milkRowHtml(tool, r)+esRowHtml(r)+'</tbody></table>'+
           '<div class="rsp-tot">'+(milkBase(tool)>0
             ? 'Dihitung dari '+milkBase(tool)+' g kopi setara espresso.'
             : (tool==="v60" ? 'Atur dulu porsi dan rasio konsentratnya di atas.'
@@ -2069,11 +2109,13 @@
       '<p class="rsp-sub">'+(comp.length>1
         ? 'Semua bahan di bawah dipakai <b>bersamaan</b>. Porsinya sudah dibagi supaya total manisnya tetap seukuran level '+LV[st.level].cat.toLowerCase()+'.'
         : 'Satu bahan untuk menu ini, di level '+LV[st.level].cat.toLowerCase()+'.')+'</p>'+
-      '<table class="rsp-tbl"><thead><tr><th>Bahan</th><th>Takaran</th></tr></thead><tbody>'+rows+milkRowHtml(tool, r)+'</tbody></table>'+
+      '<table class="rsp-tbl"><thead><tr><th>Bahan</th><th>Takaran</th></tr></thead><tbody>'+rows+milkRowHtml(tool, r)+esRowHtml(r)+'</tbody></table>'+
       '<div class="rsp-tot">'+(base>0
         ? (perVolume(tool, r)
              ? 'Dihitung dari ±'+Math.round(base)+' ml isi gelas'+(tambahanMl(tool, r)>0
-                 ? ' — kopi ±'+Math.round(base-tambahanMl(tool, r))+' ml + air/susu ±'+Math.round(tambahanMl(tool, r))+' ml.'
+                 ? ' — kopi ±'+Math.round(base-tambahanMl(tool, r))+' ml + '
+                     +(r.es ? 'susu, air panas, dan lelehan es' : 'air/susu')
+                     +' ±'+Math.round(tambahanMl(tool, r))+' ml.'
                  : ' (air per gelas).')
                  +(tambahanMl(tool, r)>0 ? ' Manisnya mengikuti isi gelas, bukan cuma kopinya.' : '')
            : tool!=="v60" ? 'Dihitung dari '+base+' g kopi di gelas.'
@@ -2819,6 +2861,19 @@
            "Ulangi tarikannya 5–10 kali sampai permukaannya berbuih lembut dan suhunya sedikit turun.",
            "Tuang ke gelas saji bersama buihnya. Minum selagi hangat, atau tambahkan es batu untuk versi dingin."]},
 
+    {id:"es_teh_susu", nama:"Es Teh Susu", ic:"i-cup", jenis:"hitam",
+     sub:"Teh hitam pekat, susu UHT, dan SKM di atas es — porsi paling besar di panel ini.",
+     daun:7.4, teh:160, waktu:240000, waktuTxt:"4 menit", es:120,
+     bahan:[{t:"uht", min:120, max:120},{t:"skm", min:25, max:40}],
+     catatan:["Tehnya dibuat jauh lebih pekat daripada menu panas: 7,4 g (4 kantong teh celup) untuk 160 ml saja. Es yang mencair menambah ±30 ml air, dan susunya hampir separuh isi gelas — teh dengan kekuatan biasa akan hilang di sana.",
+              "SKM-nya lebih banyak daripada versi panas karena <b>dingin menumpulkan rasa manis</b>. Yang terasa pas saat masih hangat akan terasa hambar setelah diberi es.",
+              "Dinginkan tehnya dulu sebelum dituang ke es kalau sempat — teh panas langsung ke es melelehkan separuhnya sekaligus dan hasilnya encer.",
+              "Aduk SKM ke teh selagi masih panas, jangan setelah dingin. SKM sulit larut di cairan dingin dan akan mengendap di dasar gelas."],
+     saji:["Seduh tehnya sesuai angka di atas, lalu angkat kantong atau saring ampasnya.",
+           "Masukkan SKM selagi teh masih panas, aduk sampai benar-benar larut.",
+           "Diamkan sampai hangat kuku, lalu tuang ke gelas berisi es.",
+           "Tambahkan susu UHT dingin, aduk sebentar, sajikan."]},
+
     {id:"hitam_creamy", nama:"Creamy Milk Tea", ic:"i-cup", jenis:"hitam",
      sub:"Susu UHT untuk badan, SKM untuk manis dan kental.",
      daun:5, teh:170, waktu:240000, waktuTxt:"4 menit",
@@ -2928,7 +2983,8 @@
       var per=tAmt(b, lv);
       comp.push({t:b.t, per:per, tot:round(per*gel), tetap:b.min===b.max, min:b.min, max:b.max});
     });
-    return {menu:m, gelas:gel, level:lv, daun:daun, air:air, comp:comp};
+    return {menu:m, gelas:gel, level:lv, daun:daun, air:air, comp:comp,
+            es: m.es ? round(m.es*gel) : 0, esCair: m.es ? round(m.es*ES_CAIR*gel) : 0};
   }
 
   // ruang seduh lebih kecil daripada badan kacanya — itu yang membatasi jumlah gelas
@@ -2967,6 +3023,14 @@
              '</td></tr>';
     }).join("");
 
+    if(h.es>0){
+      rows += '<tr><td><span class="rsp-b">Es batu</span>'+
+        '<span class="rsp-x">pengisi gelas · ±'+h.esCair+' ml di antaranya mencair jadi air</span>'+
+        '<span class="rsp-x">ditimbang, atau isi gelas sampai ¾ penuh</span></td>'+
+        '<td><span class="rsp-n">'+h.es+' g</span>'+
+        (h.gelas>1 ? '<span class="rsp-x">'+m.es+' g'+perlbl+'</span>' : '')+'</td></tr>';
+    }
+
     var seduh = "";
     if(m.daun>0){
       var j = TJENIS[m.jenis] || TJENIS.melati;
@@ -2998,7 +3062,8 @@
         ? 'Tanpa teh — hangatkan susunya saja, jangan sampai mendidih.'
         : h.gelas>1
           ? 'Seduh sekali untuk '+h.gelas+' gelas, saring, baru dibagi rata. Angka kecil di kanan adalah takaran per gelas.'
-          : 'Angka besar dalam satuan alami tiap bahan, angka di bawahnya padanannya kalau alat takarmu beda.')+'</div>'+
+          : 'Angka besar dalam satuan alami tiap bahan, angka di bawahnya padanannya kalau alat takarmu beda.')
+        +(h.es>0 ? ' Tehnya sengaja dibuat lebih pekat karena ±'+h.esCair+' ml air dari es yang mencair ikut masuk ke gelas.' : '')+'</div>'+
       tips+'</div>';
   }
 
