@@ -1118,7 +1118,7 @@
       var pt={id:Date.now(), name:name, tool:"teh",
               resep:state.teh.resep, level:state.teh.level, gelas:tGelas()};
       var at=loadPresets(); at.unshift(pt); savePresets(at);
-      $("p-name").value=""; renderPresets(); toast("Preset disimpan");
+      $("p-name").value=""; renderPresets(); updateIoCount(); toast("Preset disimpan");
       return;
     }
     var st = state[tool] || state.tygo;
@@ -1139,7 +1139,7 @@
       gram: st.customG
     };
     var arr=loadPresets(); arr.unshift(p); savePresets(arr);
-    $("p-name").value=""; renderPresets();
+    $("p-name").value=""; renderPresets(); updateIoCount();
     toast("Preset disimpan");
   }
   function applyPreset(p){
@@ -1474,12 +1474,14 @@
           : null));
 
     var smlT = milkMl("tygo");
+    var esT = st.mode==="resep" ? (resepById("tygo", st.resep).es||0) : 0;
     var specs = "Dose "+dose+"g"+(press===2?" (2 puck)":"")+" · Yield "+yieldG+"g (1:"+ratio+") · "+press+"× press 8 bar"
       + (pemanis? " · "+pemanis.type+" ("+pemanis.label
           + (pemanis.unit ? " · "+valTxt(pemanis.val, pemanis.bahan, pemanis.unit)
                             + (pemanis.plus? " + "+pemanis.plus : "") : "")
           + " · "+pemanis.mode+")" : "")
-      + (smlT>0 ? " · Susu UHT "+smlT+" ml (≈ "+rnice(smlT*UHT_RHO)+" g)" : "");
+      + (smlT>0 ? " · Susu UHT "+smlT+" ml (≈ "+rnice(smlT*UHT_RHO)+" g)" : "")
+      + (esT>0 ? " · Es batu "+esT+" g" : "");
 
     var notes = loadNotes();
     notes.unshift({
@@ -1979,8 +1981,15 @@
     }
     if(r.susu){
       out.push({t:"Takaran Susu", ic:"i-cup", opt:true,
-                d:"Resep ini memakai susu UHT sebanyak "+r.susu+"× berat kopi — angkanya sudah dihitungkan di kartu Susu UHT. Hangatkan sampai hangat kuku saja, jangan mendidih.",
+                d: r.es
+                  ? "Resep ini memakai susu UHT sebanyak "+r.susu+"× berat kopi — angkanya sudah dihitungkan di kartu Susu UHT. Pakai <b>langsung dari kulkas</b>, jangan dihangatkan dan jangan dikocok: buih tidak bertahan di minuman dingin."
+                  : "Resep ini memakai susu UHT sebanyak "+r.susu+"× berat kopi — angkanya sudah dihitungkan di kartu Susu UHT. Hangatkan sampai hangat kuku saja, jangan mendidih.",
                 el: tool==="v60" ? "v-milkcard" : "t-milkcard", ok:null});
+    }
+    if(r.es){
+      out.push({t:"Siapkan Es", ic:"i-droplet", opt:true,
+                d:"Isi gelas dengan <b>±"+r.es+" g es batu</b>, kira-kira ¾ penuh. Sekitar "+esCairMl(r)+" ml di antaranya akan mencair jadi air — itu sudah ikut diperhitungkan di takarannya, jadi jangan dikurangi dengan alasan takut encer.",
+                el: tool==="teh" ? "th-out" : RBOX[tool], ok:null});
     }
     (r.saji||[]).forEach(function(txt, i){
       out.push({t:"Penyajian"+((r.saji.length>1)?" "+(i+1):""), ic:"i-coffee",
@@ -2580,12 +2589,14 @@
           ? {label:"Kustom", val:round(state.v60.customG), unit:unit, mode:"manual", type:PEM_LABEL(t), bahan:t}
           : null));
     var smlV = milkMl("v60");
+    var esV = state.v60.mode==="resep" ? (resepById("v60", state.v60.resep).es||0) : 0;
     var specs = "Dose "+bubuk+"g · Air "+total+"g / "+total+" ml (1:"+rasio+")"
       + (pemanis? " · "+pemanis.type+" ("+pemanis.label
           + (pemanis.unit ? " · "+valTxt(pemanis.val, pemanis.bahan, pemanis.unit)
                             + (pemanis.plus? " + "+pemanis.plus : "") : "")
           + " · "+pemanis.mode+")" : "")
-      + (smlV>0 ? " · Susu UHT "+smlV+" ml (≈ "+rnice(smlV*UHT_RHO)+" g)" : "");
+      + (smlV>0 ? " · Susu UHT "+smlV+" ml (≈ "+rnice(smlV*UHT_RHO)+" g)" : "")
+      + (esV>0 ? " · Es batu "+esV+" g" : "");
     var notes = loadNotes();
     notes.unshift({
       id: "n"+notes.length+"_"+ (notes[0]?(parseInt(notes[0].id.split("_")[1]||"0",10)+1):1),
@@ -2614,7 +2625,7 @@
 
   // ---------- events ----------
   ["t-wadah0","t-sendok0","t-gelas0"].forEach(function(id){
-    $(id).addEventListener("input", function(){ saveCalib(); calibStatus(); calcTygo(); });
+    $(id).addEventListener("input", function(){ saveCalib(); calibStatus(); updateIoCount(); calcTygo(); });
   });
   $("t-sendok1").addEventListener("input", calcTygo);
   $("t-gelas1").addEventListener("input", function(){ calcTygo(); renderSaveCard(); });
@@ -2657,7 +2668,7 @@
     if(pd){
       if(confirm("Hapus preset ini?")){
         savePresets(loadPresets().filter(function(x){ return String(x.id)!==pd.getAttribute("data-pd"); }));
-        renderPresets(); toast("Preset dihapus");
+        renderPresets(); updateIoCount(); toast("Preset dihapus");
       }
     }
   });
@@ -3146,7 +3157,8 @@
     var specs = m.nama+" · "+h.gelas+" gelas · level "+TLEVEL[h.level].cat
       + (m.daun>0 ? " · "+(TJENIS[m.jenis]||TJENIS.melati).pendek+" "+h.daun+" g / air "+h.air+" ml · seduh "+thFmt(THT.target)
                     +" · hasil "+m.teh+" ml/gelas" : "")
-      + (bahanTxt ? " · "+bahanTxt : "");
+      + (bahanTxt ? " · "+bahanTxt : "")
+      + (h.es>0 ? " · Es batu "+h.es+" g" : "");
     var notes = loadNotes();
     notes.unshift({
       id: "n"+notes.length+"_"+ (notes[0]?(parseInt(notes[0].id.split("_")[1]||"0",10)+1):1),
