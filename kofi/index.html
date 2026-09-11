@@ -753,7 +753,8 @@
           <div class="chip" data-cara="saringan"><svg class="ic"><use href="#i-droplet"/></svg> Saringan kain</div>
           <div class="chip" data-cara="rebus"><svg class="ic"><use href="#i-leaf"/></svg> Rebus di teko listrik</div>
         </div>
-        <p class="hint" id="th-cara-note" style="margin:8px 0 0;font-size:12.5px"></p>
+        <p class="hint" id="th-cara-saran" style="margin:8px 0 0;font-size:12.5px"></p>
+        <p class="hint" id="th-cara-note" style="margin:6px 0 0;font-size:12.5px"></p>
       </div>
       <div class="field" id="th-kap-field">
         <label>Kapasitas ruang seduh teko</label>
@@ -2006,6 +2007,13 @@
     if(tool==="teh" && !r.daun) out = out.filter(function(x){ return !x.tehOnly; });
     // suhunya beda per jenis teh — melati rusak kalau kena air mendidih, teh
     // hitam justru butuh air paling panas. Langkahnya ikut menu, bukan hardcode.
+    if(tool==="teh" && r.daun) out = out.map(function(st){
+      if(st.t!=="Atur Porsi & Manis") return st;
+      var sr = tSaran(r), pilih = state.teh.cara||"otc";
+      return {t:st.t, ic:st.ic, el:st.el, ok:st.ok, msg:st.msg,
+        d: st.d+" Menu ini paling cocok pakai <b>"+TCARA[sr.cara].label+"</b>"
+          +(sr.cara!==pilih ? " — sekarang terpilih "+TCARA[pilih].label+"; ganti dulu di kartu Takaran kalau mau mengikuti saran." : ", dan itu yang sedang terpilih.")};
+    });
     if(tool==="teh" && r.daun && tCara(r)!=="otc"){
       var j0 = TJENIS[r.jenis] || TJENIS.melati, hitam = r.jenis==="hitam";
       var langkah = tCara(r)==="saringan" ? [
@@ -2930,6 +2938,20 @@
     rebus:    {label:"Rebus di teko listrik",
                note:"Teh direbus bersama airnya — badan paling tebal, paling mendekati teh tarik mamak. Khusus teh hitam. Pakai kantong teh, bukan daun lepas, dan jangan pernah memasukkan susu ke teko listrik."}
   };
+  // Cara seduh yang disarankan tiap menu. Diturunkan dari sifat tehnya, dan
+  // menu boleh menetapkan sendiri lewat field saran (teh tarik: rebus).
+  function tSaran(m){
+    if(!m || !m.daun) return null;
+    var susu = m.bahan.some(function(b){ return b.t==="uht" || b.t==="skm" || b.t==="evap"; });
+    var c = m.saran || (m.jenis==="melati" ? "otc" : (m.es || susu) ? "saringan" : "otc");
+    var alasan =
+        c==="rebus" ? "Direbus bersama airnya, air bertahan di titik didih dan terus bergolak — tanin dan badan tehnya keluar paling banyak dan paling tahan dilawan susu kental manis. Itu cara kedai mamak."
+      : c==="saringan" && m.es ? "Teh untuk minuman es harus sangat pekat. Menuang bolak-balik lewat saringan kain — cara cha yen Thailand — menarik badan tanpa merebus, dan airnya cuma sedikit, di bawah garis MIN kebanyakan teko listrik."
+      : c==="saringan" ? "Milk tea butuh badan tebal. Menuang bolak-balik lewat saringan kain — cara milk tea Hong Kong — menarik lebih banyak badan daripada didiamkan, dan tidak terganjal ruang seduh 190 ml."
+      : m.jenis==="melati" ? "Melati butuh 85–90 °C dan waktu yang pas. Ruang seduh One Two Cups tertutup sehingga aromanya tidak menguap, dan tombolnya menghentikan seduhan tepat waktu sebelum berubah sepat. Dituang bolak-balik lewat kain justru membuang aromanya."
+      : "Teh hitam polos cepat pahit kalau kelewat. Tombol One Two Cups menghentikan seduhan tepat waktu, dan tanpa susu, badan setebal cara rebus tidak dibutuhkan.";
+    return {cara:c, alasan:alasan};
+  }
   function tCara(m){
     var c = TCARA[state.teh.cara] ? state.teh.cara : "otc";
     return (c==="rebus" && m && m.jenis!=="hitam") ? "saringan" : c;
@@ -3014,7 +3036,7 @@
      bahan:[{t:"uht", min:95, max:95},{t:"sirup", min:12, max:18}],
      saji:["Tuang tehnya ke gelas, masukkan susu UHT dan sirup gula. Aduk rata, sajikan hangat."]},
 
-    {id:"teh_tarik", nama:"Teh Tarik Malaysia", ic:"i-cup", jenis:"hitam", top:true,
+    {id:"teh_tarik", nama:"Teh Tarik Malaysia", ic:"i-cup", jenis:"hitam", top:true, saran:"rebus",
      sub:"Teh hitam pekat + susu kental manis, ditarik bolak-balik antara dua gelas sampai berbuih — cara kedai mamak.",
      daun:7.4, teh:220, waktu:240000, waktuTxt:"3–5 menit",
      bahan:[{t:"skm", min:45, max:58},{t:"evap", min:15, max:15}],
@@ -3136,7 +3158,17 @@
     document.querySelectorAll("#th-cara .chip").forEach(function(x){
       x.classList.toggle("active", x.getAttribute("data-cara")===c);
     });
-    $("th-cara-note").textContent = TCARA[c].note;
+    var sr = tSaran(m);
+    document.querySelectorAll("#th-cara .th-star").forEach(function(x){ x.remove(); });
+    if(sr){
+      var chip = document.querySelector('#th-cara .chip[data-cara="'+sr.cara+'"]');
+      chip.insertAdjacentHTML("beforeend", '<span class="th-star">disarankan</span>');
+      $("th-cara-saran").innerHTML = '<b>Disarankan untuk '+escapeHtml(m.nama)+': '+TCARA[sr.cara].label+'.</b> '+sr.alasan
+        + (sr.cara!==c ? ' Ketuk chip bertanda <b>disarankan</b> untuk mengikutinya.' : '');
+    }else{
+      $("th-cara-saran").innerHTML = escapeHtml(m.nama)+' tidak memakai teh, jadi cara seduh tidak berpengaruh.';
+    }
+    $("th-cara-note").innerHTML = '<b>'+TCARA[c].label+':</b> '+TCARA[c].note;
     // kapasitas ruang seduh cuma berarti untuk One Two Cups
     $("th-kap-field").style.display = tCara(m)==="otc" ? "" : "none";
   }
