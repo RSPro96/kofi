@@ -316,13 +316,13 @@
     </div>
     <p class="tagline">“Karena Kopi Nikmat Adalah Hak Setiap Umat”</p>
     <h1>RSPro <span>— Racik Kopi</span></h1>
-    <p class="sub">Panduan &amp; kalkulator seduh: Tygopresso (espresso/sanger), V60 Cone, dan Teh</p>
+    <p class="sub">Panduan &amp; kalkulator seduh: Tygopresso (espresso/sanger), V60 Cone, serta teh &amp; minuman lain</p>
   </header>
 
   <div class="tabs" id="tabs">
     <button class="tab active" data-panel="tygo"><svg class="ic"><use href="#i-cup"/></svg> Tygopresso</button>
     <button class="tab" data-panel="v60"><svg class="ic"><use href="#i-droplet"/></svg> V60 Cone</button>
-    <button class="tab" data-panel="teh"><svg class="ic"><use href="#i-leaf"/></svg> Teh</button>
+    <button class="tab" data-panel="teh"><svg class="ic"><use href="#i-leaf"/></svg> Teh &amp; Lainnya</button>
   </div>
 
   <section id="panel-tygo" class="panel">
@@ -683,7 +683,7 @@
     <details class="edu">
       <summary><svg class="ic"><use href="#i-leaf"/></svg> Cara seduh teh <svg class="ic caret"><use href="#i-chevron"/></svg></summary>
       <div class="body">
-        <p>Panel ini memuat empat golongan: <b>teh melati</b>, <b>teh hitam</b>, <b>Thai tea</b> (ChaTraMue), dan satu menu tanpa teh sama sekali. Semuanya berangkat dari <b>satu seduhan dasar</b>: daun diseduh air panas, didiamkan <b>3&ndash;5 menit</b>, lalu <b>disaring</b>. Untuk menu bersusu, tehnya sengaja dibuat lebih pekat supaya rasanya tidak tenggelam di balik susu. Semua takaran di sini dihitung untuk <b>satu gelas penuh, sekitar 270&ndash;300 ml jadi</b> &mdash; bukan gelas kecil.</p>
+        <p>Panel ini memuat teh — <b>melati</b>, <b>hitam</b>, dan <b>Thai tea</b> (ChaTraMue) — plus minuman tanpa kopi dan teh: susu &amp; coklat, jahe &amp; rempah, dan minuman segar. Bagian ini soal tehnya; minuman lain punya langkahnya sendiri di Pandu Langkah. Semua teh berangkat dari <b>satu seduhan dasar</b>: daun diseduh air panas, didiamkan <b>3&ndash;5 menit</b>, lalu <b>disaring</b>. Untuk menu bersusu, tehnya sengaja dibuat lebih pekat supaya rasanya tidak tenggelam di balik susu. Semua takaran di sini dihitung untuk <b>satu gelas penuh, sekitar 270&ndash;300 ml jadi</b> &mdash; bukan gelas kecil.</p>
         <ol>
           <li><b>Teh biasa</b> (tanpa susu) &mdash; 3,5&ndash;4 g daun untuk ±260 ml teh jadi, lalu tinggal ditambah sirup sampai segelas penuh.</li>
           <li><b>Teh pekat</b> (untuk menu bersusu) &mdash; 5 g daun untuk ±160&ndash;180 ml teh jadi; sisanya diisi susu.</li>
@@ -726,7 +726,7 @@
 
     <div class="card">
       <h2>Pilih Menu</h2>
-      <p class="hint">Enam belas menu dari bahan yang ada, semuanya ditakar untuk satu gelas penuh (±270&ndash;300 ml). Semua takaran di bawah langsung menyesuaikan menu, jumlah gelas, dan level manis.</p>
+      <p class="hint">Dua puluh sembilan menu — teh dan minuman lain tanpa kopi — semuanya ditakar untuk satu gelas penuh (±250&ndash;300 ml). Beberapa bahannya belum tentu ada di dapurmu; lihat daftar bahan di tiap menu. Semua takaran di bawah langsung menyesuaikan menu, jumlah gelas, dan level manis.</p>
       <div class="g-drinks rsp-menu" id="th-menu"></div>
     </div>
 
@@ -866,7 +866,7 @@
 <nav class="botnav" id="botnav">
   <button class="navitem active" data-panel="tygo"><svg class="ic"><use href="#i-cup"/></svg> Tygopresso</button>
   <button class="navitem" data-panel="v60"><svg class="ic"><use href="#i-droplet"/></svg> V60 Cone</button>
-  <button class="navitem" data-panel="teh"><svg class="ic"><use href="#i-leaf"/></svg> Teh</button>
+  <button class="navitem" data-panel="teh"><svg class="ic"><use href="#i-leaf"/></svg> Teh &amp; Lainnya</button>
 </nav>
 
 <!-- ===== MODAL PILIH CARA PAKAI ===== -->
@@ -887,7 +887,7 @@
       </button>
       <button type="button" class="g-pickcard wide" data-tool="teh">
         <span class="g-pickicon"><svg class="ic"><use href="#i-leaf"/></svg></span>
-        <span class="g-pickname"><svg class="ic"><use href="#i-leaf"/></svg> Teh &mdash; tanpa alat kopi</span>
+        <span class="g-pickname"><svg class="ic"><use href="#i-leaf"/></svg> Teh &amp; Lainnya &mdash; tanpa alat kopi</span>
       </button>
     </div>
     <div id="g-pickhint" class="g-pickhint">Cek foto alatmu di atas.</div>
@@ -1562,7 +1562,7 @@
   // label di daftar Catatan Rasa; kuncinya ikut field "drink" tiap catatan.
   // Namanya harus sama dengan nama panelnya — catatan V60 sempat terbaca
   // "Seduh Manual" padahal panelnya "V60 Cone".
-  var DLABEL = {tygo:"Tygopresso", brew:"V60 Cone", teh:"Teh"};
+  var DLABEL = {tygo:"Tygopresso", brew:"V60 Cone", teh:"Teh & Lainnya"};
 
   function renderLog(){
     var list=$("loglist"); list.innerHTML="";
@@ -2007,6 +2007,11 @@
     if(tool==="teh" && !r.daun) out = out.filter(function(x){ return !x.tehOnly; });
     // suhunya beda per jenis teh — melati rusak kalau kena air mendidih, teh
     // hitam justru butuh air paling panas. Langkahnya ikut menu, bukan hardcode.
+    if(tool==="teh" && !r.daun) out = out.map(function(st){
+      if(st.t!=="Atur Porsi & Manis") return st;
+      return {t:st.t, ic:st.ic, el:st.el, ok:st.ok, msg:st.msg,
+        d:"Tentukan jumlah gelas dan level manisnya di kartu Takaran. Untuk percobaan pertama pakai level Ringan — menambah manis gampang, menguranginya tidak bisa."};
+    });
     if(tool==="teh" && r.daun) out = out.map(function(st){
       if(st.t!=="Atur Porsi & Manis") return st;
       var sr = tSaran(r), pilih = state.teh.cara||"otc";
@@ -2907,7 +2912,7 @@
   });
 
   // ================= PANEL TEH =================
-  var TOOLNAMA = {tygo:"Tygopresso", v60:"V60 Cone", teh:"Teh"};
+  var TOOLNAMA = {tygo:"Tygopresso", v60:"V60 Cone", teh:"Teh & Lainnya"};
 
   // Massa jenis tiap bahan, dipakai untuk bolak-balik gram <-> ml.
   // base = satuan yang paling masuk akal dipakai saat menakar bahan itu.
@@ -2917,7 +2922,21 @@
     evap:   {label:"Susu evaporasi",           rho:1.07, base:"ml"},
     skm:    {label:"Susu kental manis",        rho:1.29, base:"g"},
     sirup:  {label:"Sirup gula 1:1",           rho:1.23, base:"ml"},
-    vanila: {label:"Sirup vanilla",            rho:1.32, base:"ml"}
+    vanila: {label:"Sirup vanilla",            rho:1.32, base:"ml"},
+    air:    {label:"Air panas",                rho:1.00, base:"ml"},
+    soda:   {label:"Air soda dingin",          rho:1.00, base:"ml"},
+    madu:   {label:"Madu",                     rho:1.42, base:"ml"},
+    lemon:  {label:"Air perasan lemon",        rho:1.03, base:"ml"},
+    sirup_stroberi: {label:"Sirup stroberi",   rho:1.30, base:"ml"},
+    sirup_merah:    {label:"Sirup merah (cocopandan/frambozen)", rho:1.30, base:"ml"},
+    coklat: {label:"Coklat bubuk tanpa gula (kakao)", rho:1, base:"g", bubuk:true, sd:{n:"sdm", g:7}},
+    gula:   {label:"Gula pasir",               rho:1, base:"g", bubuk:true, sd:{n:"sdm", g:12.7}},
+    gula_aren: {label:"Gula aren sisir",       rho:1, base:"g", bubuk:true, sd:{n:"sdm", g:12}},
+    milo:   {label:"Milo bubuk",               rho:1, base:"g", bubuk:true, sd:{n:"sdm", g:8}},
+    red_velvet: {label:"Bubuk red velvet (premix)", rho:1, base:"g", bubuk:true, sd:{n:"sdm", g:10}},
+    taro:   {label:"Bubuk taro (premix)",      rho:1, base:"g", bubuk:true, sd:{n:"sdm", g:10}},
+    kunyit: {label:"Kunyit bubuk",             rho:1, base:"g", bubuk:true, sd:{n:"sdt", g:3}},
+    jahe:   {label:"Jahe segar",               rho:1, base:"g", bubuk:true, sd:{n:"ruas ibu jari", g:15}}
   };
   var SERAP = 2.5;   // ml air yang ditahan tiap gram daun teh, tidak ikut keluar
   var KANTONG_G = 1.85;
@@ -2964,7 +2983,7 @@
     return (c==="rebus" && m && m.jenis!=="hitam") ? "saringan" : c;
   }
   var TLEVEL = [
-    {cat:"Ringan", sub:"batas bawah rentang, rasa tehnya paling depan"},
+    {cat:"Ringan", sub:"batas bawah rentang, manisnya paling ringan"},
     {cat:"Sedang", sub:"tengah rentang, seimbang"},
     {cat:"Manis",  sub:"batas atas rentang, manis mantap"}
   ];
@@ -3116,12 +3135,144 @@
            "Diamkan sampai hangat kuku, lalu tuang ke gelas berisi es. Teh yang masih panas melelehkan separuh esnya sekaligus.",
            "Tuang susu evaporasi pelan-pelan di atasnya, jangan diaduk dulu — biarkan berlapis. Aduk sebelum diminum."]},
 
-    {id:"susu_vanila", nama:"Susu Vanilla Hangat", ic:"i-droplet",
-     sub:"Pilihan tanpa teh sama sekali — untuk yang sedang tidak mau kafein.",
+    {id:"susu_vanila", nama:"Susu Vanilla Hangat", ic:"i-droplet", jenis:"susu",
+     sub:"Susu hangat beraroma vanilla — untuk yang sedang tidak mau kafein.",
      daun:0, teh:0,
      bahan:[{t:"uht", min:260, max:260},{t:"vanila", min:12, max:18}],
-     saji:["Hangatkan susu pelan-pelan, jangan sampai mendidih — susu yang mendidih berubah rasanya dan berkulit.",
-           "Angkat, masukkan sirup vanilla, aduk rata."]}
+     saji:["Hangatkan susu UHT sampai hangat kuku — di panci kecil, microwave, atau pemanas susu. Jangan di teko listrik. Susu yang mendidih berubah rasa dan berkulit.",
+           "Angkat, masukkan sirup vanilla, aduk rata."]},
+
+    {id:"coklat_panas", nama:"Coklat Panas", ic:"i-cup", jenis:"susu", top:true,
+     sub:"Kakao, gula, dan susu UHT hangat dikocok sampai berbuih. Paling boros susu di golongan ini.",
+     daun:0, teh:0,
+     bahan:[{t:"coklat", min:15, max:15},{t:"gula", min:15, max:30},{t:"air", min:20, max:20},{t:"uht", min:250, max:250}],
+     catatan:["Pakai <b>coklat bubuk tanpa gula</b> (kakao murni, mis. Van Houten atau Tulip). Kalau yang dibeli minuman coklat instan yang sudah manis, mulai dari gula 0 dan cicipi.",
+              "<b>Jadikan pasta dulu, baru susu.</b> Kakao tidak mau larut di susu — dituang langsung, dia menggumpal dan mengambang. 20 ml air panas cukup untuk melarutkannya.",
+              "Jangan hangatkan susu di teko listrik: susu yang gosong di elemen hampir mustahil dibersihkan."],
+     saji:["Campur coklat bubuk dan gula di gelas, tuang 20 ml air panas dari teko, aduk sampai jadi pasta halus tanpa gumpalan.",
+           "Hangatkan susu UHT sampai hangat kuku — di panci kecil, microwave, atau pemanas susu. Jangan di teko listrik.",
+           "Tuang susu sedikit demi sedikit ke pasta sambil diaduk, lalu kocok dengan pengocok listrik sampai berbuih."]},
+
+    {id:"es_coklat", nama:"Es Coklat", ic:"i-cup", jenis:"susu", es:120,
+     sub:"Versi dingin coklat panas: pasta kakao, susu UHT dingin, dan es.",
+     daun:0, teh:0,
+     bahan:[{t:"coklat", min:15, max:15},{t:"gula", min:20, max:35},{t:"air", min:20, max:20},{t:"uht", min:200, max:200}],
+     catatan:["Gulanya lebih banyak dari coklat panas karena <b>dingin menumpulkan rasa manis</b>. Gula tetap dilarutkan di air panas dulu — gula pasir tidak larut di susu dingin.",
+              "Pakai coklat bubuk tanpa gula; kalau pakai minuman coklat instan, mulai dari gula 0."],
+     saji:["Campur coklat bubuk dan gula di gelas, tuang 20 ml air panas, aduk sampai jadi pasta halus dan gulanya larut.",
+           "Isi gelas dengan es, lalu tuang susu UHT dingin langsung dari kulkas.",
+           "Aduk atau kocok sebentar sampai warnanya rata, sajikan."]},
+
+    {id:"milo_panas", nama:"Milo Panas", ic:"i-cup", jenis:"susu",
+     sub:"Milo diseduh dengan susu UHT, bukan air — lebih kental dan lebih coklat.",
+     daun:0, teh:0,
+     bahan:[{t:"milo", min:20, max:35},{t:"air", min:30, max:30},{t:"uht", min:220, max:220}],
+     catatan:["Milo sudah manis dan mengandung malt, jadi level manis di sini mengatur <b>jumlah Milo-nya</b>, bukan gula tambahan.",
+              "Larutkan di sedikit air panas dulu, sama seperti kakao — butiran Milo menggumpal kalau langsung dituang ke susu."],
+     saji:["Tuang Milo ke gelas, tambahkan 30 ml air panas dari teko, aduk sampai larut.",
+           "Hangatkan susu UHT sampai hangat kuku — di panci kecil, microwave, atau pemanas susu. Jangan di teko listrik.",
+           "Tuang susu ke Milo sambil diaduk. Kocok sebentar dengan pengocok listrik kalau mau berbuih."]},
+
+    {id:"susu_madu", nama:"Susu Madu Hangat", ic:"i-droplet", jenis:"susu",
+     sub:"Susu UHT hangat dengan madu — sederhana, enak sebelum tidur.",
+     daun:0, teh:0,
+     bahan:[{t:"uht", min:260, max:260},{t:"madu", min:10, max:20}],
+     catatan:["Masukkan madu setelah susunya hangat kuku, bukan saat masih panas — aroma madu hilang kena panas tinggi.",
+              "Madu lebih manis per sendoknya daripada gula pasir; mulai dari level Ringan."],
+     saji:["Hangatkan susu UHT sampai hangat kuku — di panci kecil, microwave, atau pemanas susu. Jangan di teko listrik.",
+           "Angkat, masukkan madu, aduk sampai larut."]},
+
+    {id:"susu_stroberi", nama:"Susu Stroberi", ic:"i-droplet", jenis:"susu",
+     sub:"Susu UHT dingin dengan sirup stroberi — tanpa es, tanpa memanaskan apa pun.",
+     daun:0, teh:0,
+     bahan:[{t:"sirup_stroberi", min:20, max:35},{t:"uht", min:240, max:240}],
+     catatan:["Pakai susu langsung dari kulkas. Sirup stroberi (Marjan, ABC, atau sejenisnya) sudah manis dan berwarna, jadi tidak perlu gula lagi.",
+              "Kalau suatu saat ada es, tambahkan segenggam — takarannya tetap."],
+     saji:["Tuang sirup stroberi ke gelas, lalu susu UHT dingin.",
+           "Kocok dengan pengocok listrik atau aduk sampai warnanya rata merah muda."]},
+
+    {id:"red_velvet", nama:"Red Velvet Latte", ic:"i-cup", jenis:"susu",
+     sub:"Minuman kekinian dari bubuk red velvet dan susu UHT hangat.",
+     daun:0, teh:0,
+     bahan:[{t:"red_velvet", min:25, max:35},{t:"air", min:30, max:30},{t:"uht", min:220, max:220}],
+     catatan:["Bubuk red velvet untuk minuman umumnya <b>premix</b>: sudah berisi gula dan krimer. Level manis di sini mengatur jumlah bubuknya, bukan gula tambahan. Cek petunjuk di kemasannya — kalau takarannya beda jauh, kabari.",
+              "Larutkan di air panas dulu supaya tidak menggumpal."],
+     saji:["Tuang bubuk red velvet ke gelas, tambahkan 30 ml air panas, aduk sampai larut.",
+           "Hangatkan susu UHT sampai hangat kuku — di panci kecil, microwave, atau pemanas susu. Jangan di teko listrik.",
+           "Tuang susu sambil diaduk, lalu kocok dengan pengocok listrik sampai berbuih."]},
+
+    {id:"taro_latte", nama:"Taro Latte", ic:"i-cup", jenis:"susu",
+     sub:"Minuman ungu rasa talas dari bubuk taro dan susu UHT hangat.",
+     daun:0, teh:0,
+     bahan:[{t:"taro", min:25, max:35},{t:"air", min:30, max:30},{t:"uht", min:220, max:220}],
+     catatan:["Sama seperti red velvet, bubuk taro umumnya <b>premix</b> yang sudah manis dan berkrimer — level manis mengatur jumlah bubuknya. Cek petunjuk di kemasannya.",
+              "Larutkan di air panas dulu supaya tidak menggumpal."],
+     saji:["Tuang bubuk taro ke gelas, tambahkan 30 ml air panas, aduk sampai larut.",
+           "Hangatkan susu UHT sampai hangat kuku — di panci kecil, microwave, atau pemanas susu. Jangan di teko listrik.",
+           "Tuang susu sambil diaduk, lalu kocok dengan pengocok listrik sampai berbuih."]},
+
+    {id:"wedang_jahe", nama:"Wedang Jahe", ic:"i-droplet", jenis:"rempah", top:true,
+     sub:"Jahe geprek diseduh air mendidih dengan gula aren — penghangat badan klasik.",
+     daun:0, teh:0,
+     bahan:[{t:"jahe", min:20, max:20},{t:"air", min:260, max:260},{t:"gula_aren", min:15, max:25}],
+     catatan:["<b>Jangan rebus jahe di teko listrik</b> — seratnya menempel di elemen dan menyumbat cerat. Seduh saja di gelas tahan panas atau badan kaca One Two Cups dengan air baru mendidih, lalu saring.",
+              "Geprek atau iris tipis jahenya supaya sarinya keluar. Kalau ada kompor, bakar jahenya sebentar dulu — rasanya lebih wangi dan tidak terlalu pedas.",
+              "Sebatang serai geprek atau selembar daun pandan membuatnya lebih harum."],
+     saji:["Kupas dan geprek jahe, masukkan ke gelas tahan panas atau badan kaca One Two Cups.",
+           "Tuang air baru mendidih, tutup, rendam 10 menit.",
+           "Saring ke gelas saji, masukkan gula aren, aduk sampai larut."]},
+
+    {id:"susu_jahe", nama:"Susu Jahe", ic:"i-cup", jenis:"rempah",
+     sub:"Seduhan jahe pekat dicampur susu UHT dan susu kental manis — hangat, pedas lembut.",
+     daun:0, teh:0,
+     bahan:[{t:"jahe", min:15, max:15},{t:"air", min:80, max:80},{t:"uht", min:180, max:180},{t:"skm", min:20, max:35}],
+     catatan:["Jahenya diseduh dengan sedikit air supaya pekat — nanti diencerkan susu. 80 ml muat di ruang seduh One Two Cups.",
+              "Pakai <b>air seduhan jahe, bukan perasan jahe mentah</b>. Perasan jahe mentah mengandung enzim yang bisa membuat susu hangat menggumpal; air mendidih mematikan enzimnya."],
+     saji:["Geprek jahe, seduh dengan 80 ml air mendidih di gelas atau ruang seduh One Two Cups, rendam 10 menit, lalu saring.",
+           "Masukkan SKM ke seduhan jahe yang masih panas, aduk sampai larut.",
+           "Hangatkan susu UHT sampai hangat kuku — di panci kecil, microwave, atau pemanas susu. Jangan di teko listrik.",
+           "Tuang susu ke campuran jahe, kocok sebentar sampai berbuih."]},
+
+    {id:"bandrek_susu", nama:"Bandrek Susu", ic:"i-cup", jenis:"rempah",
+     sub:"Minuman rempah Sunda: jahe, gula aren, kayu manis, dan cengkeh, disusui.",
+     daun:0, teh:0,
+     bahan:[{t:"jahe", min:20, max:20},{t:"air", min:160, max:160},{t:"gula_aren", min:15, max:25},{t:"uht", min:120, max:120}],
+     catatan:["Rempah pelengkapnya: 1 batang kayu manis kecil, 2–3 butir cengkeh, dan sebatang serai kalau ada — diseduh bersama jahenya.",
+              "Bandrek aslinya direbus lama di panci. Tanpa kompor, rendam rempahnya lebih lama — 15 menit — di gelas tertutup."],
+     saji:["Geprek jahe dan serai, masukkan ke gelas tahan panas bersama kayu manis dan cengkeh.",
+           "Tuang 160 ml air baru mendidih, tutup, rendam 15 menit, lalu saring.",
+           "Masukkan gula aren selagi panas, aduk sampai larut.",
+           "Hangatkan susu UHT sampai hangat kuku — di panci kecil, microwave, atau pemanas susu. Jangan di teko listrik. Tuang ke bandreknya, aduk."]},
+
+    {id:"golden_milk", nama:"Golden Milk (Susu Kunyit)", ic:"i-droplet", jenis:"rempah",
+     sub:"Susu UHT hangat dengan kunyit, sejumput lada, dan madu.",
+     daun:0, teh:0,
+     bahan:[{t:"kunyit", min:2, max:2},{t:"uht", min:250, max:250},{t:"madu", min:10, max:20}],
+     catatan:["Tambahkan <b>sejumput lada hitam</b>: kurkumin di kunyit sulit diserap tubuh sendirian, dan lada membantunya. Sejumput kayu manis bubuk juga cocok.",
+              "Kunyit menodai kuning — kepala pengocok listrik bisa berbekas. Bilas segera.",
+              "Madu masuk terakhir, setelah susunya tidak terlalu panas."],
+     saji:["Larutkan kunyit bubuk (plus lada dan kayu manis) dengan sesendok susu jadi pasta.",
+           "Hangatkan susu UHT sampai hangat kuku — di panci kecil, microwave, atau pemanas susu. Jangan di teko listrik.",
+           "Tuang sisa susu ke pasta sambil diaduk, kocok sampai rata, lalu masukkan madu."]},
+
+    {id:"honey_lemon", nama:"Honey Lemon Hangat", ic:"i-droplet", jenis:"segar",
+     sub:"Air hangat, perasan lemon, dan madu — segar, tanpa susu.",
+     daun:0, teh:0,
+     bahan:[{t:"lemon", min:20, max:20},{t:"madu", min:15, max:30},{t:"air", min:250, max:250}],
+     catatan:["Pakai air <b>hangat, bukan mendidih</b> — diamkan air dari teko 3–5 menit dulu. Air mendidih merusak aroma madu dan membuat lemon terasa pahit.",
+              "Satu buah lemon biasanya menghasilkan 30–40 ml air perasan. Jeruk nipis bisa jadi pengganti; mulai dari 15 ml karena lebih asam."],
+     saji:["Diamkan air panas dari teko 3–5 menit sampai hangat.",
+           "Masukkan madu dan perasan lemon ke gelas, tuang air hangatnya, aduk sampai madu larut."]},
+
+    {id:"soda_gembira", nama:"Soda Gembira", ic:"i-droplet", jenis:"segar", es:120,
+     sub:"Klasik Indonesia: sirup merah, susu kental manis, dan air soda di atas es.",
+     daun:0, teh:0,
+     bahan:[{t:"sirup_merah", min:25, max:35},{t:"skm", min:25, max:25},{t:"soda", min:200, max:200}],
+     catatan:["Susunan lapisannya yang membuatnya \"gembira\": sirup di dasar, SKM di tengah, es, lalu soda dituang pelan. Aduk di depan yang minum.",
+              "Soda harus <b>dingin dan baru dibuka</b> — soda yang sudah kempis tidak memberi buih."],
+     saji:["Tuang sirup merah ke dasar gelas, lalu SKM pelan-pelan di atasnya.",
+           "Isi es sampai hampir penuh.",
+           "Tuang air soda dingin pelan-pelan lewat dinding gelas supaya lapisannya terjaga dan buihnya tidak meluap."]}
   ];
   RESEP.teh = TMENU;
 
@@ -3158,13 +3309,22 @@
     if(ml<=200) return "gelas ukur 100 ml 2× isi, atau timbang "+Math.round(gr)+" g";
     return "paling gampang ditimbang: "+Math.round(gr)+" g";
   }
+  // padanan sendok untuk bubuk, dibulatkan ke setengah — perkiraan saja
+  function sendokTxt(key, g){
+    var b=TB[key];
+    if(!b.sd) return "ditimbang";
+    var n=Math.round(g/b.sd.g*2)/2, w=Math.floor(n), h=(n-w)>=0.5;
+    return "± "+((w ? w : "")+(h ? "½" : "") || "½")+" "+b.sd.n+" · lebih akurat ditimbang";
+  }
   function tPair(v, key){
     var b=TB[key];
+    if(b.bubuk) return {utama:rnice(v)+" g", lain:null};
     if(b.base==="ml") return {utama:rnice(v)+" ml", lain:b.rho===1 ? null : rnice(v*b.rho)+" g"};
     return {utama:rnice(v)+" g", lain:b.rho===1 ? null : rnice(v/b.rho)+" ml"};
   }
 
-  var TGRUP = {melati:"Teh Melati", hitam:"Teh Hitam", thai:"Thai Tea — ChaTraMue", "":"Tanpa teh"};
+  var TGRUP = {melati:"Teh Melati", hitam:"Teh Hitam", thai:"Thai Tea — ChaTraMue",
+               susu:"Susu & Coklat — tanpa kopi & teh", rempah:"Jahe & Rempah", segar:"Segar", "":"Tanpa teh"};
   function renderTehMenu(){
     var box=$("th-menu"); box.innerHTML="";
     if(!state.teh.resep) state.teh.resep=TMENU[0].id;
@@ -3205,7 +3365,8 @@
     }
     $("th-cara-note").innerHTML = '<b>'+TCARA[c].label+':</b> '+TCARA[c].note;
     // kapasitas ruang seduh cuma berarti untuk One Two Cups
-    $("th-kap-field").style.display = tCara(m)==="otc" ? "" : "none";
+    $("th-kap-field").style.display = m.daun>0 && tCara(m)==="otc" ? "" : "none";
+    $("th-cara").parentElement.style.display = m.daun>0 ? "" : "none";
   }
   function renderTehLevel(){
     var box=$("th-level"); box.innerHTML="";
@@ -3285,7 +3446,7 @@
         : TB[c.t].label;
       return '<tr><td><span class="rsp-b">'+nama+'</span>'+
              '<span class="rsp-x">'+ket+'</span>'+
-             '<span class="rsp-x">'+tAlat(vml, vgr)+'</span></td>'+
+             '<span class="rsp-x">'+(b.bubuk ? sendokTxt(c.t, tampil) : tAlat(vml, vgr))+'</span></td>'+
              '<td><span class="rsp-n">'+p.utama+'</span>'+
              (p.lain? '<span class="rsp-n" style="display:block;font-size:13px;margin-top:2px">≈ '+p.lain+'</span>' : '')+
              (h.gelas>1 ? '<span class="rsp-x">'+tPair(c.per, c.t).utama+perlbl+'</span>' : '')+
@@ -3347,11 +3508,12 @@
       '<table class="rsp-tbl"><thead><tr><th>Bahan</th><th>'+(h.gelas>1?'Total '+h.gelas+' gelas':'Takaran')+'</th></tr></thead>'+
       '<tbody>'+rows+'</tbody></table>'+
       '<div class="rsp-tot">'+(m.daun<=0
-        ? 'Tanpa teh — hangatkan susunya saja, jangan sampai mendidih.'
+        ? (h.gelas>1 ? 'Takaran di atas untuk '+h.gelas+' gelas sekaligus. Angka kecil di kanan adalah takaran per gelas.'
+                     : 'Angka besar dalam satuan alami tiap bahan; bubuk ditakar dalam gram dengan perkiraan sendoknya.')
         : h.gelas>1
           ? 'Seduh sekali untuk '+h.gelas+' gelas, saring, baru dibagi rata. Angka kecil di kanan adalah takaran per gelas.'
           : 'Angka besar dalam satuan alami tiap bahan, angka di bawahnya padanannya kalau alat takarmu beda.')
-        +(h.es>0 ? ' Tehnya sengaja dibuat lebih pekat karena ±'+h.esCair+' ml air dari es yang mencair ikut masuk ke gelas.' : '')+'</div>'+
+        +(h.es>0 ? (m.daun>0 ? ' Tehnya sengaja dibuat lebih pekat' : ' Takarannya sudah memperhitungkan')+' ±'+h.esCair+' ml air dari es yang mencair.' : '')+'</div>'+
       tips+'</div>';
   }
 
