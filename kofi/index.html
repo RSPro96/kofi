@@ -718,7 +718,7 @@
 
     <div class="card">
       <h2>Pilih Menu</h2>
-      <p class="hint">Tiga belas menu dari bahan yang ada, semuanya ditakar untuk satu gelas penuh (±270&ndash;300 ml). Semua takaran di bawah langsung menyesuaikan menu, jumlah gelas, dan level manis.</p>
+      <p class="hint">Empat belas menu dari bahan yang ada, semuanya ditakar untuk satu gelas penuh (±270&ndash;300 ml). Semua takaran di bawah langsung menyesuaikan menu, jumlah gelas, dan level manis.</p>
       <div class="g-drinks rsp-menu" id="th-menu"></div>
     </div>
 
@@ -741,10 +741,10 @@
       <div class="field">
         <label>Kapasitas ruang seduh teko</label>
         <div class="inrow">
-          <input type="number" id="th-kap" min="50" max="1000" step="10" value="300" />
+          <input type="number" id="th-kap" min="50" max="1000" step="5" value="190" />
           <span class="unit">ml</span>
         </div>
-        <p class="hint" style="margin:6px 0 0;font-size:12.5px">Angka di kemasan itu <b>isi teko keseluruhan</b>, bukan ruang seduhnya. Untuk K1 700 ml saringannya berukuran luar 8 &times; 8 &times; 10,5 cm; setelah dipotong tebal dinding, kerah atas, dan rumah katup di dasar, tinggi air efektifnya sekitar 7 cm &mdash; jadi <b>±300 ml</b>, dan itu yang dipakai di sini. Ini <b>perkiraan dari dimensi, bukan angka resmi</b> (halaman produknya tidak mencantumkan kapasitas saringan). Kalau saat menuang ternyata sudah penuh sebelum angkanya tercapai, turunkan angka di sini; kalau masih longgar, naikkan.</p>
+        <p class="hint" style="margin:6px 0 0;font-size:12.5px"><b>±190 ml, diukur langsung</b> dari ruang seduh teko One Two Cups — diisi sampai ±1 cm di bawah bibirnya, sisa ruang untuk daun yang mengembang. Angka di kemasan itu <b>isi teko keseluruhan</b>, bukan ruang seduhnya. Kalau tekomu lain, ukur sendiri: taruh di timbangan, tare, tuang air ke ruang seduh sampai 1 cm di bawah bibir — angka timbangannya itulah kapasitasnya. Kalau air seduh sebuah menu lebih besar dari angka ini (sampai 2&times;-nya), tehnya diseduh pekat di ruang seduh lalu ditambah air panas di gelas — kartu Takaran menghitungkan pembagiannya.</p>
       </div>
       <div class="warn" id="th-warn" style="margin-top:14px"></div>
       <div id="th-out"></div>
@@ -2764,7 +2764,8 @@
     vanila: {label:"Sirup vanilla",            rho:1.32, base:"ml"}
   };
   var SERAP = 2.5;   // ml air yang ditahan tiap gram daun teh, tidak ikut keluar
-  var KANTONG_G = 1.85;   // isi satu kantong teh celup, dipakai untuk padanan takaran
+  var KANTONG_G = 1.85;
+  var LONGGAR = 15;   // ml: kapasitas diukur dengan sisa ±1 cm, jadi lebih sedikit masih muat   // isi satu kantong teh celup, dipakai untuk padanan takaran
   // Teh melati itu bunga: air terlalu panas merusak aromanya, kelewat lama jadi sepat.
   // Teh hitam cacah punya tanin: butuh air lebih panas, tapi kelewat lama jadi pahit
   // dan kelat. Untuk menu bersusu, tehnya dikuatkan dengan menambah daun — bukan waktu.
@@ -2994,20 +2995,41 @@
       var per=tAmt(b, lv);
       comp.push({t:b.t, per:per, tot:round(per*gel), tetap:b.min===b.max, min:b.min, max:b.max});
     });
+    // Ruang seduh teko jauh lebih kecil daripada badan kacanya. Kalau airnya
+    // lebih, tehnya diseduh pekat di ruang seduh lalu ditambah air panas di
+    // gelas: daunnya sama, jadi kekuatan akhirnya sama. Batasnya 2x — lebih
+    // pekat dari itu airnya terlalu sedikit untuk daun sebanyak itu.
+    var kap = tKap(), airSeduh = air, airTambah = 0;
+    if(m.daun>0 && kap>0 && air>kap+LONGGAR && air<=kap*2){
+      airSeduh  = Math.floor(kap/5)*5;
+      airTambah = air - airSeduh;
+    }
     return {menu:m, gelas:gel, level:lv, daun:daun, air:air, comp:comp,
+            airSeduh:airSeduh, airTambah:airTambah,
             es: m.es ? round(m.es*gel) : 0, esCair: m.es ? round(m.es*ES_CAIR*gel) : 0};
   }
 
   // ruang seduh lebih kecil daripada badan kacanya — itu yang membatasi jumlah gelas
   function renderTehWarn(h){
     var w=$("th-warn"), kap=tKap();
-    if(h.menu.daun<=0 || kap<=0 || h.air<=kap){ w.style.display="none"; return; }
-    var batch = Math.ceil(h.air/kap);
+    if(h.menu.daun<=0 || kap<=0 || h.air<=kap*2){ w.style.display="none"; return; }
+    var m=h.menu, air1=r5(m.teh + m.daun*SERAP);
     w.style.display="flex";
-    w.innerHTML = ic('frown')+" Air seduhnya "+h.air+" ml, tapi ruang seduh cuma muat "+kap+" ml. "+
-      "Pilihannya: seduh "+batch+" kali bergantian (masing-masing ±"+r5(h.air/batch)+" ml air dan ±"+round(h.daun/batch)+" g daun), "+
-      "seduh sekaligus di wadah lain lalu saring lewat V60 cone, atau kurangi jumlah gelas. "+
-      "Jangan diisi melewati batas atas — air yang meluap lewat tanpa tersaring.";
+    if(h.gelas>1 && air1<=kap*2){
+      // satu gelas masih bisa lewat cara pekat, jadi seduh saja per gelas
+      var seduh1 = air1>kap+LONGGAR ? Math.floor(kap/5)*5 : air1;
+      w.innerHTML = ic('frown')+" Air seduh "+h.gelas+" gelas "+h.air+" ml, ruang seduh cuma muat "+kap+" ml. "+
+        "<b>Seduh per gelas, "+h.gelas+" kali</b>: tiap kali "+round(m.daun)+" g daun"+
+        (Math.round(m.daun/KANTONG_G)>0 ? " (≈ "+Math.round(m.daun/KANTONG_G)+" kantong)" : "")+
+        " dengan "+seduh1+" ml air"+(air1>seduh1 ? ", lalu tambah "+(air1-seduh1)+" ml air panas di gelasnya" : "")+". "+
+        "Atau seduh sekaligus di wadah lain lalu saring lewat V60 cone.";
+    }else{
+      var batch = Math.ceil(h.air/kap);
+      w.innerHTML = ic('frown')+" Air seduhnya "+h.air+" ml, tapi ruang seduh cuma muat "+kap+" ml. "+
+        "Pilihannya: seduh "+batch+" kali bergantian (masing-masing ±"+r5(h.air/batch)+" ml air dan ±"+round(h.daun/batch)+" g daun), "+
+        "seduh sekaligus di wadah lain lalu saring lewat V60 cone, atau kurangi jumlah gelas. "+
+        "Jangan diisi melewati batas atas — air yang meluap lewat tanpa tersaring.";
+    }
   }
 
   function renderTeh(){
@@ -3020,7 +3042,7 @@
       var vml = b.base==="ml" ? tampil : tampil/b.rho;
       var vgr = b.base==="ml" ? tampil*b.rho : tampil;
       var ket = c.tetap
-        ? (c.t==="teh" ? "hasil seduh, sudah disaring" : "takaran tetap untuk menu ini")
+        ? (c.t==="teh" ? (h.airTambah>0 ? "hasil seduh + air tambahan" : "hasil seduh, sudah disaring") : "takaran tetap untuk menu ini")
         : "rentang "+c.min+"–"+c.max+" "+b.base+" · ikut level manis";
       var nama = c.t==="teh"
         ? ((TJENIS[m.jenis]||TJENIS.melati).pendek+" (hasil seduh)")
@@ -3051,9 +3073,17 @@
         '<tr><td><span class="rsp-b">'+j.label+'</span><span class="rsp-x">timbang, jangan dikira-kira</span>'+
           (kantong>0 ? '<span class="rsp-x">atau ≈ '+kantong+' kantong teh celup (±1,85 g/kantong)</span>' : '')+'</td>'+
           '<td><span class="rsp-n">'+h.daun+' g</span></td></tr>'+
-        '<tr><td><span class="rsp-b">Air panas</span><span class="rsp-x">'+j.suhu+' · sudah termasuk ±'+round(m.daun*SERAP*h.gelas)+' ml yang diserap daun</span>'+
-          '<span class="rsp-x">'+tAlat(h.air, h.air)+'</span></td>'+
-          '<td><span class="rsp-n">'+h.air+' ml</span></td></tr>'+
+        '<tr><td><span class="rsp-b">'+(h.airTambah>0 ? 'Air panas ke ruang seduh' : 'Air panas')+'</span>'+
+          '<span class="rsp-x">'+j.suhu+' · sudah termasuk ±'+round(m.daun*SERAP*h.gelas)+' ml yang diserap daun</span>'+
+          (h.airTambah>0 ? '<span class="rsp-x">isi sampai ±1 cm di bawah bibir — tehnya keluar lebih pekat, itu memang disengaja</span>' : '')+
+          '<span class="rsp-x">'+tAlat(h.airSeduh, h.airSeduh)+'</span></td>'+
+          '<td><span class="rsp-n">'+h.airSeduh+' ml</span></td></tr>'+
+        (h.airTambah>0
+          ? '<tr><td><span class="rsp-b">Air panas tambahan</span>'+
+              '<span class="rsp-x">tuang ke gelas setelah teh turun — mengembalikan kekuatannya ke takaran resep</span>'+
+              '<span class="rsp-x">'+tAlat(h.airTambah, h.airTambah)+'</span></td>'+
+            '<td><span class="rsp-n">'+h.airTambah+' ml</span></td></tr>'
+          : '')+
         '<tr><td><span class="rsp-b">Waktu seduh</span><span class="rsp-x">tekan tombol begitu waktunya habis</span></td>'+
           '<td><span class="rsp-n">'+(m.waktuTxt||"3–4 menit")+'</span></td></tr>'+
         '</tbody></table>';
@@ -3155,7 +3185,9 @@
       return TB[c.t].label+" "+p.utama+(p.lain? " ("+p.lain+")" : "");
     }).join(" + ");
     var specs = m.nama+" · "+h.gelas+" gelas · level "+TLEVEL[h.level].cat
-      + (m.daun>0 ? " · "+(TJENIS[m.jenis]||TJENIS.melati).pendek+" "+h.daun+" g / air "+h.air+" ml · seduh "+thFmt(THT.target)
+      + (m.daun>0 ? " · "+(TJENIS[m.jenis]||TJENIS.melati).pendek+" "+h.daun+" g / air "
+                    +(h.airTambah>0 ? h.airSeduh+" ml + "+h.airTambah+" ml tambahan" : h.air+" ml")
+                    +" · seduh "+thFmt(THT.target)
                     +" · hasil "+m.teh+" ml/gelas" : "")
       + (bahanTxt ? " · "+bahanTxt : "")
       + (h.es>0 ? " · Es batu "+h.es+" g" : "");
