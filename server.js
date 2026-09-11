@@ -11,6 +11,13 @@
 //   GET  /api/version        -> versi lokal saat ini (tanpa akses jaringan)
 //   GET  /api/update/status  -> cek apakah ada versi lebih baru di origin
 //   POST /api/update         -> jalankan git pull --ff-only
+//
+// Pembaruan otomatis: server memeriksa GitHub sendiri tiap AUTO_UPDATE_MIN
+// menit (bawaan 5) dan menarik versi baru dengan git pull --ff-only. Halaman
+// yang sedang terbuka mendeteksi versinya berubah lewat /api/version dan
+// memuat ulang sendiri begitu aman. AUTO_UPDATE_MIN=0 mematikannya.
+// --ff-only tidak pernah menimpa perubahan lokal: kalau ada bentrok, pull
+// ditolak dan server tetap jalan dengan versi yang ada.
 
 "use strict";
 const http = require("http");
@@ -22,6 +29,8 @@ const ROOT = __dirname;                        // akar repo (tempat server.js be
 const PUBLIC = path.join(ROOT, "kofi");        // folder situs yang disajikan
 const PORT = parseInt(process.env.PORT, 10) || 8080;
 const BRANCH = process.env.BRANCH || "master";
+const AUTO_MIN = process.env.AUTO_UPDATE_MIN === undefined ? 5 : (parseFloat(process.env.AUTO_UPDATE_MIN) || 0);
+const auto = { aktif: AUTO_MIN > 0, tiapMenit: AUTO_MIN, terakhirCek: null, hasil: null };
 
 const MIME = {
   ".html": "text/html; charset=utf-8",
@@ -48,7 +57,7 @@ function run(args, opts) {
 
 async function gitVersion() {
   const head = await run(["rev-parse", "--short", "HEAD"]);
-  return { local: head.err ? null : head.out, branch: BRANCH };
+  return { local: head.err ? null : head.out, branch: BRANCH, auto: auto };
 }
 
 async function gitStatus() {
@@ -69,9 +78,48 @@ async function gitStatus() {
   };
 }
 
+// fetch/pull tidak boleh jalan bersamaan (tombol manual vs pemeriksaan otomatis)
+let sibuk = false;
+async function kunci(fn, kalauSibuk) {
+  if (sibuk) return kalauSibuk;
+  sibuk = true;
+  try { return await fn(); } finally { sibuk = false; }
+}
+
 async function gitPull() {
+  const sebelum = (await run(["rev-parse", "HEAD"])).out;
   const r = await run(["pull", "--ff-only", "origin", BRANCH]);
-  return { ok: !r.err, output: (r.out + (r.errOut ? "\n" + r.errOut : "")).trim() };
+  const hasil = { ok: !r.err, output: (r.out + (r.errOut ? "\n" + r.errOut : "")).trim() };
+  if (hasil.ok) {
+    const sesudah = (await run(["rev-parse", "HEAD"])).out;
+    if (sesudah && sesudah !== sebelum) {
+      console.log("[update] " + sebelum.slice(0, 7) + " -> " + sesudah.slice(0, 7));
+      const berubah = (await run(["diff", "--name-only", sebelum, sesudah])).out.split("\n");
+      // halaman dibaca ulang dari disk tiap permintaan, tapi server.js sendiri
+      // baru berlaku setelah prosesnya dijalankan ulang
+      if (berubah.indexOf("server.js") >= 0) {
+        if (process.env.pm_id !== undefined) {
+          console.log("[update] server.js berubah — keluar supaya pm2 menjalankannya ulang");
+          setTimeout(function () { process.exit(0); }, 1000);
+        } else {
+          console.log("[update] server.js berubah — jalankan ulang server supaya perubahannya aktif");
+        }
+      }
+    }
+  }
+  return hasil;
+}
+
+async function periksaOtomatis() {
+  await kunci(async function () {
+    auto.terakhirCek = new Date().toISOString();
+    const st = await gitStatus();
+    if (st.error) { auto.hasil = "gagal memeriksa: " + st.error; console.log("[auto-update] " + auto.hasil); return; }
+    if (!st.behind) { auto.hasil = "sudah versi terbaru"; return; }
+    const p = await gitPull();
+    auto.hasil = p.ok ? "diperbarui otomatis" : "gagal menarik: " + p.output.slice(0, 200);
+    if (!p.ok) console.log("[auto-update] " + auto.hasil);
+  });
 }
 
 function sendJson(res, code, obj) {
@@ -97,8 +145,13 @@ http.createServer(function (req, res) {
   const p = new URL(req.url, "http://localhost").pathname;
 
   if (p === "/api/version") { gitVersion().then(function (d) { sendJson(res, 200, d); }); return; }
-  if (p === "/api/update/status") { gitStatus().then(function (d) { sendJson(res, 200, d); }); return; }
-  if (p === "/api/update" && req.method === "POST") { gitPull().then(function (d) { sendJson(res, d.ok ? 200 : 500, d); }); return; }
+  if (p === "/api/update/status") {
+    kunci(gitStatus, { busy: true }).then(function (d) { sendJson(res, 200, d); }); return;
+  }
+  if (p === "/api/update" && req.method === "POST") {
+    kunci(gitPull, { ok: false, busy: true, output: "Server sedang memeriksa pembaruan, coba lagi sebentar." })
+      .then(function (d) { sendJson(res, d.ok ? 200 : (d.busy ? 409 : 500), d); }); return;
+  }
 
   serveStatic(res, p);
 }).listen(PORT, "0.0.0.0", function () {
@@ -106,4 +159,11 @@ http.createServer(function (req, res) {
   console.log("Folder situs : " + PUBLIC);
   console.log("Repo git     : " + ROOT + " (branch " + BRANCH + ")");
   console.log("Update dari Git aktif: POST /api/update");
+  console.log(auto.aktif ? "Pembaruan otomatis: tiap " + AUTO_MIN + " menit (AUTO_UPDATE_MIN=0 untuk mematikan)"
+                         : "Pembaruan otomatis: mati");
 });
+
+if (auto.aktif) {
+  setTimeout(periksaOtomatis, 15000);              // beri waktu server siap dulu
+  setInterval(periksaOtomatis, AUTO_MIN * 60000);
+}

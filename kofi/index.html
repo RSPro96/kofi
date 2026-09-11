@@ -564,6 +564,14 @@
           <p class="hint" style="margin:6px 0 0;font-size:12.5px">1:12–1:18 itu rentang pour over normal. Di bawah 1:10 hasilnya <b>konsentrat</b> — bukan untuk diminum langsung, tapi pengganti espresso di minuman susu.</p>
         </div>
       </div>
+      <div class="field">
+        <label>Jenis Biji</label>
+        <div class="chips" id="v-biji">
+          <div class="chip active" data-biji="arabica"><svg class="ic"><use href="#i-droplet"/></svg> Arabica</div>
+          <div class="chip" data-biji="robusta"><svg class="ic"><use href="#i-cup"/></svg> Robusta</div>
+        </div>
+        <p class="hint" id="v-biji-note" style="margin:8px 0 0;font-size:12.5px"></p>
+      </div>
       <div class="result">
         <div class="warn" id="v-warn"></div>
         <div class="kpis">
@@ -824,7 +832,7 @@
     <div class="savedhead">
       <h2 style="margin:0"><svg class="ic"><use href="#i-download"/></svg> Pembaruan Aplikasi</h2>
     </div>
-    <p class="hint" style="margin-top:-4px">Tarik perubahan terbaru langsung dari repositori Git (GitHub). Siapa pun boleh klik — kalau ada versi baru, halaman otomatis dimuat ulang.</p>
+    <p class="hint" style="margin-top:-4px">Server memeriksa GitHub sendiri tiap beberapa menit dan menarik versi baru otomatis. Halaman yang sedang terbuka ikut memuat ulang sendiri begitu <b>aman</b>: tidak ada timer yang berjalan, Pandu Langkah tertutup, dan halaman sedang tidak dilihat atau didiamkan ±1 menit — supaya takaran yang sedang diketik tidak hilang di tengah jalan. Tombol di bawah tetap bisa dipakai kalau tidak mau menunggu.</p>
     <div class="result">
       <div class="kpis">
         <div class="kpi"><div class="n" id="upd-ver">–</div><div class="l">Versi saat ini</div></div>
@@ -992,6 +1000,12 @@
     robusta: {label:"Robusta", press:"25–30 detik",
       note:"Gembur, cepat terekstrak → direm. Alat tetap dipanaskan, tapi diamkan air 30–60 detik dulu (±92–95 °C) dan langsung tekan penuh tanpa pre-infusion. Pahit serak di tenggorokan = kelewat ekstrak."}
   };
+  var VBIJI = {
+    arabica: {waktu:"2,5–3 menit",
+      note:"Padat, butuh panas. Pakai air baru mendidih (±92–96 °C) dan gilingan sedang, sebesar butiran gula pasir. Total seduh 2,5–3 menit. Asam tipis dan hambar = kurang ekstraksi: giling sedikit lebih halus atau pakai air lebih panas."},
+    robusta: {waktu:"2–2,5 menit",
+      note:"Gembur, cepat terekstrak. Diamkan air ±1 menit setelah mendidih (±88–92 °C) dan giling sedikit lebih kasar. Total seduh 2–2,5 menit. Pahit serak di tenggorokan = kelewat ekstraksi: giling lebih kasar atau tuang lebih cepat. Rasionya tetap 1:15 — yang direm suhu dan waktunya."}
+  };
   function B(t){ return BAHAN[t] || BAHAN.gula; }
   function PEM(t){ return t==="susu" ? SANGER_SKM : t==="vanila" ? ESP_VANILLA : t==="sirup" ? ESP_SYRUP : ESP_SUGAR; }
   function PEM_LABEL(t){ return B(t).label; }
@@ -1023,7 +1037,7 @@
   var state = {
     tygo: { pemanis:null, customG:null, pemanisType:"gula", biji:"arabica", press:1,
             mode:"manual", resep:null, level:1, pilih:{}, susu:null, susuMl:null },
-    v60:  { pemanis:null, customG:null, pemanisType:"gula",
+    v60:  { pemanis:null, customG:null, pemanisType:"gula", biji:"arabica",
             mode:"manual", resep:null, level:1, pilih:{}, susu:null, susuMl:null },
     teh:  { resep:null, level:0, gelas:1 },
     verdict: { tygo:null, v60:null, teh:null },
@@ -1050,12 +1064,14 @@
       if(c.v60.perporsi>0)  $("v-perporsi").value = c.v60.perporsi;
       if(c.v60.rasio>0)     $("v-rasio").value    = c.v60.rasio;
       if(c.v60.kap>0)       $("v-kap").value      = c.v60.kap;
+      if(c.v60.biji)        state.v60.biji = c.v60.biji;
     }
     if(c.ratio>0) $("t-ratio").value = c.ratio;
     if(c.wadah!=null)  $("t-wadah0").value  = c.wadah;
     if(c.sendok!=null) $("t-sendok0").value = c.sendok;
     if(c.gelas!=null)  $("t-gelas0").value  = c.gelas;
     setBiji(c.biji || "arabica");
+    setVBiji(state.v60.biji);
     setPress(c.press);
     if(c.resep){ state.tygo.resep=c.resep; state.tygo.level=c.level!=null?c.level:1;
                  state.tygo.pilih=c.pilih||{}; }
@@ -1068,7 +1084,7 @@
       wadah:g("t-wadah0"), sendok:g("t-sendok0"), gelas:g("t-gelas0"),
       biji:state.tygo.biji, press:state.tygo.press, mode:state.tygo.mode, resep:state.tygo.resep,
       level:state.tygo.level, pilih:state.tygo.pilih, ratio:g("t-ratio"),
-      v60:{mode:state.v60.mode, resep:state.v60.resep, level:state.v60.level,
+      v60:{mode:state.v60.mode, resep:state.v60.resep, level:state.v60.level, biji:state.v60.biji,
            pilih:state.v60.pilih, porsi:g("v-porsi"), perporsi:g("v-perporsi"),
            rasio:g("v-rasio"), kap:g("v-kap")},
       teh:{resep:state.teh.resep, level:state.teh.level, gelas:tGelas(), kap:g("th-kap")}
@@ -1187,6 +1203,16 @@
     $("t-biji-note").textContent = BIJI[b].note;
     $("t-timer-target").textContent = "Target "+BIJI[b].press;
     saveCalib();
+  }
+
+  // jenis biji V60 disimpan terpisah: bisa arabica di V60, robusta di espresso
+  function setVBiji(b){
+    if(!VBIJI[b]) b="arabica";
+    state.v60.biji=b;
+    document.querySelectorAll("#v-biji .chip").forEach(function(x){
+      x.classList.toggle("active", x.getAttribute("data-biji")===b);
+    });
+    $("v-biji-note").textContent = VBIJI[b].note;
   }
 
   // ---------- jumlah press ----------
@@ -1707,7 +1733,7 @@
        ok:function(){ return num(g("v-porsi"))>0 && num(g("v-perporsi"))>0; },
        msg:"Isi dulu jumlah porsi & ukuran per gelas."},
       {t:"Kapasitas & Rasio", ic:"i-droplet",
-       d:"V60 01 muat ±15 g bubuk. Cek rekomendasi bubuknya — kalau lewat kapasitas akan muncul peringatan.",
+       d:"Pilih jenis bijinya dulu — arabica dan robusta beda suhu air dan lama seduhnya. V60 01 muat ±15 g bubuk; cek rekomendasi bubuknya, kalau lewat kapasitas akan muncul peringatan.",
        el:"v-kap", ok:null},
       {t:"Fase Tuangan", ic:"i-info",
        d:"Rendam awal (2× bubuk, diam 30–45 detik) → tuang ke 60% → tuang ke 100%. Semua masuk satu wadah, baru dibagi ke gelas.",
@@ -2376,7 +2402,7 @@
       warn.style.display="none";
     }
     $("v-t2info").textContent = total>0
-      ? "Alur: 1) rendam awal "+bloom+" g → diamkan 30–45 detik · 2) tuang pelan sampai 60% ("+t1+" g) · 3) lanjut sampai 100% ("+t2+" g). Total waktu dari mulai sampai air habis = 2,5–3 menit."
+      ? "Alur: 1) rendam awal "+bloom+" g → diamkan 30–45 detik · 2) tuang pelan sampai 60% ("+t1+" g) · 3) lanjut sampai 100% ("+t2+" g). Total waktu dari mulai sampai air habis = "+(VBIJI[state.v60.biji]||VBIJI.arabica).waktu+"."
       : "Atur jumlah porsi & ukuran per gelas untuk mulai.";
     if(state.v60.mode==="resep") renderResep("v60"); else renderVSweets();
     renderMilk("v60");
@@ -2673,6 +2699,11 @@
     var c=e.target.closest(".chip"); if(!c) return;
     setBiji(c.getAttribute("data-biji"));
   });
+  $("v-biji").addEventListener("click", function(e){
+    var c=e.target.closest(".chip"); if(!c) return;
+    setVBiji(c.getAttribute("data-biji"));
+    saveCalib(); calcV60();
+  });
   $("t-press").addEventListener("click", function(e){
     var c=e.target.closest(".chip"); if(!c) return;
     if(state.tygo.mode==="resep"){
@@ -2741,6 +2772,7 @@
   function updSetMsg(t){ var m=$("upd-msg"); if(m) m.textContent = t; }
   function updRenderStatus(d){
     if(d.offline){ updSetMsg("Server update tidak ditemukan — halaman ini dibuka langsung sebagai file. Jalankan server (node server.js) agar tombol ini berfungsi."); return; }
+    if(d.busy){ updSetMsg("Server sedang memeriksa pembaruan otomatis — coba lagi sebentar."); return; }
     if(d.error){ updSetMsg("Gagal memeriksa: " + d.error); return; }
     if(d.behind>0){ updSetMsg("Ada " + d.behind + " pembaruan tertunda — klik 'Update Sekarang'."); }
     else { updSetMsg("Sudah versi terbaru."); }
@@ -2748,11 +2780,46 @@
   function updLoadVersion(){
     updReq("/api/version", "GET", function(d){
       if(!d.offline && !d.error && d.local){
+        VER.awal = VER.awal || d.local;
         $("upd-ver").textContent = d.local;
         $("upd-ver").title = "branch " + d.branch;
+        if(d.auto) updSetMsg(d.auto.aktif
+          ? "Pembaruan otomatis aktif — server memeriksa GitHub tiap "+d.auto.tiapMenit+" menit"
+            +(d.auto.hasil ? " (terakhir: "+d.auto.hasil+")." : ".")
+          : "Pembaruan otomatis dimatikan di server. Pakai tombol di bawah untuk memeriksa.");
       }
     });
   }
+
+  // ---------- muat ulang otomatis saat versi baru terpasang ----------
+  // Server menarik versi baru sendiri (lihat server.js); halaman yang terbuka
+  // cukup mengecek /api/version tiap menit. Dimuat ulang hanya kalau aman —
+  // timer seduh atau takaran yang sedang diketik tidak boleh hilang.
+  var VER = {awal:null, baru:null, sentuh:Date.now()};
+  ["click","keydown","input","touchstart"].forEach(function(ev){
+    document.addEventListener(ev, function(){ VER.sentuh = Date.now(); }, true);
+  });
+  function amanMuatUlang(){
+    if(TT.running || VT.running || THT.running) return false;
+    if(!$("guide-wiz").hidden) return false;
+    return document.hidden || Date.now()-VER.sentuh >= 60000;
+  }
+  function cobaMuatUlang(){ if(VER.baru && amanMuatUlang()) location.reload(); }
+  function cekVersi(){
+    updReq("/api/version", "GET", function(d){
+      if(!d || d.offline || d.error || !d.local) return;
+      if(!VER.awal){ VER.awal = d.local; return; }
+      if(d.local !== VER.awal && d.local !== VER.baru){
+        VER.baru = d.local;
+        $("upd-latest").textContent = d.local;
+        updSetMsg("Versi baru "+d.local+" sudah terpasang — halaman dimuat ulang otomatis begitu tidak sedang dipakai.");
+        toast("Versi baru tersedia — dimuat ulang otomatis sebentar lagi");
+      }
+      cobaMuatUlang();
+    });
+  }
+  setInterval(cekVersi, 60000);
+  document.addEventListener("visibilitychange", cobaMuatUlang);
   $("upd-check").addEventListener("click", function(){
     var b=this; b.disabled=true;
     updSetMsg("Memeriksa pembaruan…");
