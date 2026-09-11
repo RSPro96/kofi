@@ -683,7 +683,7 @@
     <details class="edu">
       <summary><svg class="ic"><use href="#i-leaf"/></svg> Cara seduh teh <svg class="ic caret"><use href="#i-chevron"/></svg></summary>
       <div class="body">
-        <p>Panel ini memuat tiga golongan: <b>teh melati</b>, <b>teh hitam</b>, dan satu menu tanpa teh sama sekali. Semuanya berangkat dari <b>satu seduhan dasar</b>: daun diseduh air panas, didiamkan <b>3&ndash;5 menit</b>, lalu <b>disaring</b>. Untuk menu bersusu, tehnya sengaja dibuat lebih pekat supaya rasanya tidak tenggelam di balik susu. Semua takaran di sini dihitung untuk <b>satu gelas penuh, sekitar 270&ndash;300 ml jadi</b> &mdash; bukan gelas kecil.</p>
+        <p>Panel ini memuat empat golongan: <b>teh melati</b>, <b>teh hitam</b>, <b>Thai tea</b> (ChaTraMue), dan satu menu tanpa teh sama sekali. Semuanya berangkat dari <b>satu seduhan dasar</b>: daun diseduh air panas, didiamkan <b>3&ndash;5 menit</b>, lalu <b>disaring</b>. Untuk menu bersusu, tehnya sengaja dibuat lebih pekat supaya rasanya tidak tenggelam di balik susu. Semua takaran di sini dihitung untuk <b>satu gelas penuh, sekitar 270&ndash;300 ml jadi</b> &mdash; bukan gelas kecil.</p>
         <ol>
           <li><b>Teh biasa</b> (tanpa susu) &mdash; 3,5&ndash;4 g daun untuk ±260 ml teh jadi, lalu tinggal ditambah sirup sampai segelas penuh.</li>
           <li><b>Teh pekat</b> (untuk menu bersusu) &mdash; 5 g daun untuk ±160&ndash;180 ml teh jadi; sisanya diisi susu.</li>
@@ -726,7 +726,7 @@
 
     <div class="card">
       <h2>Pilih Menu</h2>
-      <p class="hint">Empat belas menu dari bahan yang ada, semuanya ditakar untuk satu gelas penuh (±270&ndash;300 ml). Semua takaran di bawah langsung menyesuaikan menu, jumlah gelas, dan level manis.</p>
+      <p class="hint">Lima belas menu dari bahan yang ada, semuanya ditakar untuk satu gelas penuh (±270&ndash;300 ml). Semua takaran di bawah langsung menyesuaikan menu, jumlah gelas, dan level manis.</p>
       <div class="g-drinks rsp-menu" id="th-menu"></div>
     </div>
 
@@ -2015,7 +2015,7 @@
           +(sr.cara!==pilih ? " — sekarang terpilih "+TCARA[pilih].label+"; ganti dulu di kartu Takaran kalau mau mengikuti saran." : ", dan itu yang sedang terpilih.")};
     });
     if(tool==="teh" && r.daun && tCara(r)!=="otc"){
-      var j0 = TJENIS[r.jenis] || TJENIS.melati, hitam = r.jenis==="hitam";
+      var j0 = TJENIS[r.jenis] || TJENIS.melati, hitam = r.jenis!=="melati";
       var langkah = tCara(r)==="saringan" ? [
         {t:"Siapkan Saringan", ic:"i-cup",
          d:"Bilas saringan kain dengan air panas, lalu gantung di gelas tahan panas atau di badan kaca One Two Cups — ruang seduhnya diangkat dulu. Panaskan wadahnya dengan air panas dan buang airnya.",
@@ -2878,7 +2878,9 @@
       cobaMuatUlang();
     });
   }
-  setInterval(cekVersi, 60000);
+  // dibuka langsung sebagai file berarti tidak ada server — tiap pemeriksaan
+  // cuma akan jadi galat jaringan di konsol
+  if(location.protocol!=="file:") setInterval(cekVersi, 60000);
   document.addEventListener("visibilitychange", cobaMuatUlang);
   $("upd-check").addEventListener("click", function(){
     var b=this; b.disabled=true;
@@ -2925,7 +2927,8 @@
   // dan kelat. Untuk menu bersusu, tehnya dikuatkan dengan menambah daun — bukan waktu.
   var TJENIS = {
     melati: {label:"Teh melati cacah", pendek:"Teh melati",      suhu:"±85–90 °C"},
-    hitam:  {label:"Teh hitam", pendek:"Teh hitam", suhu:"±95–100 °C, air baru mendidih"}
+    hitam:  {label:"Teh hitam", pendek:"Teh hitam", suhu:"±95–100 °C, air baru mendidih"},
+    thai:   {label:"Thai Tea Mix (ChaTraMue)", pendek:"Thai tea", suhu:"±95–100 °C, air baru mendidih"}
   };
   // Tiga cara menyeduh. One Two Cups dibatasi ruang seduhnya; saringan kain
   // (cara kedai mamak) dan rebus di teko listrik tidak. Teh melati tidak boleh
@@ -2943,9 +2946,10 @@
   function tSaran(m){
     if(!m || !m.daun) return null;
     var susu = m.bahan.some(function(b){ return b.t==="uht" || b.t==="skm" || b.t==="evap"; });
-    var c = m.saran || (m.jenis==="melati" ? "otc" : (m.es || susu) ? "saringan" : "otc");
+    var c = m.jenis==="thai" ? "saringan" : m.saran || (m.jenis==="melati" ? "otc" : (m.es || susu) ? "saringan" : "otc");
     var alasan =
-        c==="rebus" ? "Direbus bersama airnya, air bertahan di titik didih dan terus bergolak — tanin dan badan tehnya keluar paling banyak dan paling tahan dilawan susu kental manis. Itu cara kedai mamak."
+        m.jenis==="thai" ? "Saringan kain itu cara penjual cha yen di Thailand: dituang bolak-balik lewat kain menarik badan tehnya, dan kainnya menahan butiran ChaTraMue yang sangat halus. One Two Cups juga bisa untuk satu gelas — 200 ml airnya masih muat di ruang seduh."
+      : c==="rebus" ? "Direbus bersama airnya, air bertahan di titik didih dan terus bergolak — tanin dan badan tehnya keluar paling banyak dan paling tahan dilawan susu kental manis. Itu cara kedai mamak."
       : c==="saringan" && m.es ? "Teh untuk minuman es harus sangat pekat. Menuang bolak-balik lewat saringan kain — cara cha yen Thailand — menarik badan tanpa merebus, dan airnya cuma sedikit, di bawah garis MIN kebanyakan teko listrik."
       : c==="saringan" ? "Milk tea butuh badan tebal. Menuang bolak-balik lewat saringan kain — cara milk tea Hong Kong — menarik lebih banyak badan daripada didiamkan, dan tidak terganjal ruang seduh 190 ml."
       : m.jenis==="melati" ? "Melati butuh 85–90 °C dan waktu yang pas. Ruang seduh One Two Cups tertutup sehingga aromanya tidak menguap, dan tombolnya menghentikan seduhan tepat waktu sebelum berubah sepat. Dituang bolak-balik lewat kain justru membuang aromanya."
@@ -2954,6 +2958,9 @@
   }
   function tCara(m){
     var c = TCARA[state.teh.cara] ? state.teh.cara : "otc";
+    // Yang direbus cuma teh hitam. Melati rusak aromanya kena air mendidih;
+    // Thai tea tidak perlu direbus (petunjuk kemasan) dan butirannya yang
+    // sangat halus menyumbat saringan cerat teko listrik.
     return (c==="rebus" && m && m.jenis!=="hitam") ? "saringan" : c;
   }
   var TLEVEL = [
@@ -3081,6 +3088,20 @@
      catatan:["Tidak perlu sirup gula di percobaan pertama — sirup vanilla sudah membawa manis."],
      saji:["Tuang tehnya ke gelas, masukkan susu UHT, lalu sirup vanilla. Aduk rata."]},
 
+    {id:"thai_tea", nama:"Thai Tea (Cha Yen)", ic:"i-cup", jenis:"thai", top:true,
+     sub:"Thai tea oranye khas Thailand: ChaTraMue pekat, susu kental manis, susu evaporasi berlapis di atas es.",
+     daun:8, teh:180, waktu:240000, waktuTxt:"3–5 menit", es:120,
+     bahan:[{t:"skm", min:30, max:45},{t:"evap", min:30, max:30}],
+     catatan:["<b>Daunnya 8 g, empat kali angka di kemasan.</b> Kemasan ChaTraMue menulis 2 g untuk 200 ml air — kekuatan teh celup biasa, pas untuk teh es polos pakai lemon. Begitu diberi SKM, susu, dan es, takaran itu jadi pucat dan tipis. 8 g (±4 g per 100 ml) mendekati takaran penjual cha yen. Kalau terasa terlalu pekat atau pahit, turunkan ke 6 g — jangan kurangi waktunya.",
+              "<b>Tidak perlu direbus</b> — itu petunjuk kemasannya sendiri. Cukup air baru mendidih, rendam 3–5 menit di saringan kain, lalu tuang bolak-balik lewat saringannya.",
+              "<b>Pewarna oranyenya menempel di kain.</b> Pakai satu saringan kain khusus Thai tea, kalau tidak mau saringan tehmu ikut oranye. Kaca — gelas maupun teko One Two Cups — aman, asal segera dibilas. Kalau menyeduh di One Two Cups dan ada ampas halus yang lolos ke badan kaca, saring sekali lagi lewat kain.",
+              "Susu evaporasi dituang <b>terakhir, pelan-pelan di atas es</b> supaya berlapis oranye dan putih — itu tampilan khas cha yen. Bisa diganti susu UHT dengan takaran sama kalau mau menghabiskan UHT.",
+              "SKM-nya lebih banyak daripada teh susu panas karena <b>dingin menumpulkan rasa manis</b>. Cicipi setelah diberi es, bukan saat masih panas.",
+              "Simpan bubuknya di toples kedap udara. Butirannya sangat halus, jadi aroma vanilanya cepat hilang kalau kantong refill-nya dibiarkan terbuka."],
+     saji:["Masukkan SKM ke teh yang masih panas, aduk sampai benar-benar larut.",
+           "Diamkan sampai hangat kuku, lalu tuang ke gelas berisi es. Teh yang masih panas melelehkan separuh esnya sekaligus.",
+           "Tuang susu evaporasi pelan-pelan di atasnya, jangan diaduk dulu — biarkan berlapis. Aduk sebelum diminum."]},
+
     {id:"susu_vanila", nama:"Susu Vanilla Hangat", ic:"i-droplet",
      sub:"Pilihan tanpa teh sama sekali — untuk yang sedang tidak mau kafein.",
      daun:0, teh:0,
@@ -3129,7 +3150,7 @@
     return {utama:rnice(v)+" g", lain:b.rho===1 ? null : rnice(v/b.rho)+" ml"};
   }
 
-  var TGRUP = {melati:"Teh Melati", hitam:"Teh Hitam", "":"Tanpa teh"};
+  var TGRUP = {melati:"Teh Melati", hitam:"Teh Hitam", thai:"Thai Tea — ChaTraMue", "":"Tanpa teh"};
   function renderTehMenu(){
     var box=$("th-menu"); box.innerHTML="";
     if(!state.teh.resep) state.teh.resep=TMENU[0].id;
@@ -3220,7 +3241,7 @@
       var seduh1 = air1>kap+LONGGAR ? Math.floor(kap/5)*5 : air1;
       w.innerHTML = ic('frown')+" Air seduh "+h.gelas+" gelas "+h.air+" ml, ruang seduh cuma muat "+kap+" ml. "+
         "<b>Seduh per gelas, "+h.gelas+" kali</b>: tiap kali "+round(m.daun)+" g daun"+
-        (Math.round(m.daun/KANTONG_G)>0 ? " (≈ "+Math.round(m.daun/KANTONG_G)+" kantong)" : "")+
+        (Math.round(m.daun/KANTONG_G)>0 && m.jenis!=="thai" ? " (≈ "+Math.round(m.daun/KANTONG_G)+" kantong)" : "")+
         " dengan "+seduh1+" ml air"+(air1>seduh1 ? ", lalu tambah "+(air1-seduh1)+" ml air panas di gelasnya" : "")+". "+
         "Atau seduh sekaligus di wadah lain lalu saring lewat V60 cone.";
     }else{
@@ -3270,11 +3291,14 @@
       var j = TJENIS[m.jenis] || TJENIS.melati;
       var kantong = Math.round(h.daun/KANTONG_G);
       seduh = '<div class="th-sec">1 · Seduh dulu — '+TCARA[h.cara].label+'</div>'+
-        (state.teh.cara==="rebus" && h.cara!=="rebus"
-          ? '<p class="rsp-sub">Teh melati tidak direbus — air mendidih merusak aromanya. Takaran di bawah memakai cara saringan kain.</p>' : '')+
+        (state.teh.cara!==h.cara
+          ? '<p class="rsp-sub">'+(m.jenis==="thai"
+              ? 'Thai tea tidak direbus — kemasannya cuma minta air mendidih, dan butirannya yang sangat halus bisa menyumbat saringan cerat teko listrik.'
+              : 'Teh melati tidak direbus — air mendidih merusak aromanya.')
+            +' Takaran di bawah memakai cara saringan kain.</p>' : '')+
         '<table class="rsp-tbl"><tbody>'+
         '<tr><td><span class="rsp-b">'+j.label+'</span><span class="rsp-x">timbang, jangan dikira-kira</span>'+
-          (kantong>0 ? '<span class="rsp-x">atau ≈ '+kantong+' kantong teh celup (±1,85 g/kantong)</span>' : '')+'</td>'+
+          (kantong>0 && m.jenis!=="thai" ? '<span class="rsp-x">atau ≈ '+kantong+' kantong teh celup (±1,85 g/kantong)</span>' : '')+'</td>'+
           '<td><span class="rsp-n">'+h.daun+' g</span></td></tr>'+
         '<tr><td><span class="rsp-b">'+(h.cara==="rebus" ? 'Air di teko listrik' : h.airTambah>0 ? 'Air panas ke ruang seduh' : 'Air panas')+'</span>'+
           '<span class="rsp-x">'+(h.cara==="rebus" ? 'didihkan bersama tehnya · pastikan di atas garis MIN tekomu' : j.suhu)
