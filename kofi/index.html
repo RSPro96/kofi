@@ -1214,15 +1214,17 @@
   // ---------- sweets + kustom ----------
   function renderTygoSweets(){
     var box=$("t-sweets"); box.innerHTML="";
-    // dasar takaran = kopi bersih di gelas (timbangan - gelas kosong), bukan target yield
-    var base = round(g("t-gelas1")-g("t-gelas0"));
-    if(base<0) base=0;
+    // dasar takaran = kopi bersih di gelas (timbangan - gelas kosong), bukan target
+    // yield — ditambah susunya kalau kartu Susu UHT dipakai
+    var mb = manualBase("tygo"), base = mb.base;
     var t = state.tygo.pemanisType;
-    var S = PEM(t);
+    var S = mb.perVol ? PEMV(t) : PEM(t);
     var st = state.tygo;
     $("t-sweet-title").innerHTML = (t==="susu" ? ic('cup') : ic('droplet'))+' Rekomendasi '+PEM_LABEL(t)+' — pilih level manis'
       + PEM_NOTE(t)
-      + (base>0 ? ' <small style="font-weight:400;color:var(--muted)">(dari '+base+' g kopi di gelas)</small>'
+      + (base>0 ? ' <small style="font-weight:400;color:var(--muted)">('+(mb.perVol
+            ? 'dari ±'+Math.round(base)+' ml isi gelas — kopi '+Math.round(mb.kopi)+' + susu '+Math.round(mb.susu)+' ml'
+            : 'dari '+base+' g kopi di gelas')+')</small>'
                 : ' <small style="font-weight:400;color:var(--meh)">(timbang gelas + hasil press dulu)</small>');
     S.forEach(function(s, i){
       var sel = st.pemanis===i;
@@ -1326,7 +1328,7 @@
         st.susu = v==="x" ? null : parseInt(v,10);
         st.susuMl = null;
         $(pre+"-milk-ml").value="";
-        renderMilk(tool);
+        renderMilk(tool); segarkanManis(tool);
         if(tool==="v60") renderVSaveCard(); else renderSaveCard();
       });
     });
@@ -1359,7 +1361,7 @@
       var v=parseFloat(inp.value);
       st.susuMl = v>0 ? v : null;
       if(st.susuMl!=null) st.susu=null;
-      renderMilk(tool);
+      renderMilk(tool); segarkanManis(tool);
       if(tool==="v60") renderVSaveCard(); else renderSaveCard();
     });
   }
@@ -1461,14 +1463,14 @@
     var noteTxt = ($("t-note").value||"").trim();
 
     var t = state.tygo.pemanisType;
-    var S = PEM(t);
+    var S = manualBase("tygo").perVol ? PEMV(t) : PEM(t);
     var unit = PEM_UNIT(t);
     var st = state.tygo;
     var ti = st.pemanis;
     var pemanis = st.mode==="resep"
       ? resepPemanis("tygo", resepBase("tygo"))
       : (ti!=null
-        ? {label:S[ti].cat, val:round(yieldG*S[ti].ratio), unit:unit, mode:"by choice", type:PEM_LABEL(t), bahan:t}
+        ? {label:S[ti].cat, val:round(manualBase("tygo").base*S[ti].ratio), unit:unit, mode:"by choice", type:PEM_LABEL(t), bahan:t}
         : (st.customG!=null
           ? {label:"Kustom", val:round(st.customG), unit:unit, mode:"manual", type:PEM_LABEL(t), bahan:t}
           : null));
@@ -2170,6 +2172,11 @@
       });
     });
   }
+  // takaran pemanis mode Manual bergantung pada susu, jadi digambar ulang saat susunya berubah
+  function segarkanManis(tool){
+    if(stOf(tool).mode!=="manual") return;
+    if(tool==="v60"){ renderVSweets(); updVSweet(); } else renderTygoSweets();
+  }
   function saveCardOf(tool){ if(tool==="v60") renderVSaveCard(); else renderSaveCard(); }
   // ringkasan pemanis mode resep untuk Catatan Rasa
   function resepPemanis(tool, base){
@@ -2459,14 +2466,24 @@
   ];
   var V_SYRUP   = skala(V_SUGAR, SIRUP_1_1);
   var V_VANILLA = skala(V_SUGAR, SIRUP_BOTOL);
-  function VARR(){ var t=state.v60.pemanisType;
-    return t==="susu" ? V_SKM : t==="vanila" ? V_VANILLA : t==="sirup" ? V_SYRUP : V_SUGAR; }
-  function VUNIT(){ return PEM_UNIT(state.v60.pemanisType); }
-  function vBase(){
-    var porsi = num(g("v-porsi"))||1;
-    var per   = num(g("v-perporsi"))||220;
-    return round(porsi*per);
+  function PEMV(t){ return t==="susu" ? V_SKM : t==="vanila" ? V_VANILLA : t==="sirup" ? V_SYRUP : V_SUGAR; }
+  function VARR(){ return PEMV(state.v60.pemanisType); }
+  // Pemanis mode Manual. Begitu susu UHT ikut masuk, yang jadi dasar adalah
+  // isi gelasnya (kopi + susu) dengan takaran per ml minuman — aturan yang
+  // sama dengan mode Ikut Resep. Tanpa ini latte yang sama dapat dua angka:
+  // mode Manual kira-kira separuh mode Ikut Resep.
+  function manualBase(tool){
+    var susu = milkMl(tool)||0;
+    if(tool==="v60"){
+      var porsi = num(g("v-porsi"))||1;
+      if(susu>0) return {base: round((hasilPekat()+susu)/porsi), kopi: round(hasilPekat()/porsi), susu: round(susu/porsi)};
+      return {base: num(g("v-perporsi"))||220, kopi:0, susu:0};
+    }
+    var kopi = Math.max(0, round(g("t-gelas1")-g("t-gelas0")));
+    if(susu>0 && kopi>0) return {base: round(kopi+susu), kopi:kopi, susu:susu, perVol:true};
+    return {base:kopi, kopi:kopi, susu:0, perVol:false};
   }
+  function VUNIT(){ return PEM_UNIT(state.v60.pemanisType); }
   function setPemanisV(t){
     state.v60.pemanisType=t;
     document.querySelectorAll("#v-pemanis-type .chip").forEach(function(x){
@@ -2503,9 +2520,11 @@
   function renderVSweets(){
     var box=$("v-sweets"); box.innerHTML="";
     var arr=VARR();
-    var per = num(g("v-perporsi"))||220;
+    var mb = manualBase("v60"), per = mb.base;
     var vt = state.v60.pemanisType;
-    $("v-sweet-title").innerHTML = (vt==="susu" ? ic('cup') : ic('droplet'))+' Rekomendasi '+PEM_LABEL(vt)+' — ikut total air (ubah ukuran/jumlah gelas langsung kena)'
+    $("v-sweet-title").innerHTML = (vt==="susu" ? ic('cup') : ic('droplet'))+' Rekomendasi '+PEM_LABEL(vt)
+      + (mb.susu>0 ? ' — ikut isi gelas (konsentrat '+Math.round(mb.kopi)+' + susu '+Math.round(mb.susu)+' ml)'
+                   : ' — ikut total air (ubah ukuran/jumlah gelas langsung kena)')
       + PEM_NOTE(vt);
     arr.forEach(function(s,i){
       var sel = state.v60.pemanis===i;
@@ -2533,10 +2552,9 @@
     setPemanisV(b.getAttribute("data-type"));
   });
   function updVSweet(){
-    var total = vBase();
     var porsi = num(g("v-porsi"))||1;
     var arr = VARR();
-    var perSweet = state.v60.pemanis!=null ? round(total*arr[state.v60.pemanis].ratio/porsi) : (state.v60.customG!=null ? state.v60.customG : null);
+    var perSweet = state.v60.pemanis!=null ? round(manualBase("v60").base*arr[state.v60.pemanis].ratio) : (state.v60.customG!=null ? state.v60.customG : null);
     if(perSweet==null){
       $("v-sweet-total").textContent = "–";
       $("v-sweet-note").textContent = "Pilih level atau isi takaran manual di bawah.";
@@ -2593,7 +2611,7 @@
     var pemanis = state.v60.mode==="resep"
       ? resepPemanis("v60", resepBase("v60"))
       : (ti!=null
-        ? {label:S[ti].cat, val:round(total*S[ti].ratio/porsi), unit:unit, mode:"by choice", type:PEM_LABEL(t), bahan:t}
+        ? {label:S[ti].cat, val:round(manualBase("v60").base*S[ti].ratio), unit:unit, mode:"by choice", type:PEM_LABEL(t), bahan:t}
         : (state.v60.customG!=null
           ? {label:"Kustom", val:round(state.v60.customG), unit:unit, mode:"manual", type:PEM_LABEL(t), bahan:t}
           : null));
