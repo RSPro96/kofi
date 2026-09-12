@@ -726,7 +726,7 @@
 
     <div class="card">
       <h2>Pilih Menu</h2>
-      <p class="hint">Dua puluh sembilan menu — teh dan minuman lain tanpa kopi — semuanya ditakar untuk satu gelas penuh &mdash; ±250&ndash;300 ml untuk yang panas, dan lebih besar untuk menu ber-es karena esnya ikut mengisi gelas. Beberapa bahannya belum tentu ada di dapurmu; lihat daftar bahan di tiap menu. Semua takaran di bawah langsung menyesuaikan menu, jumlah gelas, dan level manis.</p>
+      <p class="hint">Tiga puluh dua menu — teh dan minuman lain tanpa kopi — semuanya ditakar untuk satu gelas penuh &mdash; ±250&ndash;300 ml untuk yang panas, dan lebih besar untuk menu ber-es karena esnya ikut mengisi gelas. Beberapa bahannya belum tentu ada di dapurmu; lihat daftar bahan di tiap menu. Semua takaran di bawah langsung menyesuaikan menu, jumlah gelas, dan level manis.</p>
       <div class="g-drinks rsp-menu" id="th-menu"></div>
     </div>
 
@@ -2932,6 +2932,7 @@
     sirup:  {label:"Sirup gula 1:1",           rho:1.23, base:"ml"},
     vanila: {label:"Sirup vanilla",            rho:1.32, base:"ml"},
     air:    {label:"Air panas",                rho:1.00, base:"ml"},
+    espresso: {label:"Espresso (2× press)",    rho:1.00, base:"ml"},
     soda:   {label:"Air soda dingin",          rho:1.00, base:"ml"},
     madu:   {label:"Madu",                     rho:1.42, base:"ml"},
     lemon:  {label:"Air perasan lemon",        rho:1.03, base:"ml"},
@@ -3142,6 +3143,43 @@
      saji:["Masukkan SKM ke teh yang masih panas, aduk sampai benar-benar larut.",
            "Diamkan sampai hangat kuku, lalu tuang ke gelas berisi es. Teh yang masih panas melelehkan separuh esnya sekaligus.",
            "Tuang susu evaporasi pelan-pelan di atasnya, jangan diaduk dulu — biarkan berlapis. Aduk sebelum diminum."]},
+
+    {id:"thai_latte", nama:"Thai Tea Latte", ic:"i-cup", jenis:"thai",
+     sub:"Thai tea pekat dituang ke susu UHT berbuih — paling lembut, dan paling boros susu di golongan ini.",
+     daun:6, teh:120, waktu:240000, waktuTxt:"3–5 menit",
+     bahan:[{t:"uht", min:130, max:130},{t:"skm", min:15, max:25}],
+     catatan:["<b>Tehnya jauh lebih pekat daripada Cha Ron</b>: 6 g untuk 120 ml saja (±5 g per 100 ml). Susunya hampir separuh gelas, jadi teh dengan kekuatan biasa akan hilang di baliknya.",
+              "SKM-nya lebih sedikit daripada Thai Tea Panas karena susu UHT sudah membawa rasa gurih dan sedikit manis alami. Cicipi sebelum naik level.",
+              "Satu kotak UHT 250 ml cukup untuk <b>dua gelas</b> — bikin sekalian dua kalau tidak mau ada sisa di kulkas.",
+              "Buihnya dari pengocok listrik, bukan dari ditarik. Celupkan kepalanya dulu baru dinyalakan, dan tahan tepat di bawah permukaan."],
+     saji:["Larutkan SKM ke thai tea yang masih panas, aduk sampai benar-benar larut.",
+           "Hangatkan susu UHT sampai hangat kuku — di panci kecil, microwave, atau pemanas susu. Jangan di teko listrik.",
+           "Kocok susunya dengan pengocok listrik sampai berbuih halus.",
+           "Tuang thai tea ke gelas, lalu susunya pelan-pelan. Buihnya naik sendiri ke atas."]},
+
+    {id:"thai_vanila", nama:"Vanilla Thai Tea", ic:"i-droplet", jenis:"thai",
+     sub:"Thai tea panas dengan sirup vanilla — mempertegas aroma vanila yang memang sudah ada di ChaTraMue.",
+     daun:6.5, teh:200, waktu:240000, waktuTxt:"3–5 menit",
+     bahan:[{t:"skm", min:20, max:30},{t:"vanila", min:10, max:15},{t:"evap", min:30, max:30}],
+     catatan:["ChaTraMue <b>sudah beraroma vanila</b> dari pabriknya — sirup vanilla di sini mempertegasnya, bukan menambah rasa asing. Itu sebabnya takarannya kecil.",
+              "SKM-nya diturunkan dari Thai Tea Panas (20–30 g, bukan 25–40 g) karena sirup vanilla juga membawa gula. Jangan menambah keduanya sekaligus.",
+              "Susu evaporasi bisa dilewat kalau tidak ada; gantinya susu UHT <b>dua kali takarannya</b> (30 ml evaporasi ≈ 60 ml UHT)."],
+     saji:["Masukkan SKM ke thai tea yang masih panas, aduk sampai larut.",
+           "Tambahkan susu evaporasi, aduk rata.",
+           "Terakhir masukkan sirup vanilla, aduk, lalu cicipi sebelum menambah apa pun."]},
+
+    {id:"dirty_thai", nama:"Dirty Thai Tea", ic:"i-cup", jenis:"thai",
+     sub:"Thai tea bersusu dengan espresso dituang berlapis di atasnya — teh rempah bertemu kopi.",
+     daun:6, teh:120, waktu:240000, waktuTxt:"3–5 menit",
+     bahan:[{t:"uht", min:100, max:100},{t:"skm", min:15, max:25},{t:"espresso", min:36, max:36}],
+     catatan:["<b>Espressonya wajib 2× press dengan bubuk baru</b> — ±36 g. Satu shot 18 g akan hilang di balik thai tea dan susu, dan lapisannya nyaris tidak kelihatan.",
+              "Tehnya dibuat pekat (6 g untuk 120 ml) karena harus bertahan melawan susu <i>dan</i> kopi sekaligus.",
+              "<b>Jangan diaduk dulu.</b> Lapisan coklat gelap di atas oranye itu yang bikin menarik. Aduk saat mau diminum.",
+              "Minum dalam 5 menit pertama. Espresso yang menunggu terlalu lama kehilangan crema, dan lapisannya luruh sendiri."],
+     saji:["Larutkan SKM ke thai tea yang masih panas, aduk sampai larut, lalu diamkan sampai hangat kuku.",
+           "Tuang susu UHT dingin dari kulkas ke gelas, lalu thai tea-nya pelan-pelan.",
+           "Press 2× dengan bubuk baru tiap kali di Tygopresso — ±36 g espresso.",
+           "Tuang espresso pelan lewat punggung sendok supaya mengambang di atas. Sajikan berlapis."]},
 
     {id:"susu_vanila", nama:"Susu Vanilla Hangat", ic:"i-droplet", jenis:"susu",
      sub:"Susu hangat beraroma vanilla — untuk yang sedang tidak mau kafein.",
