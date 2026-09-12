@@ -466,7 +466,7 @@
 
   <div class="card" id="t-milkcard">
     <h2>Susu UHT (opsional)</h2>
-    <p class="hint">Susu <b>bukan pemanis</b>, jadi takarannya tidak ikut level manis di atas &mdash; yang diatur di sini perbandingan susu terhadap espresso. Boleh dipakai bersama pemanis mana pun, atau sendirian saja.</p>
+    <p class="hint">Susu <b>bukan pemanis</b>, jadi takarannya tidak ikut level manis di atas &mdash; yang diatur di sini perbandingan susu terhadap espresso. Boleh dipakai bersama pemanis mana pun, atau sendirian saja. <b>Kehabisan susu UHT, atau sekotaknya keburu basi?</b> Susu evaporasi bisa menggantikan: separuh takaran evaporasi + separuh air. Angkanya sudah dihitungkan di bawah.</p>
     <div class="chips" id="t-milk"></div>
     <div class="field" style="margin-top:12px">
       <label>Atau isi sendiri</label>
@@ -698,7 +698,7 @@
         <p><b>Teh hitam lebih cocok untuk susu.</b> Melati itu aroma halus yang gampang tenggelam di balik susu; teh hitam punya badan dan tanin yang justru terangkat oleh lemak susu. Kalau milk tea melatimu terasa hambar, coba menu yang sama versi teh hitam sebelum menambah daun melatinya.</p>
         <p><b>Pakai V60 cone untuk menyaring.</b> Kalau seduhannya kebanyakan untuk ruang seduh teko, seduh saja di wadah lain lalu tuang lewat V60 &mdash; fungsinya cuma jadi penyaring, bukan diseduh gaya pour over. Rendam daunnya di wadah terpisah selama 3&ndash;4 menit seperti biasa, baru dituang. Dua catatan: <b>kertas filter menyerap ±10&ndash;15 ml</b> (tambahkan segitu ke air seduhnya) dan sedikit meredam aroma melati, jadi kalau ada saringan logam atau kain, itu lebih baik untuk teh. Basahi dulu kertasnya dengan air panas dan buang airnya, sama seperti waktu bikin kopi.</p>
         <p><b>Jangan diseduh gaya pour over.</b> Menuang air pelan-pelan menembus daun teh menghasilkan rasa yang jauh lebih tipis daripada direndam &mdash; daun teh butuh waktu kontak, bukan aliran. V60 di sini murni pengganti saringan.</p>
-        <p><b>Gram atau ml?</b> Untuk teh dan air 1 g = 1 ml. Susu UHT, susu evaporasi, SKM, madu, dan sirup lebih berat dari air, jadi tiap takaran di bawah ditulis dua-duanya &mdash; pakai yang alatnya ada. <b>Bubuk</b> (kakao, Milo, gula, gula aren, premix, kunyit) dan <b>jahe segar</b> cuma ditulis dalam gram: mengukur bubuk dengan ml tidak berarti apa-apa karena kepadatannya berubah-ubah tergantung seberapa padat disendok.</p>
+        <p><b>Susu UHT cepat basi setelah dibuka</b> &mdash; 3&ndash;5 hari di kulkas, dan sekotak 1 liter jarang habis secepat itu. Dua jalan keluarnya: beli kemasan kecil 200&ndash;250 ml (pas untuk satu gelas di sini), atau pakai <b>susu evaporasi</b>. Evaporasi itu susu yang airnya diuapkan ±60%, jadi <b>separuh takaran evaporasi + separuh air</b> setara susu biasa &mdash; padanannya sudah ditulis di bawah tiap baris Susu UHT. Kalengnya yang belum dibuka tahan setahun, tapi begitu dibuka umurnya sama saja 3&ndash;5 hari; untungnya kaleng kecil 170 g habis sekali-dua kali pakai. Rasanya lebih gurih dan "matang"; untuk teh susu justru lebih mirip kedai, tapi buihnya lebih lemah kalau dikocok untuk latte.</p><p><b>Gram atau ml?</b> Untuk teh dan air 1 g = 1 ml. Susu UHT, susu evaporasi, SKM, madu, dan sirup lebih berat dari air, jadi tiap takaran di bawah ditulis dua-duanya &mdash; pakai yang alatnya ada. <b>Bubuk</b> (kakao, Milo, gula, gula aren, premix, kunyit) dan <b>jahe segar</b> cuma ditulis dalam gram: mengukur bubuk dengan ml tidak berarti apa-apa karena kepadatannya berubah-ubah tergantung seberapa padat disendok.</p>
         <p><b>Alat takar mana untuk angka yang mana.</b> Di bawah tiap bahan sudah tertulis saran alatnya, kira-kira begini pembagiannya:</p>
         <ul>
           <li><b>Sampai 30 ml</b> &mdash; sloki espresso. Ini yang paling pas untuk sirup dan SKM, karena takarannya memang cuma 10&ndash;20 ml. Slokinya bertanda <b>ml</b> di satu sisi dan <b>sendok makan</b> di sisi lain &mdash; pakai skala ml-nya, lebih halus; skala sendok berguna kalau resep lain menyebut sdm. Patokannya <b>1 sdm = 15 ml</b>, 2 sdm = 30 ml = penuh, dan tanda ½ sdm = 7,5 ml.</li>
@@ -1386,7 +1386,7 @@
       var sumber = rr!=null ? "ditetapkan resep ("+rr+"× kopi)"
                  : st.susuMl!=null ? "isian sendiri"
                  : MILK[st.susu].sub;
-      note = sumber+" · "+ml+" ml ≈ "+rnice(ml*UHT_RHO)+" g · "+tAlat(ml, ml*UHT_RHO)
+      note = sumber+" · "+ml+" ml ≈ "+rnice(ml*UHT_RHO)+" g · "+tAlat(ml, ml*UHT_RHO)+" · "+evapTxt(ml)
            + (base>0 ? " · dari "+base+" g kopi setara espresso" : "");
     }
     $(pre+"-milk-note").textContent = note;
@@ -2133,6 +2133,12 @@
     return ml!=null ? tAlat(ml, c.gram) : "± "+c.sdm+" sdm · lebih akurat ditimbang";
   }
 
+  function evapTxt(ml){
+    if(!(ml>0)) return "";
+    var e=Math.round(ml/2);
+    return "atau ±"+e+" ml susu evaporasi + "+(Math.round(ml)-e)+" ml air";
+  }
+
   function esRowHtml(r){
     if(!r || !r.es) return "";
     return '<tr><td><span class="rsp-b">Es batu</span>'+
@@ -2146,7 +2152,8 @@
     var base=milkBase(tool), ml = base>0 ? round(base*r.susu) : null;
     return '<tr><td><span class="rsp-b">Susu UHT original</span>'+
       '<span class="rsp-x">'+r.susu+'× berat kopi · bukan pemanis</span>'+
-      (ml!=null ? '<span class="rsp-x">'+tAlat(ml, ml*UHT_RHO)+'</span>' : '')+'</td>'+
+      (ml!=null ? '<span class="rsp-x">'+tAlat(ml, ml*UHT_RHO)+'</span>'+
+                  '<span class="rsp-x">'+evapTxt(ml)+'</span>' : '')+'</td>'+
       '<td><span class="rsp-n">'+(ml!=null?ml:"–")+' ml</span>'+
       (ml!=null ? '<span class="rsp-n" style="display:block;font-size:13px;margin-top:2px">≈ '+rnice(ml*UHT_RHO)+' g</span>' : '')+
       '</td></tr>';
@@ -3458,7 +3465,8 @@
         : TB[c.t].label;
       return '<tr><td><span class="rsp-b">'+nama+'</span>'+
              '<span class="rsp-x">'+ket+'</span>'+
-             '<span class="rsp-x">'+(b.bubuk ? sendokTxt(c.t, tampil) : tAlat(vml, vgr))+'</span></td>'+
+             '<span class="rsp-x">'+(b.bubuk ? sendokTxt(c.t, tampil) : tAlat(vml, vgr))+'</span>'+
+             (c.t==="uht" ? '<span class="rsp-x">'+evapTxt(tampil)+'</span>' : '')+'</td>'+
              '<td><span class="rsp-n">'+p.utama+'</span>'+
              (p.lain? '<span class="rsp-n" style="display:block;font-size:13px;margin-top:2px">≈ '+p.lain+'</span>' : '')+
              (h.gelas>1 ? '<span class="rsp-x">'+tPair(c.per, c.t).utama+perlbl+'</span>' : '')+
