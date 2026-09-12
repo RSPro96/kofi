@@ -764,6 +764,14 @@
         </div>
         <p class="hint" style="margin:6px 0 0;font-size:12.5px"><b>±190 ml, diukur langsung</b> dari ruang seduh teko One Two Cups — diisi sampai ±1 cm di bawah bibirnya, sisa ruang untuk daun yang mengembang. Angka di kemasan itu <b>isi teko keseluruhan</b>, bukan ruang seduhnya. Kalau tekomu lain, ukur sendiri: taruh di timbangan, tare, tuang air ke ruang seduh sampai 1 cm di bawah bibir — angka timbangannya itulah kapasitasnya. Kalau air seduh sebuah menu lebih besar dari angka ini (sampai 2&times;-nya), tehnya diseduh pekat di ruang seduh lalu ditambah air panas di gelas — kartu Takaran menghitungkan pembagiannya.</p>
       </div>
+      <div class="field" id="th-aktual-field">
+        <label>Teh yang benar-benar keluar (opsional)</label>
+        <div class="inrow">
+          <input type="number" id="th-aktual" min="0" max="2000" step="5" value="" placeholder="kosongkan kalau sesuai rencana" />
+          <span class="unit">ml</span>
+        </div>
+        <p class="hint" style="margin:6px 0 0;font-size:12.5px">Seduhan jarang keluar persis seperti rencana &mdash; daun menyerap lebih banyak, ada yang tertinggal di saringan, atau kamu sengaja menyeduh lebih sedikit. Timbang saja hasil seduhnya (1 g = 1 ml), masukkan di sini, dan <b>takaran susu, gula, dan esnya ikut menyesuaikan</b> supaya perbandingannya tetap sama. Isi totalnya untuk semua gelas, bukan per gelas. Kosongkan kalau sesuai rencana.</p>
+      </div>
       <div class="warn" id="th-warn" style="margin-top:14px"></div>
       <div id="th-out"></div>
     </div>
@@ -2976,7 +2984,7 @@
     var susu = m.bahan.some(function(b){ return b.t==="uht" || b.t==="skm" || b.t==="evap"; });
     var c = m.jenis==="thai" ? "saringan" : m.saran || (m.jenis==="melati" ? "otc" : (m.es || susu) ? "saringan" : "otc");
     var alasan =
-        m.jenis==="thai" ? "Saringan kain itu cara penjual cha yen di Thailand: dituang bolak-balik lewat kain menarik badan tehnya, dan kainnya menahan butiran ChaTraMue yang sangat halus. One Two Cups juga bisa untuk satu gelas — 200 ml airnya masih muat di ruang seduh."
+        m.jenis==="thai" ? "Saringan kain itu cara penjual cha yen di Thailand: dituang bolak-balik lewat kain menarik badan tehnya, dan kainnya menahan butiran ChaTraMue yang sangat halus. One Two Cups juga bisa dipakai; kalau air seduhnya lewat dari ruang seduh, kartu Takaran otomatis membaginya jadi seduhan pekat plus air tambahan."
       : c==="rebus" ? "Direbus bersama airnya, air bertahan di titik didih dan terus bergolak — tanin dan badan tehnya keluar paling banyak dan paling tahan dilawan susu kental manis. Itu cara kedai mamak."
       : c==="saringan" && m.es ? "Teh untuk minuman es harus sangat pekat. Menuang bolak-balik lewat saringan kain — cara cha yen Thailand — menarik badan tanpa merebus, dan airnya cuma sedikit, di bawah garis MIN kebanyakan teko listrik."
       : c==="saringan" ? "Milk tea butuh badan tebal. Menuang bolak-balik lewat saringan kain — cara milk tea Hong Kong — menarik lebih banyak badan daripada didiamkan, dan tidak terganjal ruang seduh 190 ml."
@@ -3178,7 +3186,7 @@
               "Minum dalam 5 menit pertama. Espresso yang menunggu terlalu lama kehilangan crema, dan lapisannya luruh sendiri."],
      saji:["Larutkan SKM ke thai tea yang masih panas, aduk sampai larut, lalu diamkan sampai hangat kuku.",
            "Tuang susu UHT dingin dari kulkas ke gelas, lalu thai tea-nya pelan-pelan.",
-           "Press 2× dengan bubuk baru tiap kali di Tygopresso — ±36 g espresso.",
+           "Press 2× dengan bubuk baru tiap kali di Tygopresso — ±36 g espresso <b>per gelas</b>.",
            "Tuang espresso pelan lewat punggung sendok supaya mengambang di atas. Sajikan berlapis."]},
 
     {id:"susu_vanila", nama:"Susu Vanilla Hangat", ic:"i-droplet", jenis:"susu",
@@ -3330,6 +3338,7 @@
     return TMENU[0];
   }
   function tGelas(){ var v=parseInt($("th-gelas").value,10); return (v>0&&v<=6) ? v : 1; }
+  function tAktual(){ var v=parseFloat($("th-aktual").value); return v>0 ? v : 0; }
   function tKap(){ var v=parseFloat($("th-kap").value); return v>0 ? v : 0; }
   function r5(v){ return Math.round(v/5)*5; }
   // takaran satu bahan di level tertentu: 0 = batas bawah, 2 = batas atas
@@ -3389,6 +3398,7 @@
       b.addEventListener("click", function(){
         if(state.teh.resep===m.id) return;
         state.teh.resep=m.id;
+        $("th-aktual").value="";   // hasil seduh menu sebelumnya tidak berlaku di sini
         thTargetDari(m);
         saveCalib();
         renderTehMenu(); renderTeh(); renderThSaveCard();
@@ -3416,6 +3426,7 @@
     // kapasitas ruang seduh cuma berarti untuk One Two Cups
     $("th-kap-field").style.display = m.daun>0 && tCara(m)==="otc" ? "" : "none";
     $("th-cara").parentElement.style.display = m.daun>0 ? "" : "none";
+    $("th-aktual-field").style.display = m.daun>0 ? "" : "none";
   }
   function renderTehLevel(){
     var box=$("th-level"); box.innerHTML="";
@@ -3440,6 +3451,16 @@
       var per=tAmt(b, lv);
       comp.push({t:b.t, per:per, tot:round(per*gel), tetap:b.min===b.max, min:b.min, max:b.max});
     });
+    // Kalau teh yang keluar tidak sesuai rencana, semua bahan lain digeser
+    // dengan faktor yang sama supaya perbandingannya tetap. Bagian "Seduh
+    // dulu" tidak ikut: daun dan airnya sudah telanjur dipakai.
+    var rencana = round(m.teh*gel), aktual = (m.daun>0 && m.teh>0) ? tAktual() : 0;
+    var fak = (aktual>0 && rencana>0) ? aktual/rencana : 1;
+    if(fak!==1) comp.forEach(function(c){
+      if(c.t==="teh"){ c.per=round(aktual/gel); c.tot=round(aktual); return; }
+      c.per=round(c.per*fak); c.tot=round(c.per*gel);
+      if(c.min!=null){ c.min=round(c.min*fak); c.max=round(c.max*fak); }
+    });
     // Ruang seduh teko jauh lebih kecil daripada badan kacanya. Kalau airnya
     // lebih, tehnya diseduh pekat di ruang seduh lalu ditambah air panas di
     // gelas: daunnya sama, jadi kekuatan akhirnya sama. Batasnya 2x — lebih
@@ -3451,7 +3472,8 @@
     }
     return {menu:m, gelas:gel, level:lv, daun:daun, air:air, comp:comp,
             airSeduh:airSeduh, airTambah:airTambah, cara:cara,
-            es: m.es ? round(m.es*gel) : 0, esCair: m.es ? round(m.es*ES_CAIR*gel) : 0};
+            aktual:aktual, rencana:rencana, fak:fak,
+            es: m.es ? round(m.es*gel*fak) : 0, esCair: m.es ? round(m.es*ES_CAIR*gel*fak) : 0};
   }
 
   // ruang seduh lebih kecil daripada badan kacanya — itu yang membatasi jumlah gelas
@@ -3556,7 +3578,10 @@
     }
 
     var judul = '<div class="rsp-head">'+ic(m.ic.replace(/^i-/,""))+m.nama+'</div>'+
-      '<p class="rsp-sub">'+h.gelas+' gelas · level <b>'+TLEVEL[h.level].cat+'</b> — '+TLEVEL[h.level].sub+'.</p>';
+      '<p class="rsp-sub">'+h.gelas+' gelas · level <b>'+TLEVEL[h.level].cat+'</b> — '+TLEVEL[h.level].sub+'.</p>'+
+      (h.fak!==1 ? '<p class="rsp-sub">Disesuaikan dengan hasil seduh sebenarnya: <b>'+rnice(h.aktual)+' ml</b> dari rencana '+h.rencana+' ml. Semua bahan di bawah dikali <b>'+(Math.round(h.fak*100)/100)+'</b>'
+          +(h.fak<0.6 ? ' — jauh di bawah rencana; cek apakah ada yang tertinggal di saringan atau daunnya menyerap lebih banyak.'
+          : h.fak>1.5 ? ' — jauh di atas rencana; tehnya jadi lebih encer daripada resep.' : '.')+'</p>' : '');
 
     var tips = (m.catatan||[]).length
       ? '<ul class="th-tips">'+m.catatan.map(function(x){ return '<li>'+x+'</li>'; }).join("")+'</ul>' : '';
@@ -3656,7 +3681,8 @@
       + (m.daun>0 ? " · "+(TJENIS[m.jenis]||TJENIS.melati).pendek+" "+h.daun+" g / air "
                     +(h.airTambah>0 ? h.airSeduh+" ml + "+h.airTambah+" ml tambahan" : h.air+" ml")
                     +(h.cara==="rebus" ? " · 2× didih" : " · seduh "+thFmt(THT.target))
-                    +" · hasil "+m.teh+" ml/gelas" : "")
+
+                    +" · hasil "+(h.fak!==1 ? rnice(h.aktual/h.gelas)+" ml/gelas (rencana "+m.teh+", ×"+(Math.round(h.fak*100)/100)+")" : m.teh+" ml/gelas") : "")
       + (bahanTxt ? " · "+bahanTxt : "")
       + (h.es>0 ? " · Es batu "+h.es+" g" : "");
     var notes = loadNotes();
@@ -3683,6 +3709,7 @@
     thShow();
     $("th-gelas").addEventListener("input", function(){ saveCalib(); renderTeh(); });
     $("th-kap").addEventListener("input", function(){ saveCalib(); renderTeh(); });
+    $("th-aktual").addEventListener("input", function(){ renderTeh(); renderThSaveCard(); });
     $("th-cara").addEventListener("click", function(e){
       var c=e.target.closest(".chip"); if(!c) return;
       state.teh.cara = c.getAttribute("data-cara");
