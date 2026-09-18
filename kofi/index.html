@@ -726,7 +726,7 @@
 
     <div class="card">
       <h2>Pilih Menu</h2>
-      <p class="hint">Tiga puluh tujuh menu — teh, kopi instan, dan minuman lain — semuanya ditakar untuk satu gelas penuh &mdash; ±250&ndash;300 ml untuk yang panas, dan lebih besar untuk menu ber-es karena esnya ikut mengisi gelas. Beberapa bahannya belum tentu ada di dapurmu; lihat daftar bahan di tiap menu. Semua takaran di bawah langsung menyesuaikan menu, jumlah gelas, dan level manis.</p>
+      <p class="hint">Tiga puluh tujuh menu — teh, kopi instan, dan minuman lain — semuanya ditakar untuk satu gelas penuh &mdash; ±250&ndash;300 ml untuk yang panas, dan lebih besar untuk menu ber-es karena esnya ikut mengisi gelas. Beberapa bahannya belum tentu ada di dapurmu; lihat daftar bahan di tiap menu. Semua takaran di bawah langsung menyesuaikan menu, jumlah gelas, level manis, dan jumlah teh, air, atau susu yang kamu isi sendiri.</p>
       <div class="g-drinks rsp-menu" id="th-menu"></div>
     </div>
 
@@ -3414,10 +3414,12 @@
   };
   function tDasar(m){
     if(m.teh>0) return "teh";
-    for(var k in TDASAR){
-      if(m.bahan.some(function(b){ return b.t===k; })) return k;
-    }
-    return null;
+    // cairan yang paling banyak, supaya "40 ml air pelarut kopi" tidak jadi patokan latte
+    var besar=null, isi=0;
+    m.bahan.forEach(function(b){
+      if(TDASAR[b.t] && b.max>isi){ besar=b.t; isi=b.max; }
+    });
+    return besar;
   }
   function tAktual(){ var v=parseFloat($("th-aktual").value); return v>0 ? v : 0; }
   function tKap(){ var v=parseFloat($("th-kap").value); return v>0 ? v : 0; }
@@ -3453,7 +3455,8 @@
     var b=TB[key];
     if(!b.sd) return "ditimbang";
     var sd=b.sd;
-    if(sd.n==="sdt" && g/sd.g>=3) sd={n:"sdm", g:sd.g*3};
+    // dicek setelah dibulatkan, supaya tidak ada "± 3 sdt" — itu 1 sdm
+    if(sd.n==="sdt" && Math.round(g/sd.g*2)/2>=3) sd={n:"sdm", g:sd.g*3};
     var n=Math.round(g/sd.g*2)/2, w=Math.floor(n), h=(n-w)>=0.5;
     return "± "+((w ? w : "")+(h ? "½" : "") || "½")+" "+sd.n+" · lebih akurat ditimbang";
   }
