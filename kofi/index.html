@@ -3341,10 +3341,10 @@
            "Tuang air soda dingin pelan-pelan lewat dinding gelas supaya lapisannya terjaga dan buihnya tidak meluap."]},
 
     {id:"kopi_instan_hitam", nama:"Kopi Hitam Instan", ic:"i-droplet", jenis:"instan",
-     sub:"Takaran kemasan apa adanya: 2 g untuk segelas penuh, manisnya sesuai selera.",
+     sub:"Kekuatan sama dengan anjuran kemasan, cuma untuk segelas penuh, bukan cangkir kecil.",
      daun:0, teh:0,
-     bahan:[{t:"kopi_instan", min:2, max:2},{t:"air", min:250, max:250},{t:"sirup", min:0, max:15}],
-     catatan:["<b>2 g itu angka kemasannya sendiri</b> — toples 100 g untuk 50 gelas. Satu sendok teh peres kira-kira segitu. Kalau kurang tebal, naikkan ke 3 g; jangan menambah waktu, karena kopi instan larut seketika dan tidak ada yang namanya kelamaan seduh.",
+     bahan:[{t:"kopi_instan", min:3, max:3},{t:"air", min:250, max:250},{t:"sirup", min:0, max:15}],
+     catatan:["<b>Kenapa 3 g, bukan 2 g seperti di kemasan?</b> Angka “100 g untuk 50 gelas” itu 2 g untuk <i>cangkir</i> ±150–180 ml. Di sini gelasnya 250 ml, jadi kopinya ikut dinaikkan supaya kekuatannya sama — 2 g di 250 ml rasanya seperti air kopi.",
               "<b>Airnya jangan yang baru mendidih.</b> Tunggu 1–2 menit dulu, ±85–90 °C. Bubuknya sudah larut sempurna, tidak butuh air sepanas itu, dan air mendidih membuat robusta terasa gosong dan pahit.",
               "Nescafé Classic Indonesia 100% robusta Lampung: badannya tebal dan pahitnya tegas, beda dengan arabica di panel Tygopresso. Itu sebabnya menu susu di golongan ini kopinya dinaikkan, bukan susunya yang dikurangi."],
      saji:["Masukkan kopi ke gelas, tuang air panas sedikit dulu (±20 ml), aduk sampai tidak ada butiran.",
@@ -3365,11 +3365,11 @@
     {id:"kopi_instan_vanila", nama:"Vanilla Latte Instan", ic:"i-droplet", jenis:"instan",
      sub:"Kopi instan pekat, susu UHT hangat berbuih, dan sirup vanilla.",
      daun:0, teh:0,
-     bahan:[{t:"kopi_instan", min:4, max:4},{t:"air", min:60, max:60},{t:"uht", min:180, max:180},{t:"vanila", min:12, max:18}],
-     catatan:["Airnya cuma 60 ml karena sisanya diisi susu — ini kopi susu, bukan kopi hitam yang ditambah susu.",
+     bahan:[{t:"kopi_instan", min:4, max:4},{t:"air", min:40, max:40},{t:"uht", min:200, max:200},{t:"vanila", min:12, max:18}],
+     catatan:["Airnya cuma 40 ml — kopi pekat seukuran double shot espresso, dan sisa gelasnya diisi susu. Ini latte, bukan kopi hitam yang ditambah susu.",
               "Hangatkan susunya sampai hangat kuku saja, jangan mendidih. Susu mendidih berubah rasa dan berkulit.",
               "Kalau vanilla-nya kurang terasa, naikkan levelnya — jangan menambah kopi, robusta yang kelebihan langsung terasa pahit."],
-     saji:["Larutkan kopi dengan air panasnya, aduk sampai jadi pasta halus.",
+     saji:["Larutkan kopi dengan 40 ml air panas, aduk sampai tidak ada butiran.",
            "Masukkan sirup vanilla ke kopi yang masih panas, aduk.",
            "Hangatkan susu, kocok dengan pengocok listrik sampai berbuih, lalu tuang pelan-pelan."]},
 
@@ -3387,9 +3387,10 @@
     {id:"kopi_instan_dalgona", nama:"Dalgona", ic:"i-cup", jenis:"instan",
      sub:"Kopi dan gula dikocok sampai jadi krim kaku, ditaruh di atas susu dingin.",
      daun:0, teh:0,
-     bahan:[{t:"kopi_instan", min:10, max:10},{t:"gula", min:20, max:25},{t:"air", min:30, max:30},{t:"uht", min:220, max:220}],
+     bahan:[{t:"kopi_instan", min:12, max:12},{t:"gula", min:20, max:25},{t:"air", min:30, max:30},{t:"uht", min:220, max:220}],
      catatan:["<b>Cuma bisa dengan kopi instan.</b> Espresso atau V60 tidak akan mengeras — yang membentuk krimnya itu bubuk kopi kering yang larut jenuh, bukan kopinya.",
-              "<b>Gulanya jangan dikurangi.</b> Kopi, gula, dan air harus kira-kira seimbang; gula yang dipotong membuat krimnya tidak pernah kaku. Kalau kemanisan, pakai susu tawar saja dan biarkan krim ini yang jadi manisnya.",
+              "Rumus aslinya <b>2 sdm kopi, 2 sdm gula, 2 sdm air panas</b> — 12 g, ±25 g, dan 30 ml. Level Ringan memotong gulanya sedikit ke 20 g; krimnya masih bisa kaku, cuma butuh kocokan sedikit lebih lama.",
+              "<b>Gulanya jangan dikurangi lagi di bawah itu.</b> Kopi, gula, dan air harus kira-kira seimbang; gula yang dipotong membuat krimnya tidak pernah kaku. Kalau kemanisan, pakai susu tawar saja dan biarkan krim ini yang jadi manisnya.",
               "Airnya harus panas supaya gula dan kopinya larut betul sebelum dikocok.",
               "Pengocok listrik butuh 2–3 menit. Berhenti saat warnanya berubah pucat kecoklatan dan bekas kocokannya tidak hilang lagi."],
      saji:["Masukkan kopi, gula, dan air panas ke gelas kecil atau mangkuk.",
@@ -3436,8 +3437,10 @@
   function sendokTxt(key, g){
     var b=TB[key];
     if(!b.sd) return "ditimbang";
-    var n=Math.round(g/b.sd.g*2)/2, w=Math.floor(n), h=(n-w)>=0.5;
-    return "± "+((w ? w : "")+(h ? "½" : "") || "½")+" "+b.sd.n+" · lebih akurat ditimbang";
+    var sd=b.sd;
+    if(sd.n==="sdt" && g/sd.g>=3) sd={n:"sdm", g:sd.g*3};
+    var n=Math.round(g/sd.g*2)/2, w=Math.floor(n), h=(n-w)>=0.5;
+    return "± "+((w ? w : "")+(h ? "½" : "") || "½")+" "+sd.n+" · lebih akurat ditimbang";
   }
   function tPair(v, key){
     var b=TB[key];
