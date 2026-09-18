@@ -745,6 +745,14 @@
           <label>Level manis</label>
           <div class="chips" id="th-level"></div>
         </div>
+        <div class="field" id="th-pemanis-field">
+          <label>Pemanis</label>
+          <div class="chips" id="th-pemanis">
+            <div class="chip" data-gula="0">Sirup gula 1:1</div>
+            <div class="chip" data-gula="1">Gula pasir</div>
+          </div>
+          <p class="hint" style="margin:8px 0 0;font-size:12.5px">Sirup 1:1 itu separuhnya air, jadi <b>1 ml sirup &asymp; 0,6 g gula pasir</b> &mdash; angkanya dihitungkan otomatis. Gula pasir harus dilarutkan di minuman yang masih panas; di minuman dingin dia mengendap.</p>
+        </div>
       </div>
       <div class="field">
         <label>Cara seduh</label>
@@ -1076,6 +1084,7 @@
       if(c.teh.gelas>0)     $("th-gelas").value = c.teh.gelas;
       if(c.teh.kap>0)       $("th-kap").value   = c.teh.kap;
       if(TCARA[c.teh.cara]) state.teh.cara = c.teh.cara;
+      state.teh.gula = !!c.teh.gula;
     }
     if(c.v60){
       if(c.v60.resep)       state.v60.resep = c.v60.resep;
@@ -1108,7 +1117,7 @@
       v60:{mode:state.v60.mode, resep:state.v60.resep, level:state.v60.level, biji:state.v60.biji,
            pilih:state.v60.pilih, porsi:g("v-porsi"), perporsi:g("v-perporsi"),
            rasio:g("v-rasio"), kap:g("v-kap")},
-      teh:{resep:state.teh.resep, level:state.teh.level, gelas:tGelas(), kap:g("th-kap"), cara:state.teh.cara}
+      teh:{resep:state.teh.resep, level:state.teh.level, gelas:tGelas(), kap:g("th-kap"), cara:state.teh.cara, gula:!!state.teh.gula}
     })); }catch(e){}
   }
   function calibStatus(){
@@ -1138,6 +1147,7 @@
           '<div class="specs">'+(p.tool==="teh"
               ? escapeHtml(tMenuById(p.resep).nama)+' · '+p.gelas+' gelas · level '+TLEVEL[p.level||0].cat
                 + (TCARA[p.cara] && p.cara!=="otc" && tMenuById(p.resep).daun>0 ? ' · '+TCARA[p.cara].label : '')
+                + (p.gula && tAdaSirup(tMenuById(p.resep)) ? ' · gula pasir' : '')
               : (p.pmode==="resep"&&p.resep ? escapeHtml(resepById(p.tool==="v60"?"v60":"tygo", p.resep).nama)
                  : (p.mode ? PEM_LABEL(p.type)+' · '+escapeHtml(pm) : escapeHtml(pm)))+' · Rasio 1:'+p.ratio
                  + (p.tool==="v60" && p.perporsi ? ' · '+p.perporsi+' ml/gelas' : '')
@@ -1154,7 +1164,7 @@
     var tool = ACTIVE;
     if(tool==="teh"){
       var pt={id:Date.now(), name:name, tool:"teh",
-              resep:state.teh.resep, level:state.teh.level, gelas:tGelas(), cara:state.teh.cara};
+              resep:state.teh.resep, level:state.teh.level, gelas:tGelas(), cara:state.teh.cara, gula:!!state.teh.gula};
       var at=loadPresets(); at.unshift(pt); savePresets(at);
       $("p-name").value=""; renderPresets(); updateIoCount(); toast("Preset disimpan");
       return;
@@ -1187,6 +1197,7 @@
       state.teh.level = p.level!=null ? p.level : 0;
       $("th-gelas").value = p.gelas || 1;
       if(TCARA[p.cara]) state.teh.cara = p.cara;
+      state.teh.gula = !!p.gula;
       thTargetDari(tMenuById(state.teh.resep));
       renderTehMenu(); renderTehLevel(); renderTeh(); renderThSaveCard(); saveCalib();
       toast('Preset "'+p.name+'" diterapkan');
@@ -1917,7 +1928,7 @@
            "Cicipi sebelum menambah. Beda dengan sanger yang kopinya pekat, di sini susu gampang menutupi kopinya."]},
 
     {id:"es_kopi_susu_v60", nama:"Es Kopi Susu V60", ic:"i-cup", pekat:true, setara:0.6, susu:5.5, es:120,
-     pm:{lv:"gula", slots:[{opsi:["sirup","vanila"], porsi:1}]},
+     pm:{lv:"gula", slots:[{opsi:["sirup","vanila","gula"], porsi:1}]},
      sub:"Es kopi susu tanpa Tygopresso — konsentrat 1:5 sebagai ganti espresso, jadi tidak perlu press dua kali.",
      pd:"Takarannya dihitung dari isi gelas, sudah termasuk susu dan lelehan esnya. Sirup Gula 1:1 paling cepat larut di minuman dingin.",
      saji:["Seduh konsentratnya dulu sesuai angka di atas, hasilnya sekitar 45 ml. Jangan pakai rasio 1:15 yang biasa — es akan mengencerkannya jadi air kopi.",
@@ -3421,6 +3432,21 @@
     });
     return besar;
   }
+  // Sirup 1:1 berdasarkan berat: 1,23 g/ml, separuhnya gula.
+  var GULA_PER_ML = 0.62;
+  function tAdaSirup(m){ return m.bahan.some(function(b){ return b.t==="sirup"; }); }
+  function tKeGula(comp){
+    var gula = comp.filter(function(c){ return c.t==="gula"; })[0];
+    return comp.filter(function(c){
+      if(c.t!=="sirup") return true;
+      var x = {t:"gula", per:round(c.per*GULA_PER_ML), tot:round(c.tot*GULA_PER_ML), tetap:c.tetap,
+               min:round(c.min*GULA_PER_ML), max:round(c.max*GULA_PER_ML)};
+      if(!gula){ for(var k in x) c[k]=x[k]; return true; }
+      gula.per=round(gula.per+x.per); gula.tot=round(gula.tot+x.tot);
+      gula.min=round(gula.min+x.min); gula.max=round(gula.max+x.max);
+      return false;
+    });
+  }
   function tAktual(){ var v=parseFloat($("th-aktual").value); return v>0 ? v : 0; }
   function tKap(){ var v=parseFloat($("th-kap").value); return v>0 ? v : 0; }
   function r5(v){ return Math.round(v/5)*5; }
@@ -3522,6 +3548,19 @@
         : 'Gelasmu lebih besar atau lebih kecil, atau '+TDASAR[d].nya+' terlanjur kebanyakan? Isi jumlah yang kamu pakai di sini, dan <b>semua bahan lain ikut menyesuaikan</b> supaya perbandingannya tetap sama. Isi totalnya untuk semua gelas, bukan per gelas. Kosongkan atau isi 0 untuk ikut resep.';
     }
   }
+  function renderTehPemanis(){
+    var ada = tAdaSirup(tMenuById(state.teh.resep));
+    $("th-pemanis-field").style.display = ada ? "" : "none";
+    document.querySelectorAll("#th-pemanis .chip").forEach(function(x){
+      x.classList.toggle("active", (x.getAttribute("data-gula")==="1")===!!state.teh.gula);
+    });
+  }
+  document.querySelectorAll("#th-pemanis .chip").forEach(function(x){
+    x.addEventListener("click", function(){
+      state.teh.gula = x.getAttribute("data-gula")==="1";
+      saveCalib(); renderTeh(); renderThSaveCard();
+    });
+  });
   function renderTehLevel(){
     var box=$("th-level"); box.innerHTML="";
     TLEVEL.forEach(function(l,i){
@@ -3557,6 +3596,7 @@
       c.per=round(c.per*fak); c.tot=round(c.per*gel);
       if(c.min!=null){ c.min=round(c.min*fak); c.max=round(c.max*fak); }
     });
+    if(state.teh.gula) comp = tKeGula(comp);
     // Ruang seduh teko jauh lebih kecil daripada badan kacanya. Kalau airnya
     // lebih, tehnya diseduh pekat di ruang seduh lalu ditambah air panas di
     // gelas: daunnya sama, jadi kekuatan akhirnya sama. Batasnya 2x — lebih
@@ -3604,7 +3644,7 @@
     $("th-timerfab").style.display  = ada ? "" : "none";
   }
   function renderTeh(){
-    renderTehCara(); thTimerVis();
+    renderTehCara(); thTimerVis(); renderTehPemanis();
     var h=tHitung(), m=h.menu, box=$("th-out");
     renderTehWarn(h);
     var perlbl = h.gelas>1 ? " /gelas" : "";
