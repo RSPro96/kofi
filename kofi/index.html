@@ -765,12 +765,12 @@
         <p class="hint" style="margin:6px 0 0;font-size:12.5px"><b>±190 ml, diukur langsung</b> dari ruang seduh teko One Two Cups — diisi sampai ±1 cm di bawah bibirnya, sisa ruang untuk daun yang mengembang. Angka di kemasan itu <b>isi teko keseluruhan</b>, bukan ruang seduhnya. Kalau tekomu lain, ukur sendiri: taruh di timbangan, tare, tuang air ke ruang seduh sampai 1 cm di bawah bibir — angka timbangannya itulah kapasitasnya. Kalau air seduh sebuah menu lebih besar dari angka ini (sampai 2&times;-nya), tehnya diseduh pekat di ruang seduh lalu ditambah air panas di gelas — kartu Takaran menghitungkan pembagiannya.</p>
       </div>
       <div class="field" id="th-aktual-field">
-        <label>Teh yang benar-benar keluar (opsional)</label>
+        <label id="th-aktual-lbl">Teh yang benar-benar keluar (opsional)</label>
         <div class="inrow">
-          <input type="number" id="th-aktual" min="0" max="2000" step="5" value="" placeholder="kosongkan kalau sesuai rencana" />
+          <input type="number" id="th-aktual" min="0" max="2000" step="5" value="" placeholder="0 = ikut resep" />
           <span class="unit">ml</span>
         </div>
-        <p class="hint" style="margin:6px 0 0;font-size:12.5px">Seduhan jarang keluar persis seperti rencana &mdash; daun menyerap lebih banyak, ada yang tertinggal di saringan, atau kamu sengaja menyeduh lebih sedikit. Timbang saja hasil seduhnya (1 g = 1 ml), masukkan di sini, dan <b>takaran susu, gula, dan esnya ikut menyesuaikan</b> supaya perbandingannya tetap sama. Isi totalnya untuk semua gelas, bukan per gelas. Kosongkan kalau sesuai rencana.</p>
+        <p class="hint" id="th-aktual-hint" style="margin:6px 0 0;font-size:12.5px">Seduhan jarang keluar persis seperti rencana &mdash; daun menyerap lebih banyak, ada yang tertinggal di saringan, atau kamu sengaja menyeduh lebih sedikit. Timbang saja hasil seduhnya (1 g = 1 ml), masukkan di sini, dan <b>takaran susu, gula, dan esnya ikut menyesuaikan</b> supaya perbandingannya tetap sama. Isi totalnya untuk semua gelas, bukan per gelas. Kosongkan atau isi 0 untuk ikut resep.</p>
       </div>
       <div class="warn" id="th-warn" style="margin-top:14px"></div>
       <div id="th-out"></div>
@@ -3404,6 +3404,21 @@
     return TMENU[0];
   }
   function tGelas(){ var v=parseInt($("th-gelas").value,10); return (v>0&&v<=6) ? v : 1; }
+  // Bahan patokan yang boleh diisi sendiri: teh hasil seduh, atau cairan
+  // utama untuk menu tanpa teh. Bahan lain ikut digeser sebanding dengannya.
+  var TDASAR = {
+    teh:  {lbl:"Teh yang benar-benar keluar", frasa:"hasil seduh sebenarnya"},
+    air:  {lbl:"Air yang dipakai",            frasa:"air yang kamu pakai", nya:"airnya"},
+    uht:  {lbl:"Susu UHT yang dipakai",       frasa:"susu UHT yang kamu pakai", nya:"susunya"},
+    soda: {lbl:"Air soda yang dipakai",       frasa:"air soda yang kamu pakai", nya:"sodanya"}
+  };
+  function tDasar(m){
+    if(m.teh>0) return "teh";
+    for(var k in TDASAR){
+      if(m.bahan.some(function(b){ return b.t===k; })) return k;
+    }
+    return null;
+  }
   function tAktual(){ var v=parseFloat($("th-aktual").value); return v>0 ? v : 0; }
   function tKap(){ var v=parseFloat($("th-kap").value); return v>0 ? v : 0; }
   function r5(v){ return Math.round(v/5)*5; }
@@ -3495,7 +3510,14 @@
     // kapasitas ruang seduh cuma berarti untuk One Two Cups
     $("th-kap-field").style.display = m.daun>0 && tCara(m)==="otc" ? "" : "none";
     $("th-cara").parentElement.style.display = m.daun>0 ? "" : "none";
-    $("th-aktual-field").style.display = m.daun>0 ? "" : "none";
+    var d = tDasar(m);
+    $("th-aktual-field").style.display = d ? "" : "none";
+    if(d){
+      $("th-aktual-lbl").textContent = TDASAR[d].lbl+" (opsional)";
+      $("th-aktual-hint").innerHTML = d==="teh"
+        ? 'Seduhan jarang keluar persis seperti rencana &mdash; daun menyerap lebih banyak, ada yang tertinggal di saringan, atau kamu sengaja menyeduh lebih sedikit. Timbang saja hasil seduhnya (1 g = 1 ml), masukkan di sini, dan <b>takaran susu, gula, dan esnya ikut menyesuaikan</b> supaya perbandingannya tetap sama. Isi totalnya untuk semua gelas, bukan per gelas. Kosongkan atau isi 0 untuk ikut resep.'
+        : 'Gelasmu lebih besar atau lebih kecil, atau '+TDASAR[d].nya+' terlanjur kebanyakan? Isi jumlah yang kamu pakai di sini, dan <b>semua bahan lain ikut menyesuaikan</b> supaya perbandingannya tetap sama. Isi totalnya untuk semua gelas, bukan per gelas. Kosongkan atau isi 0 untuk ikut resep.';
+    }
   }
   function renderTehLevel(){
     var box=$("th-level"); box.innerHTML="";
@@ -3523,10 +3545,11 @@
     // Kalau teh yang keluar tidak sesuai rencana, semua bahan lain digeser
     // dengan faktor yang sama supaya perbandingannya tetap. Bagian "Seduh
     // dulu" tidak ikut: daun dan airnya sudah telanjur dipakai.
-    var rencana = round(m.teh*gel), aktual = (m.daun>0 && m.teh>0) ? tAktual() : 0;
+    var dasar = tDasar(m), cd = comp.filter(function(c){ return c.t===dasar; })[0];
+    var rencana = cd ? cd.tot : 0, aktual = cd ? tAktual() : 0;
     var fak = (aktual>0 && rencana>0) ? aktual/rencana : 1;
     if(fak!==1) comp.forEach(function(c){
-      if(c.t==="teh"){ c.per=round(aktual/gel); c.tot=round(aktual); return; }
+      if(c.t===dasar){ c.per=round(aktual/gel); c.tot=round(aktual); return; }
       if(c.t==="espresso") return;   // shot datang utuh, tidak bisa dipress sebagian
       c.per=round(c.per*fak); c.tot=round(c.per*gel);
       if(c.min!=null){ c.min=round(c.min*fak); c.max=round(c.max*fak); }
@@ -3542,7 +3565,7 @@
     }
     return {menu:m, gelas:gel, level:lv, daun:daun, air:air, comp:comp,
             airSeduh:airSeduh, airTambah:airTambah, cara:cara,
-            aktual:aktual, rencana:rencana, fak:fak,
+            dasar:dasar, aktual:aktual, rencana:rencana, fak:fak,
             es: m.es ? round(m.es*gel*fak) : 0, esCair: m.es ? round(m.es*ES_CAIR*gel*fak) : 0};
   }
 
@@ -3651,9 +3674,9 @@
 
     var judul = '<div class="rsp-head">'+ic(m.ic.replace(/^i-/,""))+m.nama+'</div>'+
       '<p class="rsp-sub">'+h.gelas+' gelas · level <b>'+TLEVEL[h.level].cat+'</b> — '+TLEVEL[h.level].sub+'.</p>'+
-      (h.fak!==1 ? '<p class="rsp-sub">Disesuaikan dengan hasil seduh sebenarnya: <b>'+rnice(h.aktual)+' ml</b> dari rencana '+h.rencana+' ml. Semua bahan di bawah dikali <b>'+(Math.round(h.fak*100)/100)+'</b>.'
+      (h.fak!==1 ? '<p class="rsp-sub">Disesuaikan dengan '+TDASAR[h.dasar].frasa+': <b>'+rnice(h.aktual)+' ml</b> dari rencana '+rnice(h.rencana)+' ml. Semua bahan di bawah dikali <b>'+(Math.round(h.fak*100)/100)+'</b>.'
           +(m.bahan.some(function(b){ return b.t==="espresso"; }) ? ' Espressonya tetap — satu shot datang utuh, tidak bisa dipress sebagian.' : '')
-          +(h.fak<0.6 ? ' Jauh di bawah rencana; cek apakah ada yang tertinggal di saringan atau daunnya menyerap lebih banyak.'
+          +(h.dasar!=="teh" ? '' : h.fak<0.6 ? ' Jauh di bawah rencana; cek apakah ada yang tertinggal di saringan atau daunnya menyerap lebih banyak.'
           : h.fak>1.5 ? ' Jauh di atas rencana; tehnya jadi lebih encer daripada resep.' : '')+'</p>' : '');
 
     var tips = (m.catatan||[]).length
@@ -3757,6 +3780,7 @@
 
                     +" · hasil "+(h.fak!==1 ? rnice(h.aktual/h.gelas)+" ml/gelas (rencana "+m.teh+", ×"+(Math.round(h.fak*100)/100)+")" : m.teh+" ml/gelas") : "")
       + (bahanTxt ? " · "+bahanTxt : "")
+      + (h.fak!==1 && h.dasar!=="teh" ? " · disesuaikan ×"+(Math.round(h.fak*100)/100)+" dari rencana "+rnice(h.rencana/h.gelas)+" ml/gelas" : "")
       + (h.es>0 ? " · Es batu "+h.es+" g" : "");
     var notes = loadNotes();
     notes.unshift({
