@@ -3390,7 +3390,7 @@
      bahan:[{t:"kopi_instan", min:12, max:12},{t:"gula", min:20, max:25},{t:"air", min:30, max:30},{t:"uht", min:220, max:220}],
      catatan:["<b>Cuma bisa dengan kopi instan.</b> Espresso atau V60 tidak akan mengeras — yang membentuk krimnya itu bubuk kopi kering yang larut jenuh, bukan kopinya.",
               "Rumus aslinya <b>2 sdm kopi, 2 sdm gula, 2 sdm air panas</b> — 12 g, ±25 g, dan 30 ml. Level Ringan memotong gulanya sedikit ke 20 g; krimnya masih bisa kaku, cuma butuh kocokan sedikit lebih lama.",
-              "<b>Gulanya jangan dikurangi lagi di bawah itu.</b> Kopi, gula, dan air harus kira-kira seimbang; gula yang dipotong membuat krimnya tidak pernah kaku. Kalau kemanisan, pakai susu tawar saja dan biarkan krim ini yang jadi manisnya.",
+              "<b>Gulanya jangan dikurangi lagi di bawah itu.</b> Kopi, gula, dan air harus kira-kira seimbang; gula yang dipotong membuat krimnya tidak pernah kaku. Susunya sudah tawar, jadi manisnya cuma dari krim ini — kalau kemanisan, jangan semua krimnya diaduk ke susu, sisakan sebagian.",
               "Airnya harus panas supaya gula dan kopinya larut betul sebelum dikocok.",
               "Pengocok listrik butuh 2–3 menit. Berhenti saat warnanya berubah pucat kecoklatan dan bekas kocokannya tidak hilang lagi."],
      saji:["Masukkan kopi, gula, dan air panas ke gelas kecil atau mangkuk.",
@@ -3596,10 +3596,11 @@
       return '<tr><td><span class="rsp-b">'+nama+'</span>'+
              '<span class="rsp-x">'+ket+'</span>'+
              '<span class="rsp-x">'+(c.t==="espresso" ? "ditimbang di panel Tygopresso — 2× press, bubuk baru tiap kali"
+                                    : !(tampil>0) ? "tidak dipakai di level ini"
                                     : b.bubuk ? sendokTxt(c.t, tampil) : tAlat(vml, vgr))+'</span>'+
              (c.t==="uht" ? '<span class="rsp-x">'+evapTxt(tampil)+'</span>' : '')+'</td>'+
              '<td><span class="rsp-n">'+p.utama+'</span>'+
-             (p.lain? '<span class="rsp-n" style="display:block;font-size:13px;margin-top:2px">≈ '+p.lain+'</span>' : '')+
+             (p.lain && tampil>0 ? '<span class="rsp-n" style="display:block;font-size:13px;margin-top:2px">≈ '+p.lain+'</span>' : '')+
              (h.gelas>1 ? '<span class="rsp-x">'+tPair(c.per, c.t).utama+perlbl+'</span>' : '')+
              '</td></tr>';
     }).join("");
