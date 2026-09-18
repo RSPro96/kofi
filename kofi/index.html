@@ -726,7 +726,7 @@
 
     <div class="card">
       <h2>Pilih Menu</h2>
-      <p class="hint">Tiga puluh tujuh menu — teh, kopi instan, dan minuman lain — semuanya ditakar untuk satu gelas penuh &mdash; ±250&ndash;300 ml untuk yang panas, dan lebih besar untuk menu ber-es karena esnya ikut mengisi gelas. Beberapa bahannya belum tentu ada di dapurmu; lihat daftar bahan di tiap menu. Semua takaran di bawah langsung menyesuaikan menu, jumlah gelas, level manis, dan jumlah teh, air, atau susu yang kamu isi sendiri.</p>
+      <p class="hint">Tiga puluh tujuh menu — teh, kopi instan, dan minuman lain — semuanya ditakar untuk satu gelas penuh &mdash; ±250&ndash;300 ml untuk yang panas (kecuali Kopi Hitam Instan, secangkir 150 ml), dan lebih besar untuk menu ber-es karena esnya ikut mengisi gelas. Beberapa bahannya belum tentu ada di dapurmu; lihat daftar bahan di tiap menu. Semua takaran di bawah langsung menyesuaikan menu, jumlah gelas, level manis, dan jumlah teh, air, atau susu yang kamu isi sendiri.</p>
       <div class="g-drinks rsp-menu" id="th-menu"></div>
     </div>
 
@@ -3352,10 +3352,11 @@
            "Tuang air soda dingin pelan-pelan lewat dinding gelas supaya lapisannya terjaga dan buihnya tidak meluap."]},
 
     {id:"kopi_instan_hitam", nama:"Kopi Hitam Instan", ic:"i-droplet", jenis:"instan",
-     sub:"Kekuatan sama dengan anjuran kemasan, cuma untuk segelas penuh, bukan cangkir kecil.",
+     sub:"Cara umumnya: 1 sendok teh munjung untuk secangkir 150 ml air panas.",
      daun:0, teh:0,
-     bahan:[{t:"kopi_instan", min:3, max:3},{t:"air", min:250, max:250},{t:"sirup", min:0, max:15}],
-     catatan:["<b>Kenapa 3 g, bukan 2 g seperti di kemasan?</b> Angka “100 g untuk 50 gelas” itu 2 g untuk <i>cangkir</i> ±150–180 ml. Di sini gelasnya 250 ml, jadi kopinya ikut dinaikkan supaya kekuatannya sama — 2 g di 250 ml rasanya seperti air kopi.",
+     bahan:[{t:"kopi_instan", min:3, max:3},{t:"air", min:150, max:150},{t:"sirup", min:0, max:10}],
+     catatan:["<b>Secangkir, bukan segelas.</b> Resep umumnya 1 sendok teh untuk 150 ml air — kopi hitam memang disajikan di cangkir, bukan gelas 250 ml seperti menu lain di panel ini. Airnya lebih banyak dari itu dan rasanya jadi encer.",
+              "<b>Sendoknya munjung, bukan peres.</b> 1 sdt peres cuma ±2 g (angka “100 g untuk 50 gelas” di kemasan); 1 sdt munjung ±3 g — sama dengan “± 1½ sdt” di kartu, yang dihitung dengan sendok peres — dan itu yang dipakai di sini — ±2 g per 100 ml. Mau segelas penuh? Isi 250 ml di kolom Air yang dipakai, kopinya ikut jadi 5 g.",
               "<b>Airnya jangan yang baru mendidih.</b> Tunggu 1–2 menit dulu, ±85–90 °C. Bubuknya sudah larut sempurna, tidak butuh air sepanas itu, dan air mendidih membuat robusta terasa gosong dan pahit.",
               "Nescafé Classic Indonesia 100% robusta Lampung: badannya tebal dan pahitnya tegas, beda dengan arabica di panel Tygopresso. Itu sebabnya menu susu di golongan ini kopinya dinaikkan, bukan susunya yang dikurangi."],
      saji:["Masukkan kopi ke gelas, tuang air panas sedikit dulu (±20 ml), aduk sampai tidak ada butiran.",
@@ -3365,8 +3366,8 @@
     {id:"kopi_instan_susu", nama:"Kopi Susu Instan", ic:"i-cup", jenis:"instan", top:true,
      sub:"Ala sanger: kopi instan pekat, susu kental manis, dikocok sampai berbuih.",
      daun:0, teh:0,
-     bahan:[{t:"kopi_instan", min:4, max:4},{t:"air", min:210, max:210},{t:"skm", min:35, max:45}],
-     catatan:["<b>Kopinya dua kali takaran kemasan</b> — 4 g, bukan 2 g. SKM sebanyak ini menutupi kopi dengan kekuatan biasa.",
+     bahan:[{t:"kopi_instan", min:5, max:5},{t:"air", min:210, max:210},{t:"skm", min:35, max:45}],
+     catatan:["<b>Kopinya 5 g</b> — kekuatannya sama dengan Kopi Hitam Instan (±2 g per 100 ml), cuma gelasnya lebih besar. Kurang dari itu, SKM-nya menutupi kopi dan rasanya tinggal susu manis kecoklatan.",
               "Larutkan kopinya dengan ±40 ml air panas dulu sampai jadi pasta, baru SKM-nya masuk. SKM yang dituang ke bubuk kering bikin gumpalan yang susah hilang.",
               "Buihnya dari pengocok listrik. Celupkan kepalanya dulu baru dinyalakan, jalankan 20–30 detik, dan tahan tepat di bawah permukaan."],
      saji:["Larutkan kopi dengan ±40 ml air panas, aduk sampai jadi pasta halus.",
@@ -3376,7 +3377,7 @@
     {id:"kopi_instan_vanila", nama:"Vanilla Latte Instan", ic:"i-droplet", jenis:"instan",
      sub:"Kopi instan pekat, susu UHT hangat berbuih, dan sirup vanilla.",
      daun:0, teh:0,
-     bahan:[{t:"kopi_instan", min:4, max:4},{t:"air", min:40, max:40},{t:"uht", min:200, max:200},{t:"vanila", min:12, max:18}],
+     bahan:[{t:"kopi_instan", min:5, max:5},{t:"air", min:40, max:40},{t:"uht", min:200, max:200},{t:"vanila", min:12, max:18}],
      catatan:["Airnya cuma 40 ml — kopi pekat seukuran double shot espresso, dan sisa gelasnya diisi susu. Ini latte, bukan kopi hitam yang ditambah susu.",
               "Hangatkan susunya sampai hangat kuku saja, jangan mendidih. Susu mendidih berubah rasa dan berkulit.",
               "Kalau vanilla-nya kurang terasa, naikkan levelnya — jangan menambah kopi, robusta yang kelebihan langsung terasa pahit."],
@@ -3387,8 +3388,8 @@
     {id:"kopi_instan_es", nama:"Es Kopi Susu Instan", ic:"i-cup", jenis:"instan", es:120,
      sub:"Versi dingin: kopinya lebih pekat supaya tidak kalah oleh es yang mencair.",
      daun:0, teh:0,
-     bahan:[{t:"kopi_instan", min:5, max:5},{t:"air", min:50, max:50},{t:"sirup", min:15, max:20},{t:"uht", min:170, max:170}],
-     catatan:["<b>Kopinya 5 g, bukan 4 g.</b> Es yang mencair menambah ±30 ml air, dan dingin juga menumpulkan rasa manis — itu sebabnya sirupnya ikut lebih banyak daripada menu panas.",
+     bahan:[{t:"kopi_instan", min:6, max:6},{t:"air", min:50, max:50},{t:"sirup", min:15, max:20},{t:"uht", min:170, max:170}],
+     catatan:["<b>Kopinya 6 g, sedikit lebih banyak daripada menu panas (5 g).</b> Es yang mencair menambah ±30 ml air, dan dingin juga menumpulkan rasa manis — itu sebabnya sirupnya ikut lebih banyak daripada menu panas.",
               "<b>Larutkan kopi dan sirup di air panas dulu.</b> Kopi instan memang larut di air dingin, tapi lambat dan sering mengendap di dasar gelas.",
               "Tidak punya es? Pakai susu langsung dari kulkas dan kurangi airnya jadi 30 ml — hasilnya kopi susu dingin, cuma tanpa gelas yang berembun."],
      saji:["Larutkan kopi dengan 50 ml air panas, masukkan sirup gula, aduk sampai bening.",
