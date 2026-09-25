@@ -726,7 +726,7 @@
 
     <div class="card">
       <h2>Pilih Menu</h2>
-      <p class="hint">Tiga puluh tujuh menu — teh, kopi instan, dan minuman lain — semuanya ditakar untuk satu gelas penuh &mdash; ±250&ndash;300 ml untuk yang panas (kecuali Kopi Hitam Instan, secangkir 150 ml), dan lebih besar untuk menu ber-es karena esnya ikut mengisi gelas. Beberapa bahannya belum tentu ada di dapurmu; lihat daftar bahan di tiap menu. Semua takaran di bawah langsung menyesuaikan menu, jumlah gelas, level manis, dan jumlah teh, air, atau susu yang kamu isi sendiri.</p>
+      <p class="hint">Tiga puluh sembilan menu — teh, kopi saring, kopi instan, dan minuman lain — semuanya ditakar untuk satu gelas penuh &mdash; ±250&ndash;300 ml untuk yang panas (kecuali Kopi Hitam Instan, secangkir 150 ml), dan lebih besar untuk menu ber-es karena esnya ikut mengisi gelas. Beberapa bahannya belum tentu ada di dapurmu; lihat daftar bahan di tiap menu. Semua takaran di bawah langsung menyesuaikan menu, jumlah gelas, level manis, dan jumlah teh, air, atau susu yang kamu isi sendiri.</p>
       <div class="g-drinks rsp-menu" id="th-menu"></div>
     </div>
 
@@ -2047,14 +2047,18 @@
          d:"Bilas saringan kain dengan air panas, lalu gantung di gelas tahan panas atau di badan kaca One Two Cups — ruang seduhnya diangkat dulu. Panaskan wadahnya dengan air panas dan buang airnya.",
          el:"th-cara", ok:null},
         {t:"Isi Teh & Air", ic:"i-leaf",
-         d:"Masukkan teh ke saringan sesuai angka di kartu Takaran — daun curah, atau isi kantong teh yang digunting. Tuang air panas "+j0.suhu+" ke saringan sampai tehnya terendam.",
+         d: r.jenis==="kopi"
+           ? "Masukkan bubuk kopi ke saringan sesuai angka di kartu Takaran. Tuang air panas "+j0.suhu+" langsung ke bubuknya sampai semuanya basah, lalu aduk sebentar."
+           : "Masukkan teh ke saringan sesuai angka di kartu Takaran — daun curah, atau isi kantong teh yang digunting. Tuang air panas "+j0.suhu+" ke saringan sampai tehnya terendam.",
          el:"th-out", ok:null},
         {t:"Rendam & Timer", ic:"i-play",
          d:"Biarkan saringannya terendam dan nyalakan timer di bawah layar.",
          el:"th-timerfab", ok:null},
         {t:"Tuang Lewat Saringan", ic:"i-droplet",
-         d:"Begitu timer bunyi, angkat saringannya dan tuang tehnya bolak-balik lewat saringan 3–4 kali ke wadah lain."
-           +(hitam ? " Terakhir tekan ampasnya dengan sendok — bagian itu yang paling banyak menyumbang badan rasa." : " Jangan diperas: ampas melati yang ditekan mengeluarkan rasa sepat."),
+         d: r.jenis==="kopi"
+           ? "Begitu timer bunyi, tuang bolak-balik lewat kain antara dua wadah <b>5–10 kali</b>, dari ketinggian. Ini bagian intinya, bukan sekadar menyaring. <b>Jangan diperas</b> — ampas kopi yang ditekan mengeluarkan rasa pahit."
+           : "Begitu timer bunyi, angkat saringannya dan tuang tehnya bolak-balik lewat saringan 3–4 kali ke wadah lain."
+             +(hitam ? " Terakhir tekan ampasnya dengan sendok — bagian itu yang paling banyak menyumbang badan rasa." : " Jangan diperas: ampas melati yang ditekan mengeluarkan rasa sepat."),
          el:"th-timerfab", ok:null}
       ] : [
         {t:"Isi Teko Listrik", ic:"i-cup",
@@ -2983,7 +2987,8 @@
   var TJENIS = {
     melati: {label:"Teh melati cacah", pendek:"Teh melati",      suhu:"±85–90 °C"},
     hitam:  {label:"Teh hitam", pendek:"Teh hitam", suhu:"±95–100 °C, air baru mendidih"},
-    thai:   {label:"Thai Tea Mix (ChaTraMue)", pendek:"Thai tea", suhu:"±95–100 °C, air baru mendidih"}
+    thai:   {label:"Thai Tea Mix (ChaTraMue)", pendek:"Thai tea", suhu:"±95–100 °C, air baru mendidih"},
+    kopi:   {label:"Bubuk kopi giling halus", pendek:"Kopi saring", suhu:"±95–100 °C, air baru mendidih"}
   };
   // Tiga cara menyeduh. One Two Cups dibatasi ruang seduhnya; saringan kain
   // (cara kedai mamak) dan rebus di teko listrik tidak. Teh melati tidak boleh
@@ -3005,6 +3010,7 @@
     var alasan =
         m.jenis==="thai" ? "Saringan kain itu cara penjual cha yen di Thailand: dituang bolak-balik lewat kain menarik badan tehnya, dan kainnya menahan butiran ChaTraMue yang sangat halus. One Two Cups juga bisa dipakai; kalau air seduhnya lewat dari ruang seduh, kartu Takaran otomatis membaginya jadi seduhan pekat plus air tambahan."
       : c==="rebus" ? "Direbus bersama airnya, air bertahan di titik didih dan terus bergolak — tanin dan badan tehnya keluar paling banyak dan paling tahan dilawan susu kental manis. Itu cara kedai mamak."
+      : m.jenis==="kopi" ? "Itu memang cara warung Aceh. Bubuk kopi halus diseduh di dalam kain, lalu cairannya dituang bolak-balik lewat kain dari ketinggian 5–10 kali — ekstraksinya jadi rata, ampas halusnya tersaring berkali-kali, dan suhunya turun ke suhu minum. One Two Cups tidak cocok: bubuk sehalus ini menyumbat saringannya."
       : c==="saringan" && m.es ? "Teh untuk minuman es harus sangat pekat. Menuang bolak-balik lewat saringan kain — cara cha yen Thailand — menarik badan tanpa merebus, dan airnya cuma sedikit, di bawah garis MIN kebanyakan teko listrik."
       : c==="saringan" ? "Milk tea butuh badan tebal. Menuang bolak-balik lewat saringan kain — cara milk tea Hong Kong — menarik lebih banyak badan daripada didiamkan, dan tidak terganjal ruang seduh 190 ml."
       : m.jenis==="melati" ? "Melati butuh 85–90 °C dan waktu yang pas. Ruang seduh One Two Cups tertutup sehingga aromanya tidak menguap, dan tombolnya menghentikan seduhan tepat waktu sebelum berubah sepat. Dituang bolak-balik lewat kain justru membuang aromanya."
@@ -3016,6 +3022,7 @@
     // Yang direbus cuma teh hitam. Melati rusak aromanya kena air mendidih;
     // Thai tea tidak perlu direbus (petunjuk kemasan) dan butirannya yang
     // sangat halus menyumbat saringan cerat teko listrik.
+    if(m && m.jenis==="kopi") return "saringan";
     return (c==="rebus" && m && m.jenis!=="hitam") ? "saringan" : c;
   }
   var TLEVEL = [
@@ -3351,6 +3358,32 @@
            "Isi es sampai hampir penuh.",
            "Tuang air soda dingin pelan-pelan lewat dinding gelas supaya lapisannya terjaga dan buihnya tidak meluap."]},
 
+    {id:"kopi_saring", nama:"Kopi Saring Aceh", ic:"i-droplet", jenis:"kopi", saran:"saringan",
+     sub:"Kopi warung Aceh: bubuk halus diseduh di kain, lalu ditarik bolak-balik lewat saringannya.",
+     daun:25, teh:200, waktu:180000, waktuTxt:"2–3 menit",
+     bahan:[{t:"sirup", min:0, max:15}],
+     catatan:["<b>Bubuknya digiling halus</b>, lebih halus daripada untuk V60 — mendekati gula pasir halus. Kain yang menahan ampas, jadi halus bukan masalah; justru itu yang memberi badan. Di Aceh umumnya robusta Gayo.",
+              "<b>Pekat, memang begitu takarannya:</b> 25 g untuk 200 ml, sekitar 1:8. Kopi ini disiapkan untuk dilawan susu kental manis, jadi kalau diminum polos dan terasa terlalu kuat, tambah air panas di gelas.",
+              "<b>Menarik itu bukan sekadar menyaring.</b> Tuang bolak-balik lewat kain 5–10 kali dari ketinggian: ekstraksinya jadi rata, ampas halus tersaring berulang, suhunya turun ke suhu minum, dan aromanya terangkat.",
+              "<b>Jangan diperas.</b> Ampas yang ditekan keras mengeluarkan rasa pahit dan kelat.",
+              "<b>Pakai kain khusus kopi.</b> Minyak kopi menempel di serat dan tidak hilang — kain bekas kopi akan membawa rasa itu ke tehmu. Setelah dipakai bilas dengan air panas <b>tanpa sabun</b>, lalu keringkan benar-benar, atau rendam di air bersih di kulkas kalau dipakai tiap hari.",
+              "Airnya lebih banyak daripada kopi yang keluar karena ampas menahan ±2 ml per gram — angka Air panas di kartu sudah memperhitungkannya."],
+     saji:["Tuang kopi saring ke gelas selagi panas.",
+           "Cicipi dulu sebelum menambah gula; kopi Gayo yang baru disaring sering sudah terasa manis alami."]},
+
+    {id:"sanger_saring", nama:"Sanger Saring", ic:"i-cup", jenis:"kopi", saran:"saringan", top:true,
+     sub:"Sanger asli Aceh: kopi saring, susu kental manis, ditarik sampai berbuih — tanpa mesin espresso.",
+     daun:25, teh:150, waktu:180000, waktuTxt:"2–3 menit",
+     bahan:[{t:"skm", min:35, max:45},{t:"evap", min:20, max:20}],
+     catatan:["<b>Kopinya lebih pekat daripada Kopi Saring polos</b> — 25 g untuk 150 ml, sekitar 1:6. SKM sebanyak ini menenggelamkan kopi yang lebih encer.",
+              "<b>Buihnya dari tarikan, bukan dari uap.</b> Setelah SKM larut, tarik lagi campurannya bolak-balik antara dua gelas 5–10 kali. Tidak mau menuang dari tinggi? Pengocok listrik hasilnya mirip.",
+              "Susu evaporasi bisa dilewat kalau tidak ada, atau diganti susu UHT <b>dua kali takarannya</b> — 20 ml evaporasi ≈ 40 ml UHT.",
+              "Bedanya dengan Sanger Espresso di panel Tygopresso: espresso memberi crema dan rasa yang lebih terang, kopi saring memberi badan yang lebih tebal dan pahit yang lebih bulat.",
+              "Aduk SKM selagi kopinya masih panas. SKM sulit larut begitu cairannya sudah hangat kuku."],
+     saji:["Masukkan SKM dan susu evaporasi ke kopi saring yang masih panas, aduk sampai benar-benar larut.",
+           "Siapkan dua gelas bersih, tuang bolak-balik dari ketinggian 5–10 kali sampai permukaannya berbuih.",
+           "Sajikan selagi hangat, jangan menunggu buihnya turun."]},
+
     {id:"kopi_instan_hitam", nama:"Kopi Hitam Instan", ic:"i-droplet", jenis:"instan",
      sub:"Cara umumnya: 1 sendok teh munjung untuk secangkir 150 ml air panas.",
      daun:0, teh:0,
@@ -3496,7 +3529,7 @@
 
   var TGRUP = {melati:"Teh Melati", hitam:"Teh Hitam", thai:"Thai Tea — ChaTraMue",
                susu:"Susu & Coklat — tanpa kopi & teh", rempah:"Jahe & Rempah", segar:"Segar",
-               instan:"Kopi Instan — Nescafé Classic", "":"Tanpa teh"};
+               instan:"Kopi Instan — Nescafé Classic", kopi:"Kopi Saring — cara Aceh", "":"Tanpa teh"};
   function renderTehMenu(){
     var box=$("th-menu"); box.innerHTML="";
     if(!state.teh.resep) state.teh.resep=TMENU[0].id;
@@ -3543,9 +3576,9 @@
     var d = tDasar(m);
     $("th-aktual-field").style.display = d ? "" : "none";
     if(d){
-      $("th-aktual-lbl").textContent = TDASAR[d].lbl+" (opsional)";
+      $("th-aktual-lbl").textContent = (d==="teh" && m.jenis==="kopi" ? "Kopi yang benar-benar keluar" : TDASAR[d].lbl)+" (opsional)";
       $("th-aktual-hint").innerHTML = d==="teh"
-        ? 'Seduhan jarang keluar persis seperti rencana &mdash; daun menyerap lebih banyak, ada yang tertinggal di saringan, atau kamu sengaja menyeduh lebih sedikit. Timbang saja hasil seduhnya (1 g = 1 ml), masukkan di sini, dan <b>takaran susu, gula, dan esnya ikut menyesuaikan</b> supaya perbandingannya tetap sama. Isi totalnya untuk semua gelas, bukan per gelas. Kosongkan atau isi 0 untuk ikut resep.'
+        ? 'Seduhan jarang keluar persis seperti rencana &mdash; '+(m.jenis==="kopi"?"ampasnya":"daunnya")+' menyerap lebih banyak, ada yang tertinggal di saringan, atau kamu sengaja menyeduh lebih sedikit. Timbang saja hasil seduhnya (1 g = 1 ml), masukkan di sini, dan <b>takaran susu, gula, dan esnya ikut menyesuaikan</b> supaya perbandingannya tetap sama. Isi totalnya untuk semua gelas, bukan per gelas. Kosongkan atau isi 0 untuk ikut resep.'
         : 'Gelasmu lebih besar atau lebih kecil, atau '+TDASAR[d].nya+' terlanjur kebanyakan? Isi jumlah yang kamu pakai di sini, dan <b>semua bahan lain ikut menyesuaikan</b> supaya perbandingannya tetap sama. Isi totalnya untuk semua gelas, bukan per gelas. Kosongkan atau isi 0 untuk ikut resep.';
     }
   }
@@ -3688,15 +3721,18 @@
         (state.teh.cara!==h.cara
           ? '<p class="rsp-sub">'+(m.jenis==="thai"
               ? 'Thai tea tidak direbus — kemasannya cuma minta air mendidih, dan butirannya yang sangat halus bisa menyumbat saringan cerat teko listrik.'
+              : m.jenis==="kopi" ? (state.teh.cara==="rebus"
+                  ? 'Kopi saring tidak direbus — bubuk yang ikut mendidih jadi pahit dan kelat.'
+                  : 'Kopi tidak diseduh di One Two Cups — bubuk sehalus ini menyumbat saringan tekonya.')
               : 'Teh melati tidak direbus — air mendidih merusak aromanya.')
             +' Takaran di bawah memakai cara saringan kain.</p>' : '')+
         '<table class="rsp-tbl"><tbody>'+
         '<tr><td><span class="rsp-b">'+j.label+'</span><span class="rsp-x">timbang, jangan dikira-kira</span>'+
-          (kantong>0 && m.jenis!=="thai" ? '<span class="rsp-x">atau ≈ '+kantong+' kantong teh celup (±1,85 g/kantong)</span>' : '')+'</td>'+
+          (kantong>0 && (m.jenis==="melati" || m.jenis==="hitam") ? '<span class="rsp-x">atau ≈ '+kantong+' kantong teh celup (±1,85 g/kantong)</span>' : '')+'</td>'+
           '<td><span class="rsp-n">'+h.daun+' g</span></td></tr>'+
         '<tr><td><span class="rsp-b">'+(h.cara==="rebus" ? 'Air di teko listrik' : h.airTambah>0 ? 'Air panas ke ruang seduh' : 'Air panas')+'</span>'+
           '<span class="rsp-x">'+(h.cara==="rebus" ? 'didihkan bersama tehnya · pastikan di atas garis MIN tekomu' : j.suhu)
-            +' · sudah termasuk ±'+round(m.daun*SERAP*h.gelas)+' ml yang diserap daun</span>'+
+            +' · sudah termasuk ±'+round(m.daun*SERAP*h.gelas)+' ml yang diserap '+(m.jenis==="kopi"?"ampas":"daun")+'</span>'+
           (h.airTambah>0 ? '<span class="rsp-x">isi sampai ±1 cm di bawah bibir — tehnya keluar lebih pekat, itu memang disengaja</span>' : '')+
           '<span class="rsp-x">'+tAlat(h.airSeduh, h.airSeduh)+'</span></td>'+
           '<td><span class="rsp-n">'+h.airSeduh+' ml</span></td></tr>'+
@@ -3710,7 +3746,7 @@
           ? '<tr><td><span class="rsp-b">Didihkan</span><span class="rsp-x">nyalakan, begitu mati diamkan ±2 menit, lalu nyalakan sekali lagi</span></td>'+
             '<td><span class="rsp-n">2× didih</span></td></tr>'
           : '<tr><td><span class="rsp-b">Waktu seduh</span><span class="rsp-x">'+(h.cara==="saringan"
-                ? 'rendam, lalu tuang bolak-balik lewat saringan 3–4 kali'
+                ? 'rendam, lalu tuang bolak-balik lewat saringan '+(m.jenis==="kopi" ? "5–10 kali dari ketinggian" : "3–4 kali")
                 : 'tekan tombol begitu waktunya habis')+'</span></td>'+
             '<td><span class="rsp-n">'+(m.waktuTxt||"3–4 menit")+'</span></td></tr>')+
         '</tbody></table>';
