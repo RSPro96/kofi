@@ -326,6 +326,7 @@
   </div>
 
   <section id="panel-tygo" class="panel">
+  <div id="t-edu-giling"></div>
   <details class="edu">
     <summary><svg class="ic"><use href="#i-info"/></svg> Cara pakai (3 langkah) <svg class="ic caret"><use href="#i-chevron"/></svg></summary>
     <div class="body">
@@ -501,6 +502,7 @@
 
   <!-- ================= V60 CONE 01 ================= -->
   <section id="panel-v60" class="panel" style="display:none">
+    <div id="v-edu-giling"></div>
     <details class="edu">
       <summary><svg class="ic"><use href="#i-info"/></svg> Cara pakai V60 Cone 01 (pour over) <svg class="ic caret"><use href="#i-chevron"/></svg></summary>
       <div class="body">
@@ -656,6 +658,7 @@
   </section>
 
   <section id="panel-teh" class="panel" style="display:none">
+    <div id="th-edu-giling"></div>
     <details class="edu">
       <summary><svg class="ic"><use href="#i-cup"/></svg> Cara pakai teko saringan tekan <svg class="ic caret"><use href="#i-chevron"/></svg></summary>
       <div class="body">
@@ -2984,6 +2987,33 @@
   // Teh melati itu bunga: air terlalu panas merusak aromanya, kelewat lama jadi sepat.
   // Teh hitam cacah punya tanin: butuh air lebih panas, tapi kelewat lama jadi pahit
   // dan kelat. Untuk menu bersusu, tehnya dikuatkan dengan menambah daun — bukan waktu.
+  // Satu naskah untuk tiga panel — setelan giling berlaku di semua alat, dan
+  // menyalinnya tiga kali di HTML cuma bikin salah satunya ketinggalan.
+  var EDU_GILING =
+    '<details class="edu">'+
+    '<summary><svg class="ic"><use href="#i-droplet"/></svg> Giling &amp; biji <svg class="ic caret"><use href="#i-chevron"/></svg></summary>'+
+    '<div class="body">'+
+    '<p><b>Sangrai (roasting)</b> itu memasak biji kopi. Biji mentah berwarna hijau pucat, keras, dan rasanya seperti kacang &mdash; tidak bisa diseduh. Disangrai di suhu ±200 &deg;C selama 10&ndash;15 menit, warnanya jadi coklat, gulanya berkaramel, dan aroma kopi yang kita kenal baru muncul. <b>Biji yang kamu beli sudah disangrai</b>, jadi tinggal digiling dan diseduh.</p>'+
+    '<p><b>Tingkat sangrainya mengubah rasa.</b> Sangrai muda (<i>light</i>) warnanya coklat terang, asamnya lebih terasa dan rasa buahnya lebih jelas. Sangrai tua (<i>dark</i>) coklat gelap sampai berminyak, pahitnya lebih tegas dan rasa asalnya tertutup rasa sangrai. Tengahnya (<i>medium</i>) paling aman untuk kopi susu. Makin gelap sangrainya, makin gampang larut &mdash; jadi kalau ganti biji yang lebih gelap, gilingnya perlu sedikit lebih kasar.</p>'+
+    '<p><b>&ldquo;Natural&rdquo; itu cara mengolah, bukan tingkat sangrai.</b> Setelah dipetik, buah kopi harus dilepas dari bijinya. Cara <i>washed</i> (giling basah) mengupas buahnya dulu baru dikeringkan &mdash; hasilnya bersih dan asamnya tajam. Cara <b>natural</b> mengeringkan buahnya utuh bersama bijinya, jadi gula buahnya meresap: rasanya lebih manis, berbadan tebal, sering ada rasa buah matang seperti nangka atau berry. Itu yang bikin natural cocok untuk kopi susu dan sanger &mdash; manisnya bertahan di balik SKM.</p>'+
+    '<p><b>Gayo</b> itu dataran tinggi Aceh Tengah, dan kopinya hampir selalu <b>arabika</b>. Jadi untuk Gayo pilih chip <b>Arabica</b> di Persiapan Kopi, bukan Robusta. &ldquo;King Gayo&rdquo; biasanya sebutan penjual untuk biji pilihan yang ukurannya lebih besar, bukan jenis lain.</p>'+
+    '<p><b>Setelan giling per alat:</b></p>'+
+    '<table class="rsp-tbl"><thead><tr><th>Alat</th><th>Raba bubuknya</th></tr></thead><tbody>'+
+    '<tr><td><span class="rsp-b">Tygopresso (8 bar)</span><span class="rsp-x">paling halus</span></td><td><span class="rsp-n" style="font-size:13px">seperti gula halus, sedikit menggumpal kalau dikepal</span></td></tr>'+
+    '<tr><td><span class="rsp-b">Kopi saring Aceh</span><span class="rsp-x">halus</span></td><td><span class="rsp-n" style="font-size:13px">seperti gula pasir yang dihaluskan, masih berpasir</span></td></tr>'+
+    '<tr><td><span class="rsp-b">V60 Cone</span><span class="rsp-x">sedang</span></td><td><span class="rsp-n" style="font-size:13px">seperti pasir pantai kasar</span></td></tr>'+
+    '</tbody></table>'+
+    '<p><b>Mengunci setelan Tygopresso pakai waktu, bukan angka klik.</b> Press 9 g bubuk dan hitung sampai airnya habis. Kurang dari <b>15 detik</b> berarti terlalu kasar &mdash; hasilnya asam dan tipis. Lebih dari <b>40 detik</b>, atau alatnya berat ditekan, berarti terlalu halus. Sasarannya <b>25&ndash;30 detik</b> untuk ±18 g hasil. Ubah <b>satu klik</b> tiap percobaan; dua klik sekaligus bikin kamu tidak tahu mana yang berpengaruh.</p>'+
+    '<p><b>Untuk kopi saring, jangan takut menggiling halus</b> &mdash; kain sanggup menahan bubuk halus, dan bubuk halus itu yang memberi badan tebal khas warung Aceh. Kalau hasil saringnya keruh berat dan endapannya tebal di dasar gelas, naikkan satu&ndash;dua klik saja.</p>'+
+    '<p><b>Merawat biji:</b></p><ul>'+
+    '<li><b>Giling tepat sebelum seduh.</b> Bubuk kehilangan aromanya dalam hitungan menit; biji utuh bertahan berminggu-minggu.</li>'+
+    '<li><b>Simpan di wadah kedap, suhu ruang, jauh dari cahaya.</b> Jangan di kulkas: biji menyerap bau, dan mengembun tiap kali dikeluarkan.</li>'+
+    '<li><b>Biji yang baru disangrai istirahat dulu 5&ndash;14 hari.</b> Gas CO&#8322;-nya masih banyak, dan di espresso itu bikin alirannya tidak rata dan rasanya tajam. Cari tanggal sangrai di kemasan, bukan tanggal kedaluwarsa.</li>'+
+    '<li><b>Timbang bijinya, bukan bubuknya.</b> Selalu ada sisa bubuk tertinggal di grinder, jadi menimbang setelah digiling membuat takaranmu kurang terus.</li>'+
+    '<li>Bubuk yang beterbangan dan menempel karena listrik statis? Basahi bijinya dengan <b>satu tetes air</b>, aduk, baru digiling.</li>'+
+    '</ul></div></details>';
+  ["t-edu-giling","v-edu-giling","th-edu-giling"].forEach(function(id){ $(id).innerHTML = EDU_GILING; });
+
   var TJENIS = {
     melati: {label:"Teh melati cacah", pendek:"Teh melati",      suhu:"±85–90 °C"},
     hitam:  {label:"Teh hitam", pendek:"Teh hitam", suhu:"±95–100 °C, air baru mendidih"},
