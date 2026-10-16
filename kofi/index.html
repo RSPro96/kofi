@@ -1027,6 +1027,32 @@
   // jenis biji: hanya mengatur yang bisa dikontrol (panas, pre-infusion, durasi).
   // Yield tidak diikutkan — kapasitas wadah bubuk kecil dan tetap, jadi rasio
   // aktual ditentukan alat, bukan pilihan biji.
+  // ---------- nomor gilingan ----------
+  // Grindernya berskala 0 = paling halus sampai 40 = paling kasar, naik per 5 poin.
+  // Angka di bawah disimpan sebagai pecahan dari rentang itu, bukan angka mati,
+  // jadi kalau grindernya ganti cukup GRIND yang diubah.
+  var GRIND = {min:0, max:40, step:5};
+  function grindNo(frac){
+    var v = GRIND.min + (GRIND.max-GRIND.min)*frac;
+    var k = Math.round(v/GRIND.step)*GRIND.step;
+    return Math.min(GRIND.max, Math.max(GRIND.min, k));
+  }
+  function grindGeser(no, langkah){
+    return Math.min(GRIND.max, Math.max(GRIND.min, no + langkah*GRIND.step));
+  }
+  function grindSkala(){
+    return "skala "+GRIND.min+" halus – "+GRIND.max+" kasar, naik per "+GRIND.step+" poin";
+  }
+  // frac 0 = sehalus mungkin, 1 = sekasar mungkin
+  var GILING = {
+    esp_arabica: 0.12,   // 5
+    esp_robusta: 0.22,   // 10
+    saring:      0.25,   // 10
+    v60_arabica: 0.45,   // 20
+    v60_robusta: 0.58,   // 25
+    konsentrat:  0.35    // 15
+  };
+
   var BIJI = {
     arabica: {label:"Arabica", press:"30–40 detik",
       note:"Padat, susah diekstrak → kejar panas. Panaskan alat + gelas dengan air panas dulu (buang airnya), air langsung dari teko, pre-infusion: tekan pelan sampai bubuk basah, tunggu 10–15 detik, baru tekan penuh. Asam tipis dan hambar = kurang ekstraksi, bukan watak bijinya."},
@@ -1239,7 +1265,11 @@
     document.querySelectorAll("#t-biji .chip").forEach(function(x){
       x.classList.toggle("active", x.getAttribute("data-biji")===b);
     });
-    $("t-biji-note").textContent = BIJI[b].note;
+    var gno = grindNo(b==="robusta" ? GILING.esp_robusta : GILING.esp_arabica);
+    $("t-biji-note").textContent = BIJI[b].note
+      + " Di grindermu: giling nomor " + gno + " (" + grindSkala() + ")."
+      + " Asam dan tipis → turun ke " + grindGeser(gno,-1) + "."
+      + " Pahit serak atau alat berat ditekan → naik ke " + grindGeser(gno,1) + ".";
     $("t-timer-target").textContent = "Target "+BIJI[b].press;
     saveCalib();
   }
@@ -1251,7 +1281,12 @@
     document.querySelectorAll("#v-biji .chip").forEach(function(x){
       x.classList.toggle("active", x.getAttribute("data-biji")===b);
     });
-    $("v-biji-note").textContent = VBIJI[b].note;
+    var vgno = grindNo(b==="robusta" ? GILING.v60_robusta : GILING.v60_arabica);
+    $("v-biji-note").textContent = VBIJI[b].note
+      + " Di grindermu: giling nomor " + vgno + " (" + grindSkala() + "),"
+      + " dan nomor " + grindNo(GILING.konsentrat) + " untuk konsentrat 1:5 karena airnya sedikit dan kontaknya singkat."
+      + " Air cepat netes → turun ke " + grindGeser(vgno,-1) + "."
+      + " Air lama menggenang → naik ke " + grindGeser(vgno,1) + ".";
   }
 
   // ---------- jumlah press ----------
@@ -3041,14 +3076,15 @@
     '<p><b>Tingkat sangrainya mengubah rasa.</b> Sangrai muda (<i>light</i>) warnanya coklat terang, asamnya lebih terasa dan rasa buahnya lebih jelas. Sangrai tua (<i>dark</i>) coklat gelap sampai berminyak, pahitnya lebih tegas dan rasa asalnya tertutup rasa sangrai. Tengahnya (<i>medium</i>) paling aman untuk kopi susu. Makin gelap sangrainya, makin gampang larut &mdash; jadi kalau ganti biji yang lebih gelap, gilingnya perlu sedikit lebih kasar.</p>'+
     '<p><b>&ldquo;Natural&rdquo; itu cara mengolah, bukan tingkat sangrai.</b> Setelah dipetik, buah kopi harus dilepas dari bijinya. Cara <i>washed</i> (giling basah) mengupas buahnya dulu baru dikeringkan &mdash; hasilnya bersih dan asamnya tajam. Cara <b>natural</b> mengeringkan buahnya utuh bersama bijinya, jadi gula buahnya meresap: rasanya lebih manis, berbadan tebal, sering ada rasa buah matang seperti nangka atau berry. Itu yang bikin natural cocok untuk kopi susu dan sanger &mdash; manisnya bertahan di balik SKM.</p>'+
     '<p><b>Gayo</b> itu dataran tinggi Aceh Tengah, dan kopinya hampir selalu <b>arabika</b>. Jadi untuk Gayo pilih chip <b>Arabica</b> di Persiapan Kopi, bukan Robusta. &ldquo;King Gayo&rdquo; biasanya sebutan penjual untuk biji pilihan yang ukurannya lebih besar, bukan jenis lain.</p>'+
-    '<p><b>Setelan giling per alat:</b></p>'+
-    '<table class="rsp-tbl"><thead><tr><th>Alat</th><th>Raba bubuknya</th></tr></thead><tbody>'+
-    '<tr><td><span class="rsp-b">Tygopresso (8 bar)</span><span class="rsp-x">paling halus</span></td><td><span class="rsp-n" style="font-size:13px">seperti gula halus, sedikit menggumpal kalau dikepal</span></td></tr>'+
-    '<tr><td><span class="rsp-b">Kopi saring Aceh</span><span class="rsp-x">halus</span></td><td><span class="rsp-n" style="font-size:13px">seperti gula pasir yang dihaluskan, masih berpasir</span></td></tr>'+
-    '<tr><td><span class="rsp-b">V60 Cone</span><span class="rsp-x">sedang</span></td><td><span class="rsp-n" style="font-size:13px">seperti pasir pantai kasar</span></td></tr>'+
+    '<p><b>Setelan giling per alat.</b> Grindermu berskala <b>'+GRIND.min+' (paling halus) sampai '+GRIND.max+' (paling kasar)</b>, naik per '+GRIND.step+' poin — jadi &ldquo;satu langkah&rdquo; di bawah ini berarti '+GRIND.step+' poin. Nomornya titik awal, bukan harga mati: rabanya yang menentukan, karena tiap biji dan tiap sangrai menggiling sedikit berbeda.</p>'+
+    '<table class="rsp-tbl"><thead><tr><th>Alat</th><th>Nomor &amp; raba bubuknya</th></tr></thead><tbody>'+
+    '<tr><td><span class="rsp-b">Tygopresso (8 bar)</span><span class="rsp-x">paling halus</span></td><td><span class="rsp-n">nomor '+grindNo(GILING.esp_arabica)+'</span><span class="rsp-x">robusta '+grindNo(GILING.esp_robusta)+' — cepat terekstrak jadi direm. Seperti gula halus, sedikit menggumpal kalau dikepal</span></td></tr>'+
+    '<tr><td><span class="rsp-b">Kopi saring Aceh</span><span class="rsp-x">halus</span></td><td><span class="rsp-n">nomor '+grindNo(GILING.saring)+'</span><span class="rsp-x">seperti gula pasir yang dihaluskan, masih berpasir</span></td></tr>'+
+    '<tr><td><span class="rsp-b">V60 Cone</span><span class="rsp-x">sedang</span></td><td><span class="rsp-n">nomor '+grindNo(GILING.v60_arabica)+'</span><span class="rsp-x">robusta '+grindNo(GILING.v60_robusta)+'. Seperti pasir pantai kasar</span></td></tr>'+
+    '<tr><td><span class="rsp-b">Konsentrat V60 1:5</span><span class="rsp-x">sedang-halus</span></td><td><span class="rsp-n">nomor '+grindNo(GILING.konsentrat)+'</span><span class="rsp-x">airnya sedikit dan kontaknya singkat, jadi satu langkah lebih halus</span></td></tr>'+
     '</tbody></table>'+
-    '<p><b>Mengunci setelan Tygopresso pakai waktu, bukan angka klik.</b> Press 9 g bubuk dan hitung sampai airnya habis. Kurang dari <b>15 detik</b> berarti terlalu kasar &mdash; hasilnya asam dan tipis. Lebih dari <b>40 detik</b>, atau alatnya berat ditekan, berarti terlalu halus. Sasarannya <b>25&ndash;30 detik</b> untuk ±18 g hasil. Ubah <b>satu klik</b> tiap percobaan; dua klik sekaligus bikin kamu tidak tahu mana yang berpengaruh.</p>'+
-    '<p><b>Untuk kopi saring, jangan takut menggiling halus</b> &mdash; kain sanggup menahan bubuk halus, dan bubuk halus itu yang memberi badan tebal khas warung Aceh. Kalau hasil saringnya keruh berat dan endapannya tebal di dasar gelas, naikkan satu&ndash;dua klik saja.</p>'+
+    '<p><b>Mengunci setelan Tygopresso pakai waktu, bukan angka klik.</b> Press 9 g bubuk dan hitung sampai airnya habis. Kurang dari <b>15 detik</b> berarti terlalu kasar &mdash; hasilnya asam dan tipis. Lebih dari <b>40 detik</b>, atau alatnya berat ditekan, berarti terlalu halus. Sasarannya <b>25&ndash;30 detik</b> untuk ±18 g hasil. Ubah <b>satu langkah ('+GRIND.step+' poin)</b> tiap percobaan; dua langkah sekaligus bikin kamu tidak tahu mana yang berpengaruh.</p>'+
+    '<p><b>Untuk kopi saring, jangan takut menggiling halus</b> &mdash; kain sanggup menahan bubuk halus, dan bubuk halus itu yang memberi badan tebal khas warung Aceh. Kalau hasil saringnya keruh berat dan endapannya tebal di dasar gelas, naikkan satu&ndash;dua langkah saja ('+GRIND.step+'&ndash;'+(GRIND.step*2)+' poin).</p>'+
     '<p><b>Merawat biji:</b></p><ul>'+
     '<li><b>Giling tepat sebelum seduh.</b> Bubuk kehilangan aromanya dalam hitungan menit; biji utuh bertahan berminggu-minggu.</li>'+
     '<li><b>Simpan di wadah kedap, suhu ruang, jauh dari cahaya.</b> Jangan di kulkas: biji menyerap bau, dan mengembun tiap kali dikeluarkan.</li>'+
