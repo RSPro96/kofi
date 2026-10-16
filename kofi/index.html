@@ -506,7 +506,7 @@
     <details class="edu">
       <summary><svg class="ic"><use href="#i-info"/></svg> Cara pakai V60 Cone 01 (pour over) <svg class="ic caret"><use href="#i-chevron"/></svg></summary>
       <div class="body">
-        <p>V60 = <b>nyeduh manual</b>: air dituang pelan-pelan ke bubuk kopi, tembus kertas filter, jatuh ke gelas di bawah. Conemu <b>ukuran 01</b> — pas untuk <b>1–2 cangkir</b>, muat ±15 g bubuk.</p>
+        <p>V60 = <b>nyeduh manual</b>: air dituang pelan-pelan ke bubuk kopi, tembus kertas filter, jatuh ke gelas di bawah. Ukuran cone menentukan berapa banyak sekali seduh — <b>01</b> untuk 1–2 cangkir, <b>02</b> untuk 1–4, <b>03</b> untuk 1–6. Pilih punyamu di kartu <b>Kapasitas Cone</b>, semua angka ikut menyesuaikan.</p>
         <ol>
           <li><b>Siapkan filter</b>: pasang kertas filter di cone, siram air panas dulu untuk menghilangkan rasa kertasnya, lalu buang airnya.</li>
           <li><b>Masukkan bubuk</b> giling sedang (sebesar butiran gula pasir). Pakai timbangan untuk menakarnya.</li>
@@ -521,12 +521,12 @@
 
     <div class="card">
       <h2>Target Porsi</h2>
-      <p class="hint">Conemu ukuran 01 — 1 gelas paling pas, 2 gelas masih bisa tapi tuang bertahap supaya cone tidak penuh. <b>Ukuran per gelas itu air yang dituang, bukan kopi yang jadi</b>: ampas menahan ±2× berat bubuk, jadi 220 g air menghasilkan ±190 ml di gelas. Di rasio 1:15 itu sudah 14,7 g bubuk — nyaris batas cone 01, jadi 220 g air praktis jadi batas sekali seduh.</p>
+      <p class="hint"><b>Ukuran per gelas itu air yang dituang, bukan kopi yang jadi</b>: ampas menahan ±2× berat bubuk, jadi 220 g air menghasilkan ±190 ml di gelas. Berapa gelas yang muat sekali seduh ditentukan kapasitas cone, bukan angka tetap — di rasio 1:15, 220 g air butuh 14,7 g bubuk, nyaris batas cone 01 tapi masih longgar di 02. Pilih ukuran cone-mu di kartu berikutnya; peringatan muncul kalau bubuknya lewat.</p>
       <div class="grid2">
         <div class="field">
           <label>Jumlah porsi / gelas</label>
           <div class="inrow">
-            <input type="number" id="v-porsi" min="1" max="2" step="1" value="1" />
+            <input type="number" id="v-porsi" min="1" max="6" step="1" value="1" />
             <span class="unit">gelas</span>
           </div>
         </div>
@@ -548,14 +548,16 @@
 
     <div class="card">
       <h2>Kapasitas Cone &amp; Rekomendasi Bubuk</h2>
-      <p class="hint">V60 01 biasanya muat ±15 g bubuk. Kalau rekomendasinya kelewat besar, akan muncul peringatan.</p>
+      <p class="hint">Pilih ukuran cone-mu dulu &mdash; angka kapasitas ikut menyesuaikan, dan peringatan muncul kalau rekomendasi bubuknya melebihi itu.</p>
+      <div class="chips" id="v-cone" style="margin-bottom:14px"></div>
       <div class="grid2">
         <div class="field">
           <label>Maks bubuk ditampung (cone)</label>
           <div class="inrow">
-            <input type="number" id="v-kap" min="1" max="100" step="1" value="15" />
+            <input type="number" id="v-kap" min="1" max="120" step="1" value="15" />
             <span class="unit">gram</span>
           </div>
+          <p class="hint" style="margin:6px 0 0;font-size:12.5px">Angka tiap ukuran itu <b>patokan praktis, bukan batas mati</b> &mdash; bentuk cone dan kehalusan gilingan ikut berpengaruh. Kalau punyamu ternyata muat lebih banyak, timpa saja angkanya di sini.</p>
         </div>
         <div class="field">
           <label>Target rasio (1:X)</label>
@@ -1770,7 +1772,7 @@
        ok:function(){ return num(g("v-porsi"))>0 && num(g("v-perporsi"))>0; },
        msg:"Isi dulu jumlah porsi & ukuran per gelas."},
       {t:"Kapasitas & Rasio", ic:"i-droplet",
-       d:"Pilih jenis bijinya dulu — arabica dan robusta beda suhu air dan lama seduhnya. V60 01 muat ±15 g bubuk; cek rekomendasi bubuknya, kalau lewat kapasitas akan muncul peringatan.",
+       d:"Pilih jenis bijinya dulu — arabica dan robusta beda suhu air, lama seduh, dan nomor gilingnya. Lalu pilih ukuran cone (01/02/03) atau isi kapasitasnya sendiri; rekomendasi bubuk langsung dibandingkan dengan angka itu.",
        el:"v-kap", ok:null},
       {t:"Fase Tuangan", ic:"i-info",
        d:"Rendam awal (2× bubuk, diam 30–45 detik) → tuang ke 60% → tuang ke 100%. Semua masuk satu wadah, baru dibagi ke gelas.",
@@ -1909,7 +1911,7 @@
            "Kalau sudah dingin, gula pasir sulit larut. Sirup 1:1 tetap bisa."]},
 
     {id:"v60_pekat", nama:"Konsentrat V60", ic:"i-droplet", pm:null, pekat:true, setara:0.6,
-     sub:"Rasio 1:5, 15 g bubuk. Bukan minuman jadi — ini pengganti espresso untuk menu susu.",
+     sub:"Rasio 1:5 — 75 g air, 15 g bubuk. Bukan minuman jadi, ini pengganti espresso untuk menu susu.",
      saji:["Konsentrat ini terlalu pekat kalau diminum langsung. Fungsinya menggantikan espresso, bukan jadi kopi seduh biasa.",
            "Hasilnya sekitar 45 ml, bukan 75 ml — bubuk menahan air kira-kira dua kali beratnya sendiri, dan itu normal.",
            "Untuk minuman susu, pakai <b>1,7x</b> dari jumlah espresso yang tertulis di resep — konsentrat 1:5 kekuatannya ±0,6x espresso. Resep minta 20 g espresso, tuang 33 g konsentrat.",
@@ -2479,6 +2481,47 @@
   });
 
   // ---------- V60 ----------
+  // Patokan praktis tiap ukuran V60. Angka dose-nya bukan spesifikasi resmi —
+  // bentuk cone dan kehalusan gilingan ikut menentukan, jadi boleh ditimpa.
+  var CONE = [
+    {id:"01", kap:15},
+    {id:"02", kap:25},
+    {id:"03", kap:40}
+  ];
+  function coneById(id){
+    for(var i=0;i<CONE.length;i++){ if(CONE[i].id===id) return CONE[i]; }
+    return null;
+  }
+  // ukuran dianggap terpilih selama kapasitasnya masih sama dengan patokan
+  function coneAktif(){
+    var k=num(g("v-kap"));
+    for(var i=0;i<CONE.length;i++){ if(CONE[i].kap===k) return CONE[i].id; }
+    return null;
+  }
+  function coneNama(){
+    var a=coneAktif();
+    return a ? "cone "+a : "cone-mu";
+  }
+  function renderCone(){
+    var box=$("v-cone"); if(!box) return;
+    box.innerHTML="";
+    var aktif=coneAktif();
+    CONE.forEach(function(c){
+      var chip=el("div","chip"+(c.id===aktif?" active":""), "V60 "+c.id+" · ±"+c.kap+" g");
+      chip.setAttribute("data-cone", c.id);
+      box.appendChild(chip);
+    });
+    box.appendChild(el("div","chip"+(aktif==null?" active":""), "Kustom"));
+    box.querySelectorAll("[data-cone]").forEach(function(chip){
+      chip.addEventListener("click", function(){
+        var c=coneById(chip.getAttribute("data-cone"));
+        if(!c) return;
+        $("v-kap").value = c.kap;
+        saveCalib(); calcV60();
+      });
+    });
+  }
+
   function num(n){ var x=parseFloat(n); return isFinite(x)&&x>0 ? x : 0; }
   function vDash(n){ return n>0 ? n : "–"; }
   function calcV60(){
@@ -2497,13 +2540,14 @@
     $("v-bloom").textContent  = vDash(bloom)+" g";
     $("v-t1").textContent     = vDash(t1)+" g";
     $("v-t2").textContent     = vDash(t2)+" g";
+    renderCone();
     var warn=$("v-warn");
     if(kap>0 && bubuk>0 && bubuk>kap){
       warn.style.display="flex";
-      warn.innerHTML = ic('frown') + " Bubuk yang dibutuhkan "+bubuk+" g, tapi cone 01 muat sekitar "+kap+" g — kurangi jumlah gelas, perkecil ukuran per gelas, atau encerkan rasionya.";
-    } else if(porsi>=2){
+      warn.innerHTML = ic('frown') + " Bubuk yang dibutuhkan "+bubuk+" g, tapi "+coneNama()+" muat sekitar "+kap+" g — kurangi jumlah gelas, perkecil ukuran per gelas, encerkan rasionya, atau seduh "+Math.ceil(bubuk/kap)+" kali bergantian.";
+    } else if(kap>0 && bubuk>0 && bubuk>kap*0.85){
       warn.style.display="flex";
-      warn.innerHTML = ic('frown') + " 2 gelas sekaligus di cone 01 itu penuh banget — hasilnya bisa kurang rata. Kalau bisa, seduh 1 gelas dulu, ulangi untuk gelas berikutnya.";
+      warn.innerHTML = ic('frown') + " Bubuk "+bubuk+" g sudah mepet kapasitas "+coneNama()+" ("+kap+" g). Bubuknya jadi tebal dan air gampang meluber di atas — tuang lebih pelan dan bertahap, jangan sekali guyur.";
     } else {
       warn.style.display="none";
     }
