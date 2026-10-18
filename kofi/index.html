@@ -29,10 +29,12 @@
   html,body{margin:0;padding:0}
   body{
     font-family:"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
-    background:
-      radial-gradient(1100px 620px at 82% -12%, #d6e6fb 0%, transparent 60%),
-      radial-gradient(900px 520px at -12% 112%, #e2ebf6 0%, transparent 55%),
-      var(--bg);
+    /* Dulu ada dua radial-gradient di sini. Posisinya dihitung dari kotak body,
+       jadi pada halaman setinggi 5300-7600 px pusatnya jatuh di y -636 dan +5933
+       - dua-duanya di luar dokumen, tidak pernah kelihatan. Yang tersisa cuma
+       biayanya: kanvas selebar layar x setinggi dokumen harus dirasterisasi
+       sebagai gradasi, bukan warna rata, dan itu membesar di layar >FHD. */
+    background:var(--bg);
     color:var(--text);
     line-height:1.5;
     -webkit-font-smoothing:antialiased;
@@ -90,7 +92,7 @@
   .timer{text-align:center;padding:6px 0 14px}
   .timer .n{font-size:56px;font-weight:800;color:var(--crema-soft);font-variant-numeric:tabular-nums;letter-spacing:2px}
 
-  .timerfab{position:fixed;left:50%;transform:translateX(-50%);bottom:76px;z-index:60;display:flex;align-items:center;gap:6px;background:rgba(21,26,33,.94);backdrop-filter:blur(8px);border:1.5px solid var(--line);border-radius:999px;padding:7px 10px;box-shadow:0 10px 28px rgba(0,0,0,.4)}
+  .timerfab{position:fixed;left:50%;transform:translateX(-50%);bottom:76px;z-index:60;display:flex;align-items:center;gap:6px;background:rgba(21,26,33,.94);border:1.5px solid var(--line);border-radius:999px;padding:7px 10px;box-shadow:0 10px 28px rgba(0,0,0,.4)}
   .timerfab .tf-label{font-size:11px;font-weight:700;color:var(--muted);display:flex;align-items:center;gap:5px;padding-left:4px}
   .timerfab .tf-n{font-size:21px;font-weight:800;color:var(--crema-soft);font-variant-numeric:tabular-nums;letter-spacing:.5px;min-width:126px;text-align:center}
   .tf-btn{width:36px;height:36px;flex-shrink:0;border-radius:50%;border:1.5px solid var(--line);background:var(--card2);color:var(--cream);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.15s}
@@ -184,7 +186,7 @@
   footer{text-align:center;color:var(--muted);font-size:12px;margin-top:26px;opacity:.85;line-height:1.7}
   footer .ic{color:var(--crema-soft)}
 
-  .botnav{display:none;position:fixed;left:0;right:0;bottom:0;z-index:70;background:rgba(19,24,31,.97);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:6px 10px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -8px 24px rgba(0,0,0,.35)}
+  .botnav{display:none;position:fixed;left:0;right:0;bottom:0;z-index:70;background:rgba(19,24,31,.97);border-top:1px solid var(--line);padding:6px 10px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -8px 24px rgba(0,0,0,.35)}
   .navitem{flex:1;background:transparent;border:0;color:var(--muted);padding:9px 6px;border-radius:11px;font-size:12px;font-weight:600;cursor:pointer;transition:.15s;display:flex;flex-direction:column;align-items:center;gap:4px;font-family:inherit}
   .navitem .ic{width:23px;height:23px}
   .navitem.active{color:var(--crema)}
@@ -195,7 +197,11 @@
     body{padding-bottom:86px}
   }
 
-  .ovl{position:fixed;inset:0;z-index:80;background:rgba(8,10,14,.6);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:18px}
+  .ovl{position:fixed;inset:0;z-index:80;background:rgba(8,10,14,.6);display:flex;align-items:center;justify-content:center;padding:18px}
+  /* Blur seukuran viewport penuh itu satu-satunya efek yang biayanya ikut naik
+     mengikuti jumlah piksel layar, dan jendela ini muncul tiap kali aplikasi
+     dibuka. Di atas FHD scrim 60% saja sudah cukup memisahkan latar. */
+  @media(max-width:1920px){ .ovl{backdrop-filter:blur(3px)} }
   .ovl[hidden]{display:none}
   .sheet{width:100%;max-width:420px;background:var(--card2);border:1px solid var(--line);border-radius:18px;box-shadow:0 24px 60px rgba(0,0,0,.5);overflow:hidden;display:flex;flex-direction:column;max-height:88vh}
   .sheet-center{width:100%;max-width:400px;background:var(--card2);border:1px solid var(--line);border-radius:18px;box-shadow:0 24px 60px rgba(0,0,0,.5);padding:26px 24px;text-align:center;max-height:100%;overflow-y:auto;overscroll-behavior:contain}
@@ -272,7 +278,7 @@
   .g-actions{display:flex;gap:10px;padding:12px 16px 14px;border-top:1px solid var(--line);margin-top:12px}
   .g-actions .btn{flex:1;justify-content:center;padding:12px}
   .guide-ring{box-shadow:0 0 0 3px var(--crema),0 8px 30px rgba(0,0,0,.35) !important;border-radius:14px}
-  .g-reopen{position:fixed;left:50%;transform:translateX(-50%);bottom:136px;z-index:65;display:inline-flex;align-items:center;gap:8px;background:rgba(169,116,26,.92);backdrop-filter:blur(8px);border:1.5px solid #c9a030;border-radius:999px;padding:11px 16px;color:#fff;font-size:13.5px;font-weight:700;cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,.4);transition:.15s}
+  .g-reopen{position:fixed;left:50%;transform:translateX(-50%);bottom:136px;z-index:65;display:inline-flex;align-items:center;gap:8px;background:rgba(169,116,26,.92);border:1.5px solid #c9a030;border-radius:999px;padding:11px 16px;color:#fff;font-size:13.5px;font-weight:700;cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,.4);transition:.15s}
   .g-reopen .ic{width:18px;height:18px;color:#ffe082}
   .g-reopen:hover{background:rgba(169,116,26,1);border-color:#ffe082}
   .g-reopen:active{transform:scale(.95)}
